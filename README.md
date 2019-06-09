@@ -1,2 +1,2 @@
-# codecharacter-simulator-2020
+# CodeCharacter Simulator 2020
 Simulator for Pragyan CodeCharacter 2020
