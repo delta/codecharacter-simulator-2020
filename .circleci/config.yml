@@ -25,7 +25,7 @@ jobs:
           name: Run CMake
           working_directory: /root/project/build
           command: |
-            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/simulator
+            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/simulator -DCMAKE_CXX_COMPILER=clang++-8
       - run:
           name: Run Make
           working_directory: /root/project/build
