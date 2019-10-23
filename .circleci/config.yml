@@ -35,3 +35,8 @@ jobs:
           name: Run Tests
           working_directory: /root/project/simulator/bin
           command: ./tests
+      - run:
+          name: Run Linter Tests
+          working_directory: /root/project/.circleci
+          command: |
+            ./linter-check.sh
