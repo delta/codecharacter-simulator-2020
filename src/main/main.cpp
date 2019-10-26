@@ -1,6 +1,6 @@
-#include<iostream>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
-	std::cout<<"It works? It works!!!"<<std::endl;
-	return 0;
+  std::cout << "It works? It works!!!" << std::endl;
+  return 0;
 }
