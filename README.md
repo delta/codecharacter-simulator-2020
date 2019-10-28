@@ -29,3 +29,8 @@ To run the simulator, `<your_install_location>/bin/simulator`
 To run the unit tests, `<your_install_location>/bin/test`
 
 Pass `-DBUILD_PROJECT=<project_name>` to cmake to build only a specific module. Passing `no_tests` as the project name builds everything but the unit tests
+
+## Building Documentations
+
+1. Run `doxygen && cd docs/ && make html && cd ../` at the root level of the project.
+2. The documentation files are built under `docs/build/html`
