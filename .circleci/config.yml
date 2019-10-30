@@ -40,3 +40,15 @@ jobs:
           working_directory: /root/project/.circleci
           command: |
             ./linter-check.sh
+      - run:
+          name: Setup Doxygen and Sphinx
+          working_directory: /root
+          command: |
+            apt update
+            apt install -y doxygen python3-pip
+            python3 -m pip install sphinx_rtd_theme breathe
+      - run:
+          name: Build Doxygen documentation.
+          working_directory: /root/project
+          command: |
+            doxygen && cd docs/ && make html && cd ../
