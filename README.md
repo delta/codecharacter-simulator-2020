@@ -29,3 +29,11 @@ To run the simulator, `<your_install_location>/bin/simulator`
 To run the unit tests, `<your_install_location>/bin/test`
 
 Pass `-DBUILD_PROJECT=<project_name>` to cmake to build only a specific module. Passing `no_tests` as the project name builds everything but the unit tests
+
+## Setting up Doxygen, Sphinx and building Documentation.
+
+1. `sudo apt update
+	sudo apt install -y doxygen python3-pip
+	sudo python3 -m pip install sphinx_rtd_theme breathe`
+2. Run `doxygen && cd docs/ && make html && cd ../` at the root level of the project.
+3. The documentation files are built under `docs/build/html`
