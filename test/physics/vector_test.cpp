@@ -81,3 +81,20 @@ TEST(VectorTest, CeilTest) {
   Vector<double> ans = {6, 2};
   ASSERT_EQ(a.ceil(), ans);
 }
+
+TEST(VectorTest, PrintTest) {
+  Vector<int> v = {4, 6};
+  testing::internal::CaptureStdout();
+  std::cout << v;
+  std::string output = testing::internal::GetCapturedStdout();
+
+  ASSERT_EQ("(4, 6)", output);
+}
+
+TEST(VectorTest, ExplicitBoolTest) {
+  Vector<int> v = {4, 6};
+  bool val = static_cast<bool>(v);
+
+  ASSERT_EQ(true, val);
+  ASSERT_EQ(false, static_cast<bool>(Vector<int>::null));
+}

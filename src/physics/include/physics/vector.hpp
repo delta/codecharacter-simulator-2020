@@ -16,6 +16,7 @@ namespace physics {
 template <typename T> class Vector {
 public:
   Vector();
+
   Vector(T x, T y);
   /**
    * @brief 	Null vector : {-1, -1}
