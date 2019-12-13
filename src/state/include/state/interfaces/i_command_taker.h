@@ -42,13 +42,13 @@ public:
   virtual void TransformBot(PlayerId player_id, int64_t bot_id) = 0;
 
   /**
-   * Handles attack on actor
+   * Blast a bot and destroy units nearby
    *
-   * @param[in]  player_id     player to act upon
-   * @param[in]  actor_id      actor to act upon
+   * @param[in]  player_id     Player to act upon
+   * @param[in]  bot_id      Bot to act upon
    *
    * @throw      std::exception  if the operation was not possible
    */
-  virtual void AttackActor(PlayerId player_id, int64_t actor_id) = 0;
+  virtual void BlastBot(PlayerId player_id, int64_t bot_id) = 0;
 };
 } // namespace state
