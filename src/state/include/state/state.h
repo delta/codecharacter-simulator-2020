@@ -10,7 +10,7 @@
 #include "state/interfaces/i_updatable.h"
 #include "state/utilities.h"
 
-namespace State {
+namespace state {
 
 class STATE_EXPORT State {};
-} // namespace State
+} // namespace state

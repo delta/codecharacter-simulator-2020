@@ -3,6 +3,3 @@ build/*
 simulator/*
 docs/build/*
 docs/xml/*
-.idea
-.vscode
-

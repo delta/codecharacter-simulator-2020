@@ -28,8 +28,8 @@ public:
    *
    * @throw      std::exception  if the operation was not possible
    */
-  virtual void MoveSoldier(PlayerId player_id, int64_t bot_id,
-                           physics::Vector<int64_t> position) = 0;
+  virtual void MoveBot(PlayerId player_id, int64_t bot_id,
+                       physics::Vector<int64_t> position) = 0;
 
   /**
    * Handles bot transform
