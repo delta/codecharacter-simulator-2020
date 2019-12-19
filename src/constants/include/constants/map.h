@@ -26,4 +26,4 @@ const auto PLAYER2_BASE_POSITION =
 const std::vector<DoubleVec2D> PLAYER_BASE_POSITIONS = {PLAYER1_BASE_POSITION,
                                                         PLAYER2_BASE_POSITION};
 
-}
+} // namespace Constants::Map

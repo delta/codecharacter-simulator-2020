@@ -26,4 +26,4 @@ const int64_t BOT_SPEED = 2;
 // Frequency at which bots spawn at home base per turn
 const int64_t BOT_SPAWN_FREQUENCY = 1;
 
-}
+} // namespace Constants::Actor
