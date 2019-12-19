@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <vector>
 
+namespace Constants::Map {
+
 // Size of the map
 const size_t MAP_SIZE = 100;
 
@@ -23,3 +25,5 @@ const auto PLAYER2_BASE_POSITION =
 // Base positions of both players
 const std::vector<DoubleVec2D> PLAYER_BASE_POSITIONS = {PLAYER1_BASE_POSITION,
                                                         PLAYER2_BASE_POSITION};
+
+}
