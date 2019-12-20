@@ -5,10 +5,11 @@
 
 #pragma once
 
-#include "physics/vector.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+
+namespace Constants::Actor {
 
 // Maximum number of bots per player
 const size_t MAX_NUM_BOTS = 500;
@@ -24,3 +25,5 @@ const int64_t BOT_SPEED = 2;
 
 // Frequency at which bots spawn at home base per turn
 const int64_t BOT_SPAWN_FREQUENCY = 1;
+
+} // namespace Constants::Actor

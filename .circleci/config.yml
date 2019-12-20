@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: buildpack-deps:bionic
-        enviroment:
+    enviroment:
           CXX: "clang++-8"
           CMAKE_BUILD_TYPE: "Release"
           LD_LIBRARY_PATH: "/root/project/simulator/lib:${LD_LIBRARY_PATH}"

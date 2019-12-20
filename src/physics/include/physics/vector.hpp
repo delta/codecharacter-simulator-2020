@@ -234,3 +234,8 @@ template <typename T> Vector<T>::operator bool() const {
 }
 
 } // namespace physics
+
+// Common aliases
+
+using Vec2D = physics::Vector<int64_t>;
+using DoubleVec2D = physics::Vector<double_t>;
