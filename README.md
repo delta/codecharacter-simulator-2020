@@ -3,17 +3,17 @@ Simulator for Pragyan CodeCharacter 2020
 
 ## Setup Instructions
 
-1. Download [Boost 1.71](https://www.boost.org/users/history/version_1_71_0.html)
+1. Download & Install [CMake](https://cmake.org/install/) (>= v3.15.3)
 
-2. `cd` to the Boost directory and build the system library by running `./bootstrap.sh --prefix=. --with-libraries=system && ./b2 cxxflags=-std=c++14 install`
+2. Download & Install [Protobuf](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
 
-3. `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git`
+3. Install Clang++ (>=8.0.1)
 
-4. Download & Install [CMake](https://cmake.org/install/) (>= v3.15.3)
+4. Download [Boost 1.71](https://www.boost.org/users/history/version_1_71_0.html) (preferably in `/usr/local/lib/`)
 
-5. Download & Install [Protobuf](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
+5. `cd` to the Boost directory and build the system library by running `./bootstrap.sh --prefix=. --with-libraries=system && ./b2 cxxflags=-std=c++14 install`
 
-6. Install Clang++ (>=8.0.1)
+6. `cd` to your projects directory and run `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git` && `git config core.hooksPath .githooks/ `
 
 7. `mkdir build && cd build`
 
