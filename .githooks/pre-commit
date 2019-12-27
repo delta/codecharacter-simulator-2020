@@ -6,3 +6,4 @@ root="$(pwd)"
 sh "${root}/.githooks/clangformat.sh"
 
 # Run cmake-format on cmake lists files
+sh "${root}/.githooks/cmakeformat.sh"
