@@ -3,6 +3,6 @@
 root="$(pwd)"
 
 # Run clang-format on all staged CXX source files
-sh "${root}/.githooks/clangformat.sh"
+bash "${root}/.githooks/clangformat.sh"
 
 # Run cmake-format on cmake lists files
