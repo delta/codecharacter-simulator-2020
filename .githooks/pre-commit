@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "##### Running pre-commit hook #####"
 root="$(pwd)"
 
 # Run clang-format on all staged CXX source files
