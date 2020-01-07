@@ -1,8 +1,9 @@
 #!/bin/bash
-
+echo "##### Running pre-commit hook #####"
 root="$(pwd)"
 
 # Run clang-format on all staged CXX source files
 bash "${root}/.githooks/clangformat.sh"
 
 # Run cmake-format on cmake lists files
+bash "${root}/.githooks/cmakeformat.sh"

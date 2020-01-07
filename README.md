@@ -1,4 +1,5 @@
 # CodeCharacter Simulator 2020
+
 Simulator for Pragyan CodeCharacter 2020
 
 ## Setup Instructions
@@ -13,16 +14,17 @@ Simulator for Pragyan CodeCharacter 2020
 
 5. `cd` to the Boost directory and build the system library by running `./bootstrap.sh --prefix=. --with-libraries=system && ./b2 cxxflags=-std=c++14 install`
 
-6. `cd` to your projects directory and run `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git` && `git config core.hooksPath .githooks/ `
+6. `cd` to your projects directory and run `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git` && `git config core.hooksPath .githooks/`
 
-7. `mkdir build && cd build`
+7. run `pip install cmake-format`
 
-8. `export LD_LIBRARY_PATH=<repo_install_location>/lib`
+8. `mkdir build && cd build`
 
-9. `cmake .. -DCMAKE_INSTALL_PREFIX=<repo_install_location> -DBOOST_ROOT=<boost_download_location> -DCMAKE_CXX_COMPILER=clang++`
+9. `export LD_LIBRARY_PATH=<repo_install_location>/lib`
 
-10. `make install`
+10. `cmake .. -DCMAKE_INSTALL_PREFIX=<repo_install_location> -DBOOST_ROOT=<boost_download_location> -DCMAKE_CXX_COMPILER=clang++`
 
+11. `make install`
 
 To run the simulator, `<your_install_location>/bin/simulator`
 
@@ -32,8 +34,9 @@ Pass `-DBUILD_PROJECT=<project_name>` to cmake to build only a specific module. 
 
 ## Setting up Doxygen, Sphinx and building Documentation.
 
-1. `sudo apt update
-	sudo apt install -y doxygen python3-pip
-	sudo python3 -m pip install sphinx_rtd_theme breathe`
+1. sudo apt update  
+   sudo apt install -y doxygen python3-pip  
+   sudo python3 -m pip install sphinx_rtd_theme breathe
+
 2. Run `doxygen && cd docs/ && make html && cd ../` at the root level of the project.
 3. The documentation files are built under `docs/build/html`
