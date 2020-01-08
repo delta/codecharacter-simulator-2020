@@ -8,7 +8,7 @@ set(INCLUDE_PATH include)
 add_executable(main ${SOURCE_FILES})
 
 if(UNIX)
-  target_link_libraries(main pthread)
+  target_link_libraries(main pthread logger)
 endif()
 
 target_include_directories(
