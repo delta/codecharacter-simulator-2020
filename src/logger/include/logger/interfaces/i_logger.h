@@ -47,9 +47,7 @@ public:
    * Logs final game parameters, should be called once, right before logging
    * state to stream (i.e before calling WriteGame)
    */
-  virtual void LogFinalGameParams(state::PlayerId player_id,
-                                  bool was_deathmatch,
-                                  std::array<int64_t, 2> final_scores) = 0;
+  virtual void LogFinalGameParams(state::PlayerId player_id) = 0;
 
   /**
    * Writes the complete serialized logs to stream

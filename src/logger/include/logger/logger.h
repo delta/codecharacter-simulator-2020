@@ -16,6 +16,8 @@ class LOGGER_EXPORT Logger : public ILogger {
 public:
   /**
    * Constructor for the Logger class
+   *
+   * TODO: get the paramerters in constructor
    */
   Logger();
 
@@ -38,8 +40,7 @@ public:
   /**
    * @see ILogger#LogFinalGameParams
    */
-  void LogFinalGameParams(state::PlayerId player_id, bool was_deathmatch,
-                          std::array<int64_t, 2> final_scores) override;
+  void LogFinalGameParams(state::PlayerId player_id) override;
 
   /**
    * @see ILogger#WriteGame

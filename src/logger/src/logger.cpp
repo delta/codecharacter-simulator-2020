@@ -35,8 +35,7 @@ void Logger::LogError(state::PlayerId player_id, ErrorType error_type,
 /**
  * @see ILogger#LogFinalGameParams
  */
-void Logger::LogFinalGameParams(state::PlayerId player_id, bool was_deathmatch,
-                                std::array<int64_t, 2> final_scores) {
+void Logger::LogFinalGameParams(state::PlayerId player_id) {
   std::cout << "LogFinalGameParams called \n";
 };
 
