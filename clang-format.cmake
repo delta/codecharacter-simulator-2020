@@ -19,7 +19,6 @@ file(
   src/*.cpp
   src/*.h
   src/*.hpp
-  src/*.proto
   test/*.cpp
   test/*.h)
 
