@@ -72,7 +72,7 @@ struct _Unit : _Actor {
   Vec2D destination;
   static size_t speed;
 
-  void reset() { destination = Vec2D::null; }
+  virtual void reset() { destination = Vec2D::null; }
   void move(Vec2D p_destination) {
     reset();
     destination = p_destination;
@@ -85,19 +85,31 @@ size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
 struct Bot : _Unit {
   BotState state;
+  Vec2D target;
+  bool hasBlasted;
+  bool hasTransformed;
   static size_t impact_radius;
+
+  void reset() override {
+    destination = Vec2D::null;
+    target = Vec2D::null;
+    hasTransformed = false;
+    hasBlasted = false;
+  }
 
   void blast_bot() {
     reset();
-    //
+    hasBlasted = true;
   }
 
   void transform_bot() {
     reset();
-    //
+    hasTransformed = true;
   }
 
-  Bot() : _Unit(){};
+  Bot()
+      : _Unit(), target(Vec2D::null), hasBlasted(false),
+        hasTransformed(false){};
 };
 
 size_t Bot::impact_radius = Constants::Actor::BLAST_IMPACT_RADIUS;
@@ -113,9 +125,9 @@ std::ostream &operator<<(std::ostream &os, Bot bot) {
 
 struct Tower : _Actor {
   TowerState state;
-  void suicide_tower() {
-    //
-  }
+  bool hasCommittedSuicide;
+
+  void suicide_tower() { hasCommittedSuicide = true; }
   Tower() : _Actor(){};
 };
 
