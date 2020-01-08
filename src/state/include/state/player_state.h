@@ -128,7 +128,7 @@ struct Tower : _Actor {
   bool hasCommittedSuicide;
 
   void suicide_tower() { hasCommittedSuicide = true; }
-  Tower() : _Actor(){};
+  Tower() : _Actor(), hasCommittedSuicide(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
