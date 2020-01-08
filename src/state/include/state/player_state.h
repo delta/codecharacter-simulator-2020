@@ -20,6 +20,10 @@ enum class BotState : int8_t {
   IDLE,
   // Bot is moving
   MOVE,
+  // Bot is blowing up.
+  BLAST,
+  // Bot is changing into Tower
+  TRANSFORM,
   // Bot is dead
   DEAD
 };
@@ -32,6 +36,12 @@ std::ostream &operator<<(std::ostream &os, BotState bot_state) {
   case BotState::MOVE:
     os << "MOVE";
     break;
+  case BotState::BLAST:
+    os << "BLAST";
+    break;
+  case BotState::TRANSFORM:
+    os << "TRANSFORM";
+    break;
   case BotState::DEAD:
     os << "DEAD";
     break;
@@ -41,8 +51,10 @@ std::ostream &operator<<(std::ostream &os, BotState bot_state) {
 }
 
 enum class TowerState : int8_t {
-  // Tower is idle, i.e doing nothing
+  // Tower is doing nothing
   IDLE,
+  // Tower is blowing up.
+  BLAST,
   // Tower is dead
   DEAD
 };
@@ -51,6 +63,9 @@ std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
   switch (tower_state) {
   case TowerState::IDLE:
     os << "IDLE";
+    break;
+  case TowerState::BLAST:
+    os << "BLAST";
     break;
   case TowerState::DEAD:
     os << "DEAD";
@@ -85,14 +100,12 @@ size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
 struct Bot : _Unit {
   BotState state;
-  Vec2D target;
   bool hasBlasted;
   bool hasTransformed;
   static size_t impact_radius;
 
   void reset() override {
     destination = Vec2D::null;
-    target = Vec2D::null;
     hasTransformed = false;
     hasBlasted = false;
   }
@@ -102,14 +115,19 @@ struct Bot : _Unit {
     hasBlasted = true;
   }
 
+  // move to a target position and blast;
+  void blast_bot(Vec2D target_position) {
+    reset();
+    destination = target_position;
+    hasBlasted = true;
+  }
+
   void transform_bot() {
     reset();
     hasTransformed = true;
   }
 
-  Bot()
-      : _Unit(), target(Vec2D::null), hasBlasted(false),
-        hasTransformed(false){};
+  Bot() : _Unit(), hasBlasted(false), hasTransformed(false){};
 };
 
 size_t Bot::impact_radius = Constants::Actor::BLAST_IMPACT_RADIUS;
@@ -125,10 +143,10 @@ std::ostream &operator<<(std::ostream &os, Bot bot) {
 
 struct Tower : _Actor {
   TowerState state;
-  bool hasCommittedSuicide;
+  bool hasBlasted;
 
-  void suicide_tower() { hasCommittedSuicide = true; }
-  Tower() : _Actor(), hasCommittedSuicide(false){};
+  void blast_tower() { hasBlasted = true; }
+  Tower() : _Actor(), hasBlasted(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
@@ -165,7 +183,6 @@ struct State {
   int64_t num_enemy_towers;
 
   int64_t score;
-  int64_t interest_threshold;
 
   State()
       : bots(Constants::Actor::MAX_NUM_BOTS),
@@ -176,7 +193,7 @@ struct State {
         enemy_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
         num_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
         num_enemy_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
-        score(0), interest_threshold(0) {}
+        score(0) {}
 };
 
 std::ostream &operator<<(std::ostream &os, State state) {
