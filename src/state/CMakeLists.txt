@@ -14,15 +14,15 @@ target_link_libraries(state physics constants)
 generate_export_header(state EXPORT_FILE_NAME ${EXPORTS_FILE_PATH})
 
 target_include_directories(
-  state PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
-               $<BUILD_INTERFACE:${EXPORTS_DIR}> $<INSTALL_INTERFACE:include>)
+state PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
+$<BUILD_INTERFACE:${EXPORTS_DIR}> $<INSTALL_INTERFACE:include>)
 
 install(
-  TARGETS state
-  EXPORT state_config
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin)
+TARGETS state
+EXPORT state_config
+ARCHIVE DESTINATION lib
+LIBRARY DESTINATION lib
+RUNTIME DESTINATION bin)
 
 install(EXPORT state_config DESTINATION lib)
 install(DIRECTORY ${INCLUDE_PATH}/ DESTINATION include)
