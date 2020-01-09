@@ -100,34 +100,39 @@ size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
 struct Bot : _Unit {
   BotState state;
-  bool hasBlasted;
-  bool hasTransformed;
+  // move and blast at set destination
+  Vec2D final_destination;
+  bool has_blasted;
+  bool has_transformed;
   static size_t impact_radius;
 
   void reset() override {
     destination = Vec2D::null;
-    hasTransformed = false;
-    hasBlasted = false;
+    final_destination = Vec2D::null;
+    has_blasted = false;
+    has_transformed = false;
   }
 
   void blast_bot() {
     reset();
-    hasBlasted = true;
+    has_blasted = true;
   }
 
   // move to a target position and blast;
   void blast_bot(Vec2D target_position) {
     reset();
-    destination = target_position;
-    hasBlasted = true;
+    final_destination = target_position;
+    has_blasted = true;
   }
 
   void transform_bot() {
     reset();
-    hasTransformed = true;
+    has_transformed = true;
   }
 
-  Bot() : _Unit(), hasBlasted(false), hasTransformed(false){};
+  Bot()
+      : _Unit(), final_destination(Vec2D::null), has_blasted(false),
+        has_transformed(false){};
 };
 
 size_t Bot::impact_radius = Constants::Actor::BLAST_IMPACT_RADIUS;
@@ -143,10 +148,10 @@ std::ostream &operator<<(std::ostream &os, Bot bot) {
 
 struct Tower : _Actor {
   TowerState state;
-  bool hasBlasted;
+  bool has_blasted;
 
-  void blast_tower() { hasBlasted = true; }
-  Tower() : _Actor(), hasBlasted(false){};
+  void blast_tower() { has_blasted = true; }
+  Tower() : _Actor(), has_blasted(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
