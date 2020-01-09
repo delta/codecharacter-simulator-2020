@@ -41,7 +41,7 @@ jobs:
           command: |
             ./linter-check.sh
       - run:
-          name: Install and Run Cmake-format Tests
+          name: Install and Run cmake-format Tests
           working_directory: /root/project/.circleci
           command: |
             curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format

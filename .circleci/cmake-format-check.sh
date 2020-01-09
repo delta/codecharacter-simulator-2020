@@ -2,19 +2,19 @@
 set -o nounset
 set -o pipefail
 
-# Run CMake-Format
+# Run cmake-format
 cd /root/project/build
-find . \( -name '*.cmake' -o -name 'CMakeLists.txt' \) -exec cmake-format -i {} \;   || { echo "CMake-format run failed!"; exit 1; }
+find . \( -name '*.cmake' -o -name 'CMakeLists.txt' \) -exec cmake-format -i {} \;   || { echo "cmake-format run failed!"; exit 1; }
 
 # Check git for changes
 cd /root/project
-listcmakeformatcheck=`git status | grep "modified"`
-if [[ -z $listcmakeformatcheck ]]; then
-    echo "Cmake-Format test passed!"
+cmakeformatcheklist=`git status | grep "modified"`
+if [[ -z $cmakeformatcheklist ]]; then
+    echo "cmake-format test passed!"
     exit 0;
 else
     echo "You have cmake-format problems :";
-    for f in $listcmakeformatcheck; do
+    for f in $cmakeformatcheklist; do
         filename=`echo $f | awk '{print $2}'`
         echo $filename
         git diff $filename
