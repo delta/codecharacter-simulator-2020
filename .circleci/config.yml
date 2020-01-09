@@ -4,9 +4,9 @@ jobs:
     docker:
       - image: buildpack-deps:bionic
     enviroment:
-          CXX: "clang++-8"
-          CMAKE_BUILD_TYPE: "Release"
-          LD_LIBRARY_PATH: "/root/project/simulator/lib:${LD_LIBRARY_PATH}"
+      CXX: "clang++-8"
+      CMAKE_BUILD_TYPE: "Release"
+      LD_LIBRARY_PATH: "/root/project/simulator/lib:${LD_LIBRARY_PATH}"
     steps:
       - checkout
       - run:
@@ -15,6 +15,7 @@ jobs:
             git submodule sync --recursive
             git submodule update --recursive --init
             apt update
+            pip install cmake-format
             apt install -y --no-install-recommends build-essential clang-8 clang-format-8 llvm-8 llvm-8-dev llvm-8-runtime
             wget "https://cmake.org/files/v3.15/cmake-3.15.4-Linux-x86_64.tar.gz" --no-check-certificate
             tar xf cmake-3.15.4-Linux-x86_64.tar.gz
@@ -40,6 +41,12 @@ jobs:
           working_directory: /root/project/.circleci
           command: |
             ./linter-check.sh
+      - run:
+          name: Run Cmake-format Tests
+          working_directory: /root/project/.circleci
+          command: |
+            ./cmake-format-check.sh
+
       - run:
           name: Setup Doxygen and Sphinx
           working_directory: /root
