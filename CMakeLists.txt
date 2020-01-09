@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 if(NOT BUILD_PROJECT STREQUAL "no_tests")
   include(clang-format.cmake)
+  include(cmake-format.cmake)
 endif()
 
 set(BOOST_ROOT
