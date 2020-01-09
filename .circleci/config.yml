@@ -15,7 +15,9 @@ jobs:
             git submodule sync --recursive
             git submodule update --recursive --init
             apt update
-            apt install lamp-server
+            # apt install tasksel
+            tasksel install lamp-server
+            # apt-get install lamp-server
             apt install -y php7.1-mcrypt python-pip
             pip install cmake-format
             apt install -y --no-install-recommends build-essential clang-8 clang-format-8 llvm-8 llvm-8-dev llvm-8-runtime
