@@ -3,7 +3,7 @@ set -o nounset
 set -o pipefail
 
 # Run cmake-format
-cd /root/project/build
+cd /root/project
 find . \( -name '*.cmake' -o -name 'CMakeLists.txt' \) -exec cmake-format -i {} \;   || { echo "cmake-format run failed!"; exit 1; }
 
 # Check git for changes
