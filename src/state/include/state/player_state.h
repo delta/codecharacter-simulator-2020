@@ -93,7 +93,7 @@ struct _Unit : _Actor {
     destination = p_destination;
   }
 
-  _Unit() : _Actor(){};
+  _Unit() : _Actor(), destination(Vec2D::null){};
 };
 
 size_t _Unit::speed = Constants::Actor::BOT_SPEED;
@@ -131,8 +131,8 @@ struct Bot : _Unit {
   }
 
   Bot()
-      : _Unit(), final_destination(Vec2D::null), has_blasted(false),
-        has_transformed(false){};
+      : _Unit(), state(BotState::IDLE), final_destination(Vec2D::null),
+        has_blasted(false), has_transformed(false){};
 };
 
 size_t Bot::impact_radius = Constants::Actor::BLAST_IMPACT_RADIUS;
@@ -151,7 +151,8 @@ struct Tower : _Actor {
   bool has_blasted;
 
   void blast_tower() { has_blasted = true; }
-  Tower() : _Actor(), has_blasted(false){};
+
+  Tower() : _Actor(), state(TowerState::IDLE), has_blasted(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
@@ -190,7 +191,7 @@ struct State {
   int64_t score;
 
   State()
-      : bots(Constants::Actor::MAX_NUM_BOTS),
+      : map(), bots(Constants::Actor::MAX_NUM_BOTS),
         enemy_bots(Constants::Actor::MAX_NUM_BOTS),
         num_bots(Constants::Actor::MAX_NUM_BOTS),
         num_enemy_bots(Constants::Actor::MAX_NUM_BOTS),
