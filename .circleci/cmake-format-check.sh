@@ -18,7 +18,7 @@ else
     for f in $cmakeformatcheklist; do
         filename=`echo $f | awk '{print $2}'`
         echo $filename
-        git diff $filename
+        git diff $filename --exit-code
     done
     exit 1;
 fi
