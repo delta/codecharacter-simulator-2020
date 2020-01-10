@@ -20,6 +20,7 @@ jobs:
             tar xf cmake-3.15.4-Linux-x86_64.tar.gz
             cp -r cmake-3.15.4-Linux-x86_64/bin/* /usr/local/bin
             cp -r cmake-3.15.4-Linux-x86_64/share/* /usr/local/share
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format
             mkdir simulator build
       - run:
           name: Run CMake
@@ -44,7 +45,6 @@ jobs:
           name: Install and Run cmake-format Tests
           working_directory: /root/project/.circleci
           command: |
-            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format
             ./cmake-format-check.sh
       - run:
           name: Setup Doxygen and Sphinx
