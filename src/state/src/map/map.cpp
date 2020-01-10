@@ -22,7 +22,7 @@ TerrainType Map::GetTerrainType(double x, double y) const {
 }
 
 void Map::SetTerrainType(int64_t x, int64_t y, TerrainType terrainType) {
-  map[x][y] = (TerrainType)terrainType;
+  map[x][y] = terrainType;
 }
 
 } // namespace state
