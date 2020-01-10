@@ -22,7 +22,7 @@ enum class ActorType { BOT, TOWER };
 /**
  * Enum for the different types of terrain on the map
  */
-enum class TerrainType { LAND, WATER, FLAG };
+enum class TerrainType { LAND, WATER, TOWER, FLAG };
 
 /**
  * Enum for the two game players

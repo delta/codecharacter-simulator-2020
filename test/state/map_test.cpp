@@ -6,10 +6,10 @@
 using namespace std;
 
 const auto MAP_SIZE = size_t{5};
-const auto ELEMENT_SIZE = size_t{10};
 
 const auto L = state::TerrainType::LAND;
 const auto W = state::TerrainType::WATER;
+const auto T = state::TerrainType::TOWER;
 const auto F = state::TerrainType::FLAG;
 
 class MapTest : public testing::Test {
@@ -21,33 +21,35 @@ protected:
         {L, W, W, W, L},
         {L, L, F, L, L},
         {L, W, W, W, L},
-        {L, L, W, L, L},
+        {L, L, W, L, T},
     }};
 
-    map = make_unique<state::Map>(map_matrix, MAP_SIZE, ELEMENT_SIZE);
+    map = make_unique<state::Map>(map_matrix, MAP_SIZE);
   }
 };
 
 TEST_F(MapTest, GetSizeTest) { EXPECT_EQ(map->GetSize(), MAP_SIZE); }
 
-TEST_F(MapTest, GetElementSizeTest) {
-  EXPECT_EQ(map->GetElementSize(), ELEMENT_SIZE);
+TEST_F(MapTest, GetTerrainTypeInt64Test) {
+  EXPECT_EQ(map->GetTerrainType((int64_t)0, (int64_t)0), L);
+  EXPECT_EQ(map->GetTerrainType((int64_t)1, (int64_t)1), W);
+  EXPECT_EQ(map->GetTerrainType((int64_t)2, (int64_t)2), F);
+  EXPECT_EQ(map->GetTerrainType((int64_t)4, (int64_t)4), T);
+  EXPECT_EQ(map->GetTerrainType((int64_t)0, (int64_t)4), L);
+  EXPECT_EQ(map->GetTerrainType((int64_t)4, (int64_t)0), L);
 }
 
-TEST_F(MapTest, GetElementByOffsetTest) {
-  EXPECT_EQ(map->GetTerrainTypeByOffset(0, 0), L);
-  EXPECT_EQ(map->GetTerrainTypeByOffset(1, 1), W);
-  EXPECT_EQ(map->GetTerrainTypeByOffset(2, 2), F);
-  EXPECT_EQ(map->GetTerrainTypeByOffset(4, 4), L);
-  EXPECT_EQ(map->GetTerrainTypeByOffset(0, 4), L);
-  EXPECT_EQ(map->GetTerrainTypeByOffset(4, 0), L);
+TEST_F(MapTest, GetTerrainTypeDoubleTest) {
+  EXPECT_EQ(map->GetTerrainType(0.5, 0.18), L);
+  EXPECT_EQ(map->GetTerrainType(1.599, 1.501), W);
+  EXPECT_EQ(map->GetTerrainType(2.432, 2.411), F);
+  EXPECT_EQ(map->GetTerrainType(4.997, 4.999), T);
+  EXPECT_EQ(map->GetTerrainType(0.11, 4.921), L);
+  EXPECT_EQ(map->GetTerrainType(4.90, 0.0), L);
 }
 
-TEST_F(MapTest, GetElementByPositionTest) {
-  EXPECT_EQ(map->GetTerrainTypeByPosition(0, 0), L);
-  EXPECT_EQ(map->GetTerrainTypeByPosition(15, 15), W);
-  EXPECT_EQ(map->GetTerrainTypeByPosition(24, 24), F);
-  EXPECT_EQ(map->GetTerrainTypeByPosition(49, 49), L);
-  EXPECT_EQ(map->GetTerrainTypeByPosition(0, 49), L);
-  EXPECT_EQ(map->GetTerrainTypeByPosition(49, 0), L);
+TEST_F(MapTest, SetTerrainTypeTest) {
+  map->SetTerrainType(0.0, 0.0, T);
+  EXPECT_EQ(map->GetTerrainType(0.0, 0.0), T);
+  map->SetTerrainType(0.0, 0.0, L);
 }

@@ -27,19 +27,14 @@ private:
    */
   size_t map_size;
 
-  /**
-   * Element size, the size of each grid element in map
-   */
-  size_t element_size;
-
 public:
   /**
    * Constructor
    *
-   * @param element_size
+   * @param map
+   * @param map_size
    */
-  Map(std::vector<std::vector<TerrainType>> map, size_t map_size,
-      size_t element_size);
+  Map(std::vector<std::vector<TerrainType>> map, size_t map_size);
 
   /**
    * Get the size of the map (returns the template param)
@@ -49,20 +44,13 @@ public:
   size_t GetSize() const;
 
   /**
-   * Get the size of one element of the map
-   *
-   * @return Size of one map element
-   */
-  size_t GetElementSize() const;
-
-  /**
-   * Get the Terrain type of an element at a particular grid element
+   * Get the Terrain type of the element from any position on the map
    *
    * @param x
    * @param y
    * @return the tile's terrain type
    */
-  TerrainType GetTerrainTypeByOffset(int64_t x, int64_t y) const;
+  TerrainType GetTerrainType(int64_t x, int64_t y) const;
 
   /**
    * Get the Terrain type of the element from any position on the map
@@ -71,9 +59,16 @@ public:
    * @param y
    * @return the tile's terrain type
    */
-  TerrainType GetTerrainTypeByPosition(int64_t x, int64_t y) const;
+  TerrainType GetTerrainType(double x, double y) const;
 
-  TerrainType GetTerrainTypeByPosition(double x, double y) const;
+  /**
+   * Set the Terrain type of the element from any position on the map
+   *
+   * @param x
+   * @param y
+   * @param terrainType the tile's terrain type
+   */
+  void SetTerrainType(int64_t x, int64_t y, TerrainType terrainType);
 };
 
 } // namespace state

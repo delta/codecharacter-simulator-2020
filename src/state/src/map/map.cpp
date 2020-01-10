@@ -8,29 +8,21 @@
 
 namespace state {
 
-Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size,
-         size_t element_size)
-    : map(std::move(map)), map_size(map_size), element_size(element_size) {}
+Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size)
+    : map(std::move(map)), map_size(map_size) {}
 
 size_t Map::GetSize() const { return map_size; }
-size_t Map::GetElementSize() const { return element_size; }
 
-TerrainType Map::GetTerrainTypeByOffset(int64_t x, int64_t y) const {
+TerrainType Map::GetTerrainType(int64_t x, int64_t y) const {
   return map[x][y];
 }
 
-TerrainType Map::GetTerrainTypeByPosition(int64_t x, int64_t y) const {
-  auto offset_x = x / element_size;
-  auto offset_y = y / element_size;
-
-  return map[offset_x][offset_y];
+TerrainType Map::GetTerrainType(double x, double y) const {
+  return map[(int64_t)x][(int64_t)y];
 }
 
-TerrainType Map::GetTerrainTypeByPosition(double x, double y) const {
-  auto offset_x = (int64_t)x / element_size;
-  auto offset_y = (int64_t)y / element_size;
-
-  return map[offset_x][offset_y];
+void Map::SetTerrainType(int64_t x, int64_t y, TerrainType terrainType) {
+  map[x][y] = (TerrainType)terrainType;
 }
 
 } // namespace state
