@@ -52,13 +52,6 @@ public:
    */
   TerrainType GetTerrainType(int64_t x, int64_t y) const;
 
-  /**
-   * Get the Terrain type of the element from any position on the map
-   *
-   * @param x
-   * @param y
-   * @return the tile's terrain type
-   */
   TerrainType GetTerrainType(double x, double y) const;
 
   /**
