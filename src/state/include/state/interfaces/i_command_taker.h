@@ -49,6 +49,6 @@ public:
    *
    * @throw      std::exception  if the operation was not possible
    */
-  virtual void BlastBot(PlayerId player_id, int64_t bot_id) = 0;
+  virtual void BlastBot(PlayerId player_id, ActorId bot_id) = 0;
 };
 } // namespace state
