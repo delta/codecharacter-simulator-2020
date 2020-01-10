@@ -26,4 +26,11 @@ TerrainType Map::GetTerrainTypeByPosition(int64_t x, int64_t y) const {
   return map[offset_x][offset_y];
 }
 
+TerrainType Map::GetTerrainTypeByPosition(double x, double y) const {
+  auto offset_x = (int64_t)x / element_size;
+  auto offset_y = (int64_t)y / element_size;
+
+  return map[offset_x][offset_y];
+}
+
 } // namespace state

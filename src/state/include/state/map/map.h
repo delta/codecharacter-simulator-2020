@@ -28,7 +28,7 @@ private:
   size_t map_size;
 
   /**
-   * Element size, the size of each map element
+   * Element size, the size of each grid element in map
    */
   size_t element_size;
 
@@ -56,7 +56,7 @@ public:
   size_t GetElementSize() const;
 
   /**
-   * Get the Terrain type of an element at a particular grid offset
+   * Get the Terrain type of an element at a particular grid element
    *
    * @param x
    * @param y
@@ -72,6 +72,8 @@ public:
    * @return the tile's terrain type
    */
   TerrainType GetTerrainTypeByPosition(int64_t x, int64_t y) const;
+
+  TerrainType GetTerrainTypeByPosition(double x, double y) const;
 };
 
 } // namespace state
