@@ -3,8 +3,8 @@ set -o nounset
 set -o pipefail
 
 # Run cmake-format
-cd /root/project
-find . \( -type f -not -path '*build*' -not -path '*ext*' -name '*.cmake' -o -name 'CMakeLists.txt' \)   -exec cmake-format -i {} \;   || { echo "cmake-format run failed!"; exit 1; }
+cd /root/project/build
+make cmakeformat   || { echo "cmake-format run failed!"; exit 1; }
 
 # Check git for changes
 cd /root/project
