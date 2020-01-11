@@ -45,10 +45,10 @@ public:
    * Blast a bot and destroy units nearby
    *
    * @param[in]  player_id     Player to act upon
-   * @param[in]  bot_id      Bot to act upon
+   * @param[in]  actor_id      Actor id to act upon
    *
    * @throw      std::exception  if the operation was not possible
    */
-  virtual void BlastBot(PlayerId player_id, ActorId bot_id) = 0;
+  virtual void BlastActor(PlayerId player_id, ActorId actor_id) = 0;
 };
 } // namespace state

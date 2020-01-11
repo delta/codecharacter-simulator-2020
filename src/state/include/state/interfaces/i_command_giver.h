@@ -3,7 +3,9 @@
  * Interface for command giver which validates and run's user's commands
  */
 
-#include "player_state.h"
+#pragma once
+
+#include "state/player_state.h"
 #include <array>
 
 namespace state {
@@ -23,4 +25,5 @@ public:
   virtual void RunCommands(std::array<player_state::State, 2> player_states,
                            std::array<bool, 2> skip_turns) = 0;
 };
-}
+
+} // namespace state
