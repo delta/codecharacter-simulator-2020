@@ -9,7 +9,7 @@ find . \( -type f  -name 'CMakeLists.txt' ! -path "./build/*" ! -path "./ext/*" 
 
 #Check git for changes
 cd /root/project
-cmakeformatcheklist=`git status | grep "modified"`
+cmakeformatchecklist=`git status | grep "modified"`
 echo $cmakeformatcheklist
 if [[ -z $cmakeformatcheklist ]]; then
     echo "cmake-format test passed!"
