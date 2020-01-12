@@ -10,14 +10,14 @@ find . \( -type f  -name 'CMakeLists.txt' ! -path "./build/*" ! -path "./ext/*" 
 #Check git for changes
 cd /root/project
 cmakeformatchecklist=`git status | grep "modified"`
-echo $cmakeformatcheklist
-if [[ -z $cmakeformatcheklist ]]; then
+echo $cmakeformatchecklist
+if [[ -z $cmakeformatchecklist ]]; then
     echo "cmake-format test passed!"
     exit 0;
 else
     echo "You have cmake-format problems :";
-    echo "$cmakeformatcheklist"
-    for f in $cmakeformatcheklist; do
+    echo "$cmakeformatchecklist"
+    for f in $cmakeformatchecklist; do
         filename=`echo $f | awk '{print $2}'`
         echo "$(git diff $filename)"
     done
