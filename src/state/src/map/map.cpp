@@ -14,15 +14,15 @@ Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size)
 size_t Map::GetSize() const { return map_size; }
 
 TerrainType Map::GetTerrainType(int64_t x, int64_t y) const {
-  return map[x][y];
+    return map[x][y];
 }
 
 TerrainType Map::GetTerrainType(double x, double y) const {
-  return map[(int64_t)x][(int64_t)y];
+    return map[(int64_t)x][(int64_t)y];
 }
 
 void Map::SetTerrainType(int64_t x, int64_t y, TerrainType terrainType) {
-  map[x][y] = terrainType;
+    map[x][y] = terrainType;
 }
 
 } // namespace state

@@ -4,7 +4,14 @@ set -o pipefail
 
 # Run cmake-format
 cd /root/project
-find . \( -path './ext' -o -path './build' -o -path './simulator' \) -prune -o -type f \( -iname '*.cmake' -o -iname 'CMakeLists.txt' \) -exec cmake-format -i {} \; || { echo "cmake-format run failed;" exit 1; } 
+
+# find all cmake list files in working tree, excluding some directories and assigns them in array list
+filelist="$(find . -type d \( -wholename './build' -o -wholename './ext' -o -wholename './simulator' -o name "*cmake*" \) -prune -o  \( -type f \( -iname '*.cmake' -o -iname 'CMakeLists.txt' \) -print \))"
+
+for file in $filelist; do
+    cmake-format -i $file
+done
+
 
 #Check git for changes
 cd /root/project
@@ -14,7 +21,7 @@ if [[ -z $cmakeformatchecklist ]]; then
     echo "cmake-format test passed!"
     exit 0;
 else
-    echo "You have cmake-format problems :";
+    echo "You have cmake-format problems in files :";
     echo "$cmakeformatchecklist"
     for f in $cmakeformatchecklist; do
         filename=`echo $f | awk '{print $2}'`

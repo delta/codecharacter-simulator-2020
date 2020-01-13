@@ -13,9 +13,9 @@ namespace state {
  * IUpdatable interface to define the Update method
  */
 class STATE_EXPORT IUpdatable {
-public:
-  virtual ~IUpdatable(){};
+  public:
+    virtual ~IUpdatable(){};
 
-  virtual void Update() = 0;
+    virtual void Update() = 0;
 };
 } // namespace state
