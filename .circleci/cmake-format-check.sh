@@ -4,8 +4,7 @@ set -o pipefail
 
 # Run cmake-format
 cd /root/project
-find . \( -type f  -name '*.cmake' ! -path "./build/*" ! -path "./ext/*" \) -exec cmake-format -i {} \;   || { echo "cmake-format run failed!"; exit 1; }
-find . \( -type f  -name 'CMakeLists.txt' ! -path "./build/*" ! -path "./ext/*" \) -exec cmake-format -i {} \;   || { echo "cmake-format run failed!"; exit 1; }
+find . \( -path './ext' -o -path './build' -o -path './simulator' \) -prune -o -type f \( -iname '*.cmake' -o -iname 'CMakeLists.txt' \) -exec cmake-format -i {} \; || { echo "cmake-format run failed;" exit 1; } 
 
 #Check git for changes
 cd /root/project
