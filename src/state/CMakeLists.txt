@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.15.0)
 project(state)
 
-set(SOURCE_FILES src/state.cpp src/map/map.cpp)
+set(SOURCE_FILES src/state.cpp src/map/map.cpp src/state/actor.cpp
+                 src/state/unit.cpp)
 
 set(INCLUDE_PATH include)
 
