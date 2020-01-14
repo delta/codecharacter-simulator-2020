@@ -94,10 +94,10 @@ void Graph::InitOpenList(Node start_node, const Node &destination_node) {
   OpenListEntry start_node_entry;
 
   // Cost from start node to itself is 0
-  start_node_entry.gValue = 0;
+  start_node_entry.g_value = 0;
 
   // Heuristic cost from start node to end node
-  start_node_entry.hValue =
+  start_node_entry.h_value =
       start_node.position.distance(destination_node.position);
 
   start_node_entry.parent = {Vec2D::null};
@@ -127,7 +127,7 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
   // Neighbour's cost from start is cost of current node + distance between
   // current node and neighbour
   double_t neighbour_g_value =
-      open_list_entries[current_node].gValue + distance;
+      open_list_entries[current_node].g_value + distance;
 
   // Neighbour's heuristic cost to destination is euclidian distance between
   // them
@@ -154,8 +154,8 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
       if (current_total_value > (neighbour_g_value + neighbour_h_value)) {
 
         neighbour_open_list_node->parent = current_node;
-        neighbour_open_list_node->gValue = neighbour_g_value;
-        neighbour_open_list_node->hValue = neighbour_h_value;
+        neighbour_open_list_node->g_value = neighbour_g_value;
+        neighbour_open_list_node->h_value = neighbour_h_value;
 
         open_list_heap.push(
             {neighbour_g_value + neighbour_h_value, neighbour_node});

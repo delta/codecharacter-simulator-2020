@@ -34,7 +34,7 @@ struct OpenListEntry {
    * Get sum of gValue and hValue
    * @return total value
    */
-  double_t getTotalValue() const { return gValue + hValue; }
+  double_t getTotalValue() const { return g_value + h_value; }
 
   /**
    * Equality comparator for two open list nodes

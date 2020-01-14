@@ -231,7 +231,7 @@ template <typename T> Vector<T>::operator bool() const {
 }
 
 template <typename T> std::size_t hash_value(const Vector<T> &val) {
-  return (val.x + val.y);
+  return std::hash<T>{}(val.x ^ std::hash<T>{}(val.y));
 }
 
 } // namespace physics
