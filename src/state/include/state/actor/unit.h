@@ -21,17 +21,11 @@ class STATE_EXPORT Unit : public Actor {
 protected:
   /**
    * @brief Unit speed in map-units per turn.
-   *
    */
-  // TODO: use constants.h to set speed at next line
-  const static size_t speed;
-  // TODO: decide whether destination should be Vec2D or DoubleVec2D. position
-  // and new_position is DoubleVec2D though.
-  // Suggested solution: Make all of them DoubleVec2D.
+  size_t speed = 5;
   /**
    * @brief Destination that the soldier needs to navigate to. Valid only if
    * is_destination_set is true
-   *
    */
   Vec2D destination;
   /**
@@ -42,9 +36,8 @@ protected:
   /**
    * @brief  Position Unit should move to if Unit is moving. Used in updating
    * Unit position.
-   *
    */
-  DoubleVec2D new_position;
+  Vec2D new_position;
   /**
    * @brief true -> if new_position is set
    *        false -> otherwise
@@ -62,7 +55,7 @@ public:
    * @param position
    */
   Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-       DoubleVec2D position);
+       Vec2D position);
 
   /**
    * @brief Get the Unit's speed.
@@ -95,23 +88,22 @@ public:
 
   /**
    * @brief Resets current destination and sets is_destination_set to false.
-   *
    */
   void clearDestination();
 
   /**
    * @brief Get the new_position
    *
-   * @return DoubleVec2D new_position of Unit
+   * @return Vec2D new_position of Unit
    */
-  DoubleVec2D getNewPosition() const;
+  Vec2D getNewPosition() const;
 
   /**
    * @brief Set the new_position of Unit
    *
    * @param position The position to set new_position to.
    */
-  void setNewPosition(DoubleVec2D position);
+  void setNewPosition(Vec2D position);
 
   /**
    * @brief Check if new_position is set
@@ -123,7 +115,6 @@ public:
 
   /**
    * @brief Resets new_position and sets is_new_position_set to false.
-   *
    */
   void clearNewPosition();
 
@@ -136,13 +127,11 @@ public:
 
   /**
    * @brief Update function of Unit
-   *
    */
   virtual void update() = 0;
 
   /**
    * @brief Late Update function of unit. After the end of every turn.
-   *
    */
   virtual void lateUpdate() = 0;
 };

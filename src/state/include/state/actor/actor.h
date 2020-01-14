@@ -1,7 +1,6 @@
 /**
  * @file actor.h
  * @brief Declares the Base Actor class that all actors derive from.
- *
  */
 
 #pragma once
@@ -14,38 +13,32 @@
 namespace state {
 /**
  * @brief Actor base class
- *
  */
 class STATE_EXPORT Actor : public IUpdatable {
 protected:
   /**
    * @brief Unique ID of actor
-   *
    */
   const ActorId id;
 
   /**
    * @brief Static counter which assigns unique incrementing ID to each actor
    * instance
-   *
    */
-  static ActorId actor_id_increment;
+  static ActorId next_actor_id;
 
   /**
    * @brief ID of player that Actor belongs to
-   *
    */
   const PlayerId player_id;
 
   /**
    * @brief Type of the Actor
-   *
    */
   ActorType actor_type;
 
   /**
    * @brief Current HitPoints of the Actor.
-   *
    */
   size_t hp;
 
@@ -54,57 +47,40 @@ protected:
    *
    */
   // TODO: set max_hp from constants here.
-  static const size_t max_hp;
+  static const size_t max_hp = 50;
 
   /**
    * @brief Amount of damage the soldier incurred in the current turn
    *        Applied to hp at the end of the turn
-   *
    */
   size_t damage_incurred;
 
   /**
-   * @brief The number turns the actor has been alive for. Increments with each
-   * update
-   *
-   */
-  size_t age;
-
-  /**
    * @brief Actor position
-   *
    */
-  DoubleVec2D position;
+  Vec2D position;
 
 public:
   Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-        DoubleVec2D position);
+        Vec2D position);
 
-  virtual ~Actor();
+  Actor(PlayerId player_id, ActorType actor_type, size_t hp, Vec2D position);
+
+  virtual ~Actor() {}
 
   /**
    * @brief Gets the new ActorId to assign to new actor.
    *
    * @return The ActorId to assign
-   *
    */
   static ActorId getNextActorId();
-
-  /**
-   * @brief Set the auto incrementing actor id.
-   *
-   * @param actor_id to set
-   *
-   * @throw std::out_of_range if actor_id is negative
-   */
-  static void setActorIdIncrement(ActorId actor_id = 0);
 
   /**
    * @brief Get the ActorId of Actor.
    *
    * @return ActorId
    */
-  ActorId getActorId();
+  ActorId getActorId() const;
 
   /**
    * @brief Get the PlayerId of Actor.
@@ -131,7 +107,6 @@ public:
    * @brief Set the Hp of Actor
    *
    * @throw std::out_of_range If hp is negative, or greater than max_hp.
-   *
    */
   void setHp(size_t hp);
 
@@ -153,8 +128,8 @@ public:
   size_t getLatestHp() const;
 
   /**
-   * @brief Increases damage_incurred of Actor upto its Hp. Used to reduce hp of
-   * Actor by specified amount.
+   * @brief Used to reduce hp of the Actor.
+   *        Increases damage_incurred of Actor upto its Hp.
    *
    * @param damage_amout
    */
@@ -165,13 +140,7 @@ public:
    *
    * @return Vec2D
    */
-  DoubleVec2D getPosition() const;
-
-  /**
-   * @brief Get the Age of the actor/
-   *
-   * @return size_t
-   */
-  size_t getAge() const;
+  Vec2D getPosition() const;
 };
+
 } // namespace state

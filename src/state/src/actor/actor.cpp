@@ -9,20 +9,21 @@
 
 namespace state {
 
+ActorId Actor::next_actor_id = 0;
+
 Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             DoubleVec2D position)
+             Vec2D position)
     : id(id), player_id(player_id), actor_type(actor_type), hp(hp),
       position(position){};
 
-ActorId Actor::getActorId() { return id; }
-void Actor::setActorIdIncrement(ActorId actor_id) {
-  if (actor_id < 0) {
-    throw std::out_of_range("`actor_id` cannot be negative");
-  }
-  actor_id_increment = actor_id;
-}
+Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp,
+             Vec2D position)
+    : id(++next_actor_id), player_id(player_id), actor_type(actor_type), hp(hp),
+      position(position){};
 
-ActorId Actor::getNextActorId() { return actor_id_increment++; }
+ActorId Actor::getActorId() const { return id; }
+
+ActorId Actor::getNextActorId() { return next_actor_id++; }
 
 PlayerId Actor::getPlayerId() const { return player_id; }
 
@@ -50,8 +51,6 @@ void Actor::damage(size_t damage_amout) {
   damage_incurred = std::min<size_t>(hp, damage_incurred + damage_amout);
 }
 
-DoubleVec2D Actor::getPosition() const { return position; }
-
-size_t Actor::getAge() const { return age; }
+Vec2D Actor::getPosition() const { return position; }
 
 } // namespace state
