@@ -38,7 +38,6 @@ void Graph::AddNode(Vec2D position) {
   // Insert the node only if it doesn't exist
   if (!CheckNodeExists(new_node)) {
     NodeEdgeList edge_list;
-    edge_list.node = new_node;
     adjacency_list.insert({new_node, edge_list});
 
     nodes.insert(new_node);

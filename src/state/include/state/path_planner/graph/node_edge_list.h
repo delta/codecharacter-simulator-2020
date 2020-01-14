@@ -13,11 +13,6 @@ namespace state {
 
 struct NodeEdgeList {
   /**
-   * Start Node
-   */
-  Node node;
-
-  /**
    * Map of all neighbouring node connected to and
    * cost of reaching the destination node
    */
