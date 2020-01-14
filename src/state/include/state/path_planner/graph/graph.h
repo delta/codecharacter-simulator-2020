@@ -57,11 +57,11 @@ private:
   void InitOpenList(Node start_node, const Node &destination_node);
 
   /**
-   * Get the position in the open list with smallest total cost
+   * Get the next position in the open list with smallest total cost
    * @param next_position
    * @return next node in open list
    */
-  bool GetSmallestNextPosition(Vec2D &next_position);
+  bool GetNearestNextPosition(Vec2D &next_position);
 
   /**
    * Update the open list details of one neighbour of a node

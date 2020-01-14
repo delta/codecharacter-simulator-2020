@@ -103,7 +103,7 @@ void Graph::InitOpenList(Node start_node, const Node &destination_node) {
   open_list_heap.push({start_node_entry.getTotalValue(), start_node});
 }
 
-bool Graph::GetSmallestNextPosition(Vec2D &next_position) {
+bool Graph::GetNearestNextPosition(Vec2D &next_position) {
   if (!open_list_heap.empty()) {
     // Top node in heap has the least total cost
     auto next_node = (open_list_heap.top()).second;
@@ -138,8 +138,7 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
     open_list_heap.push(
         {neighbour_g_value + neighbour_h_value, neighbour_node});
   } else {
-    auto neighbour_open_list_node =
-        &(open_list_entries.find(neighbour_node)->second);
+    auto neighbour_open_list_node = &(open_list_entries[neighbour_node]);
 
     // Neighbour node is not closed, if closed, ignore
     if (neighbour_open_list_node->is_open) {
@@ -178,7 +177,7 @@ std::vector<Vec2D> Graph::GetPath(Vec2D start_position, Vec2D end_position) {
   // Current position while traversing through graph
   auto current_position = Vec2D::null;
 
-  while (GetSmallestNextPosition(current_position)) {
+  while (GetNearestNextPosition(current_position)) {
     if (!open_list_entries[{current_position}].is_open)
       continue;
 

@@ -13,16 +13,16 @@ protected:
   GraphTest() {
     graph = make_unique<state::Graph>();
 
-    nodes.push_back({0, 2});
-    nodes.push_back({2, 4});
-    nodes.push_back({4, 4});
-    nodes.push_back({6, 4});
-    nodes.push_back({8, 2});
-    nodes.push_back({6, 0});
-    nodes.push_back({4, 0});
-    nodes.push_back({2, 0});
-    nodes.push_back({4, 2});
-    nodes.push_back({10, 10});
+    nodes.emplace_back(0, 2);
+    nodes.emplace_back(2, 4);
+    nodes.emplace_back(4, 4);
+    nodes.emplace_back(6, 4);
+    nodes.emplace_back(8, 2);
+    nodes.emplace_back(6, 0);
+    nodes.emplace_back(4, 0);
+    nodes.emplace_back(2, 0);
+    nodes.emplace_back(4, 2);
+    nodes.emplace_back(10, 10);
 
     for (auto node : nodes) {
       graph->AddNode(node);
