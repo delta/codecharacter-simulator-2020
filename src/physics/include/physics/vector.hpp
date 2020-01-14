@@ -219,18 +219,19 @@ template <typename T> Vector<T> Vector<T>::ceil() const {
 }
 
 template <typename T> Vector<double_t> Vector<T>::to_double() const {
-  return Vector<double_t>(static_cast<double_t>(x), static_cast<double_t>(y));
+  return {static_cast<double_t>(x), static_cast<double_t>(y)};
 }
 
 template <typename T> Vector<int64_t> Vector<T>::to_int() const {
-  return Vector<int64_t>(static_cast<int64_t>(x), static_cast<int64_t>(y));
+  return {static_cast<int64_t>(x), static_cast<int64_t>(y)};
 }
 
 template <typename T> Vector<T>::operator bool() const {
-  if (*this == Vector<T>::null) {
-    return false;
-  }
-  return true;
+  return !(*this == Vector<T>::null);
+}
+
+template <typename T> std::size_t hash_value(const Vector<T> &val) {
+  return (val.x + val.y);
 }
 
 } // namespace physics

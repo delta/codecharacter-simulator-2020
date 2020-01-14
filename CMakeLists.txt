@@ -18,6 +18,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(BOOST_ROOT
+    ""
+    CACHE PATH "Path to Boost libraries")
 
 add_subdirectory(ext/googletest)
 add_subdirectory(src/main)
