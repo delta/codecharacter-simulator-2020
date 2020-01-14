@@ -32,25 +32,38 @@ struct OpenListEntry {
 
   /**
    * Get sum of gValue and hValue
-   * @return total value
+   * @return double_t total value
    */
   double_t getTotalValue() const { return g_value + h_value; }
 
   /**
    * Equality comparator for two open list nodes
+   * Used by priority_queue
    * @param rhs
-   * @return
+   * @return bool true, if the value of both nodes are equals
    */
   bool operator==(OpenListEntry const &rhs) const {
-    return (g_value + h_value) == (rhs.g_value + rhs.h_value);
+    return getTotalValue() == rhs.getTotalValue();
   };
 
+  /**
+   * Less than comparator for two open list nodes
+   * Used by priority_queue
+   * @param rhs
+   * @return bool true, if the value of this node is less than rhs
+   */
   bool operator<(const OpenListEntry &rhs) const {
-    return (g_value + h_value) < (rhs.g_value + rhs.h_value);
+    return getTotalValue() < rhs.getTotalValue();
   };
 
+  /**
+   * Greater than comparator for two open list nodes
+   * Used by priority_queue
+   * @param rhs
+   * @return bool true, if the value of this node is greater than rhs
+   */
   bool operator>(const OpenListEntry &rhs) const {
-    return (g_value + h_value) > (rhs.g_value + rhs.h_value);
+    return getTotalValue() > rhs.getTotalValue();
   };
 };
 
