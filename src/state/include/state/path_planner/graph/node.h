@@ -1,6 +1,6 @@
 /**
- * @file waypoint.h
- * Declares a wrapper for a standard graph
+ * @file node.h
+ * Declares a single graph node
  */
 
 #pragma once
@@ -20,22 +20,20 @@ struct Node {
    * @param other
    * @return
    */
-  bool operator==(Node const &other) const {
-    return position == other.position;
+  bool operator==(Node const &rhs) const { return position == rhs.position; };
+
+  bool operator<(Node const &rhs) const {
+    if (position.x == rhs.position.x) {
+      return position.y < rhs.position.y;
+    }
+    return position.x < rhs.position.x;
   };
 
-  bool operator<(Node const &other) const {
-    if (position.x == other.position.x) {
-      return position.y < other.position.y;
+  bool operator>(Node const &rhs) const {
+    if (position.x == rhs.position.x) {
+      return position.y > rhs.position.y;
     }
-    return position.x < other.position.x;
-  };
-
-  bool operator>(Node const &other) const {
-    if (position.x == other.position.x) {
-      return position.y > other.position.y;
-    }
-    return position.x > other.position.x;
+    return position.x > rhs.position.x;
   };
 };
 

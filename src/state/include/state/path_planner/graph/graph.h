@@ -1,6 +1,6 @@
 /**
- * @file waypoint_edge.h
- * Declares a edge from one waypoint to another
+ * @file graph.h
+ * Declares a wrapper for a standard graph
  */
 
 #pragma once

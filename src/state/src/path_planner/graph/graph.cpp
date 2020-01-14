@@ -1,6 +1,6 @@
 /**
- * @file waypoint.cpp
- * Defines the Waypoint Graph class
+ * @file graph.cpp
+ * Defines the Graph class
  */
 
 #include "state/path_planner/graph/graph.h"

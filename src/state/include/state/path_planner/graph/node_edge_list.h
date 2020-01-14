@@ -1,6 +1,6 @@
 /**
  * @file node_edge_list.h
- * Declares a single node and the edges to other nodes
+ * Declares the edges from one node to other nodes
  */
 
 #pragma once

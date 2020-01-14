@@ -1,6 +1,6 @@
 /**
  * @file open_list_entry.h
- * Declares an entry in the open list
+ * Declares an entry in the open list for a-star
  */
 
 #pragma once
@@ -13,12 +13,12 @@ struct OpenListEntry {
   /**
    * Cost to reach from source to node in a-star
    */
-  double_t gValue;
+  double_t g_value;
 
   /**
    * Heuristic cost to reach from node to destination in a-star
    */
-  double_t hValue;
+  double_t h_value;
 
   /**
    * Previous node in the a-star path generated
@@ -42,15 +42,15 @@ struct OpenListEntry {
    * @return
    */
   bool operator==(OpenListEntry const &rhs) const {
-    return (gValue + hValue) == (rhs.gValue + rhs.hValue);
+    return (g_value + h_value) == (rhs.g_value + rhs.h_value);
   };
 
   bool operator<(const OpenListEntry &rhs) const {
-    return (gValue + hValue) < (rhs.gValue + rhs.hValue);
+    return (g_value + h_value) < (rhs.g_value + rhs.h_value);
   };
 
   bool operator>(const OpenListEntry &rhs) const {
-    return (gValue + hValue) > (rhs.gValue + rhs.hValue);
+    return (g_value + h_value) > (rhs.g_value + rhs.h_value);
   };
 };
 
