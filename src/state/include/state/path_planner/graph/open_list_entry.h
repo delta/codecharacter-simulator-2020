@@ -13,12 +13,12 @@ struct OpenListEntry {
   /**
    * Cost to reach from source to node in a-star
    */
-  double_t g_value;
+  double_t g_value{0};
 
   /**
    * Heuristic cost to reach from node to destination in a-star
    */
-  double_t h_value;
+  double_t h_value{0};
 
   /**
    * Previous node in the a-star path generated
@@ -28,7 +28,7 @@ struct OpenListEntry {
   /**
    * Track whether the node is open
    */
-  bool is_open;
+  bool is_open{true};
 
   /**
    * Get sum of gValue and hValue

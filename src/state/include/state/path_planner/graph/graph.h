@@ -17,7 +17,7 @@
 namespace state {
 typedef std::priority_queue<std::pair<double_t, Node>,
                             std::vector<std::pair<double_t, Node>>,
-                            std::greater<std::pair<double_t, Node>>>
+                            std::greater<>>
     Heap;
 
 class Graph {

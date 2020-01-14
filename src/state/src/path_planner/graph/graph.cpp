@@ -4,10 +4,11 @@
  */
 
 #include "state/path_planner/graph/graph.h"
+#include <algorithm>
 
 namespace state {
 
-Graph::Graph() {}
+Graph::Graph() = default;
 
 size_t Graph::GetNumNodes() const { return nodes.size(); }
 
@@ -24,12 +25,8 @@ bool Graph::CheckEdgeExists(const Vec2D &position_a, const Vec2D &position_b) {
   Node node_b = {position_b};
 
   if (CheckPositionExists(position_a) && CheckPositionExists(position_b)) {
-    if (adjacency_list[node_a].neighbours.find(node_b) !=
-        adjacency_list[node_a].neighbours.end()) {
-      return true;
-    }
-
-    return false;
+    return adjacency_list[node_a].neighbours.find(node_b) !=
+           adjacency_list[node_a].neighbours.end();
   }
 
   return false;
@@ -129,7 +126,7 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
   double_t neighbour_g_value =
       open_list_entries[current_node].g_value + distance;
 
-  // Neighbour's heuristic cost to destination is euclidian distance between
+  // Neighbour's heuristic cost to destination is euclidean distance between
   // them
   double_t neighbour_h_value =
       neighbour_node.position.distance(destination_node.position);
@@ -201,7 +198,7 @@ std::vector<Vec2D> Graph::GetPath(Vec2D start_position, Vec2D end_position) {
         result_position = open_list_entries[{result_position}].parent.position;
       }
 
-      reverse(result.begin(), result.end());
+      std::reverse(result.begin(), result.end());
       return result;
     }
 
