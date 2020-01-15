@@ -7,7 +7,7 @@ using namespace std;
 
 class GraphTest : public testing::Test {
 protected:
-  std::vector<Vec2D> nodes;
+  std::vector<DoubleVec2D> nodes;
   unique_ptr<state::Graph> graph;
 
   GraphTest() {
@@ -78,30 +78,30 @@ TEST_F(GraphTest, RemoveEdgeTest) {
 }
 
 TEST_F(GraphTest, GetBasicPathTest) {
-  std::vector<Vec2D> path = graph->GetPath(nodes[0], nodes[4]);
+  std::vector<DoubleVec2D> path = graph->GetPath(nodes[0], nodes[4]);
   EXPECT_EQ(path.size(), 4);
   EXPECT_EQ(path[0], nodes[7]);
   EXPECT_EQ(path[1], nodes[6]);
   EXPECT_EQ(path[2], nodes[5]);
   EXPECT_EQ(path[3], nodes[4]);
 
-  std::vector<Vec2D> path2 = graph->GetPath(nodes[3], nodes[5]);
+  std::vector<DoubleVec2D> path2 = graph->GetPath(nodes[3], nodes[5]);
   EXPECT_EQ(path2.size(), 2);
   EXPECT_EQ(path2[0], nodes[2]);
   EXPECT_EQ(path2[1], nodes[5]);
 }
 
 TEST_F(GraphTest, GetInvalidPathTest) {
-  std::vector<Vec2D> path = graph->GetPath(nodes[0], nodes[9]);
+  std::vector<DoubleVec2D> path = graph->GetPath(nodes[0], nodes[9]);
   EXPECT_EQ(path.size(), 0);
 }
 
 TEST_F(GraphTest, GetInvalidPositionPathTest) {
-  std::vector<Vec2D> path = graph->GetPath(nodes[0], {10, 1});
+  std::vector<DoubleVec2D> path = graph->GetPath(nodes[0], {10, 1});
   EXPECT_EQ(path.size(), 0);
 }
 
 TEST_F(GraphTest, GetSelfPathTest) {
-  std::vector<Vec2D> path = graph->GetPath(nodes[0], nodes[0]);
+  std::vector<DoubleVec2D> path = graph->GetPath(nodes[0], nodes[0]);
   EXPECT_EQ(path.size(), 0);
 }
