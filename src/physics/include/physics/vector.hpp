@@ -31,25 +31,25 @@ public:
   bool operator==(const Vector<T> &rhs) const;
 
   /**
-   * @brief 	Equal to operator for vector comparison
-   * @param 	rhs The vector to be compared against
-   * @return 	true if vectors are equal, else false
-   */
-  bool operator<(const Vector<T> &rhs) const;
-
-  /**
-   * @brief 	Equal to operator for vector comparison
-   * @param 	rhs The vector to be compared against
-   * @return 	true if vectors are equal, else false
-   */
-  bool operator>(const Vector<T> &rhs) const;
-
-  /**
    * @brief 	Not equal to operator for vector comparison
    * @param 	rhs The vector to be compared against
    * @return 	true if vectors are not equal, else false
    */
   bool operator!=(const Vector<T> &rhs) const;
+
+  /**
+   * @brief 	Less than operator for vector comparison
+   * @param 	rhs The vector to be compared against
+   * @return 	true if vector is less than rhs, else false
+   */
+  bool operator<(const Vector<T> &rhs) const;
+
+  /**
+   * @brief 	Greater than operator for vector comparison
+   * @param 	rhs The vector to be compared against
+   * @return 	true if vectors is greater than rhs, else false
+   */
+  bool operator>(const Vector<T> &rhs) const;
 
   /**
    * @brief 	Vector addition operator
