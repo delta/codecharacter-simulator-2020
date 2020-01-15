@@ -47,9 +47,9 @@ protected:
 
 TEST_F(GraphTest, GetSizeTest) { EXPECT_EQ(graph->GetNumNodes(), 10); }
 
-TEST_F(GraphTest, CheckPositionExistsTest) {
-  EXPECT_EQ(graph->CheckPositionExists(nodes[0]), true);
-  EXPECT_EQ(graph->CheckPositionExists({-10, 0}), false);
+TEST_F(GraphTest, CheckNodeExistsTest) {
+  EXPECT_EQ(graph->CheckNodeExists(nodes[0]), true);
+  EXPECT_EQ(graph->CheckNodeExists({-10, 0}), false);
 }
 
 TEST_F(GraphTest, CheckEdgeExistsTest) {

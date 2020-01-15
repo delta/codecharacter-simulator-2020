@@ -23,7 +23,7 @@ struct OpenListEntry {
   /**
    * Previous node in the a-star path generated
    */
-  Node parent;
+  Vec2D parent;
 
   /**
    * Track whether the node is open

@@ -31,6 +31,20 @@ public:
   bool operator==(const Vector<T> &rhs) const;
 
   /**
+   * @brief 	Equal to operator for vector comparison
+   * @param 	rhs The vector to be compared against
+   * @return 	true if vectors are equal, else false
+   */
+  bool operator<(const Vector<T> &rhs) const;
+
+  /**
+   * @brief 	Equal to operator for vector comparison
+   * @param 	rhs The vector to be compared against
+   * @return 	true if vectors are equal, else false
+   */
+  bool operator>(const Vector<T> &rhs) const;
+
+  /**
    * @brief 	Not equal to operator for vector comparison
    * @param 	rhs The vector to be compared against
    * @return 	true if vectors are not equal, else false
@@ -153,6 +167,18 @@ template <typename T> bool Vector<T>::operator==(const Vector<T> &rhs) const {
 
 template <typename T> bool Vector<T>::operator!=(const Vector<T> &rhs) const {
   return (x != rhs.x || y != rhs.y);
+}
+
+template <typename T> bool Vector<T>::operator<(const Vector<T> &rhs) const {
+  if (x == rhs.x)
+    return y < rhs.y;
+  return x < rhs.x;
+}
+
+template <typename T> bool Vector<T>::operator>(const Vector<T> &rhs) const {
+  if (x == rhs.x)
+    return y > rhs.y;
+  return x > rhs.x;
 }
 
 template <typename T>

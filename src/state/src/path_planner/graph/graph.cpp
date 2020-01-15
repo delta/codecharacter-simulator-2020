@@ -10,50 +10,36 @@ namespace state {
 
 size_t Graph::GetNumNodes() const { return nodes.size(); }
 
-bool Graph::CheckNodeExists(const Node &node) const {
+bool Graph::CheckNodeExists(const Vec2D &node) const {
   return (nodes.find(node) != nodes.end());
 }
 
-bool Graph::CheckPositionExists(const Vec2D &position) const {
-  return CheckNodeExists({position});
-}
-
-bool Graph::CheckEdgeExists(const Vec2D &position_a, const Vec2D &position_b) {
-  Node node_a = {position_a};
-  Node node_b = {position_b};
-
-  if (CheckPositionExists(position_a) && CheckPositionExists(position_b)) {
+bool Graph::CheckEdgeExists(const Vec2D &node_a, const Vec2D &node_b) {
+  if (CheckNodeExists(node_a) && CheckNodeExists(node_b)) {
     return adjacency_list[node_a].find(node_b) != adjacency_list[node_a].end();
   }
 
   return false;
 }
 
-void Graph::AddNode(Vec2D position) {
-  Node new_node = {position};
-
+void Graph::AddNode(Vec2D node) {
   // Insert the node only if it doesn't exist
-  if (!CheckNodeExists(new_node)) {
+  if (!CheckNodeExists(node)) {
     EdgeList edge_list;
-    adjacency_list.insert({new_node, edge_list});
+    adjacency_list.insert({node, edge_list});
 
-    nodes.insert(new_node);
+    nodes.insert(node);
   }
 }
 
-void Graph::RemoveNode(Vec2D position) {
-  Node node = {position};
-
+void Graph::RemoveNode(Vec2D node) {
   if (CheckNodeExists(node)) {
     nodes.erase(node);
     adjacency_list.erase(node);
   }
 }
 
-void Graph::AddEdge(Vec2D start_position, Vec2D end_position, double_t cost) {
-  Node start_node = {start_position};
-  Node end_node = {end_position};
-
+void Graph::AddEdge(Vec2D start_node, Vec2D end_node, double_t cost) {
   if (cost < 0)
     return;
 
@@ -66,10 +52,7 @@ void Graph::AddEdge(Vec2D start_position, Vec2D end_position, double_t cost) {
   }
 }
 
-void Graph::RemoveEdge(Vec2D start_position, Vec2D end_position) {
-  Node start_node = {start_position};
-  Node end_node = {end_position};
-
+void Graph::RemoveEdge(Vec2D start_node, Vec2D end_node) {
   if (CheckNodeExists(start_node)) {
     adjacency_list[start_node].erase(end_node);
   }
@@ -79,7 +62,7 @@ void Graph::RemoveEdge(Vec2D start_position, Vec2D end_position) {
   }
 }
 
-void Graph::InitOpenList(Node start_node, const Node &destination_node) {
+void Graph::InitOpenList(Vec2D start_node, const Vec2D &destination_node) {
   open_list_entries.clear();
   open_list_heap = Heap();
 
@@ -90,8 +73,7 @@ void Graph::InitOpenList(Node start_node, const Node &destination_node) {
   start_node_entry.g_value = 0;
 
   // Heuristic cost from start node to end node
-  start_node_entry.h_value =
-      start_node.position.distance(destination_node.position);
+  start_node_entry.h_value = start_node.distance(destination_node);
 
   start_node_entry.parent = {Vec2D::null};
   start_node_entry.is_open = true;
@@ -104,7 +86,7 @@ bool Graph::GetNearestNextPosition(Vec2D &next_position) {
   if (!open_list_heap.empty()) {
     // Top node in heap has the least total cost
     auto next_node = (open_list_heap.top()).second;
-    next_position = next_node.position;
+    next_position = next_node;
 
     open_list_heap.pop();
 
@@ -115,8 +97,8 @@ bool Graph::GetNearestNextPosition(Vec2D &next_position) {
   return false;
 }
 
-void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
-                            double_t distance, const Node &destination_node) {
+void Graph::UpdateNeighbour(Vec2D current_node, Vec2D neighbour_node,
+                            double_t distance, const Vec2D &destination_node) {
   // Neighbour's cost from start is cost of current node + distance between
   // current node and neighbour
   double_t neighbour_g_value =
@@ -124,8 +106,7 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
 
   // Neighbour's heuristic cost to destination is euclidean distance between
   // them
-  double_t neighbour_h_value =
-      neighbour_node.position.distance(destination_node.position);
+  double_t neighbour_h_value = neighbour_node.distance(destination_node);
 
   // Neighbour node has not been visited yet
   if (open_list_entries.find(neighbour_node) == open_list_entries.end()) {
@@ -156,41 +137,36 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
   }
 }
 
-std::vector<Vec2D> Graph::GetPath(Vec2D start_position, Vec2D end_position) {
-  Node start_node = {start_position};
-  Node end_node = {end_position};
-
-  if (!CheckPositionExists(start_position) ||
-      !CheckPositionExists(end_position)) {
+std::vector<Vec2D> Graph::GetPath(Vec2D start_node, Vec2D end_node) {
+  if (!CheckNodeExists(start_node) || !CheckNodeExists(end_node)) {
     return std::vector<Vec2D>{};
   }
 
-  if (start_position == end_position) {
+  if (start_node == end_node) {
     return std::vector<Vec2D>{};
   }
 
   InitOpenList(start_node, end_node);
 
   // Current position while traversing through graph
-  auto current_position = Vec2D::null;
+  auto current_node = Vec2D::null;
 
-  while (GetNearestNextPosition(current_position)) {
-    if (!open_list_entries[{current_position}].is_open)
+  while (GetNearestNextPosition(current_node)) {
+    if (!open_list_entries[current_node].is_open)
       continue;
 
-    open_list_entries[{current_position}].is_open = false;
+    open_list_entries[current_node].is_open = false;
 
     // Return path
-    if (current_position == end_position) {
+    if (current_node == end_node) {
       auto result = std::vector<Vec2D>{};
-      auto result_position = current_position;
+      auto result_node = current_node;
 
       // Traceback through the nodes' parents to get the complete path
-      while (result_position &&
-             open_list_entries[{result_position}].parent.position !=
-                 Vec2D::null) {
-        result.push_back(result_position);
-        result_position = open_list_entries[{result_position}].parent.position;
+      while (result_node &&
+             open_list_entries[result_node].parent != Vec2D::null) {
+        result.push_back(result_node);
+        result_node = open_list_entries[result_node].parent;
       }
 
       std::reverse(result.begin(), result.end());
@@ -198,8 +174,8 @@ std::vector<Vec2D> Graph::GetPath(Vec2D start_position, Vec2D end_position) {
     }
 
     // Add neighbours to openListHeap and updateOpenListEntries
-    for (auto neighbour : adjacency_list[{current_position}]) {
-      UpdateNeighbour({current_position}, neighbour.first, neighbour.second,
+    for (auto neighbour : adjacency_list[current_node]) {
+      UpdateNeighbour(current_node, neighbour.first, neighbour.second,
                       end_node);
     }
   }

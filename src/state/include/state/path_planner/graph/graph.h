@@ -6,7 +6,6 @@
 #pragma once
 
 #include "physics/vector.hpp"
-#include "state/path_planner/graph/node.h"
 #include "state/path_planner/graph/open_list_entry.h"
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
@@ -14,29 +13,29 @@
 #include <queue>
 
 namespace state {
-typedef std::priority_queue<std::pair<double_t, Node>,
-                            std::vector<std::pair<double_t, Node>>,
+typedef std::priority_queue<std::pair<double_t, Vec2D>,
+                            std::vector<std::pair<double_t, Vec2D>>,
                             std::greater<>>
     Heap;
 
-typedef boost::unordered::unordered_map<Node, double_t> EdgeList;
+typedef boost::unordered::unordered_map<Vec2D, double_t> EdgeList;
 
 class Graph {
 private:
   /**
    * List of all nodes in map
    */
-  boost::unordered_set<Node> nodes;
+  boost::unordered_set<Vec2D> nodes;
 
   /**
    * Adjacency List for the nodes in graph
    */
-  boost::unordered::unordered_map<Node, EdgeList> adjacency_list;
+  boost::unordered::unordered_map<Vec2D, EdgeList> adjacency_list;
 
   /**
    * Map of Node and corresponding open list entry
    */
-  boost::unordered::unordered_map<Node, OpenListEntry> open_list_entries;
+  boost::unordered::unordered_map<Vec2D, OpenListEntry> open_list_entries;
 
   /**
    * Heap containing nodes and the cost for a-star
@@ -44,18 +43,12 @@ private:
   Heap open_list_heap;
 
   /**
-   * Check node exists
-   * @param node Node to be checked
-   */
-  bool CheckNodeExists(const Node &node) const;
-
-  /**
    * Initialize the openListEntries and openListHeap for a
    * given start node to destination node
    * @param start_node
    * @param destination_node
    */
-  void InitOpenList(Node start_node, const Node &destination_node);
+  void InitOpenList(Vec2D start_node, const Vec2D &destination_node);
 
   /**
    * Get the next position in the open list with smallest total cost
@@ -71,8 +64,8 @@ private:
    * @param distance
    * @param destination_node Final destination
    */
-  void UpdateNeighbour(Node current_node, Node neighbour_node,
-                       double_t distance, const Node &destination_node);
+  void UpdateNeighbour(Vec2D current_node, Vec2D neighbour_node,
+                       double_t distance, const Vec2D &destination_node);
 
 public:
   /**
@@ -81,11 +74,10 @@ public:
   size_t GetNumNodes() const;
 
   /**
-   * Check position exists
-   * @param position Position to be checked
-   * @return bool true, if given position is one of the nodes
+   * Check node exists
+   * @param node Node to be checked
    */
-  bool CheckPositionExists(const Vec2D &position) const;
+  bool CheckNodeExists(const Vec2D &node) const;
 
   /**
    * Check if edge exists between two positions
