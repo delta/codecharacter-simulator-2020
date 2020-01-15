@@ -46,8 +46,7 @@ protected:
    * @brief Maximum possible HitPoints of Actor.
    *
    */
-  // TODO: set max_hp from constants here.
-  static const size_t max_hp = 50;
+  size_t max_hp;
 
   /**
    * @brief Amount of damage the soldier incurred in the current turn
@@ -62,9 +61,10 @@ protected:
 
 public:
   Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-        Vec2D position);
+        size_t max_hp, Vec2D position);
 
-  Actor(PlayerId player_id, ActorType actor_type, size_t hp, Vec2D position);
+  Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
+        Vec2D position);
 
   virtual ~Actor() {}
 
@@ -115,7 +115,7 @@ public:
    *
    * @return size_t
    */
-  static size_t getMaxHp();
+  size_t getMaxHp() const;
 
   /**
    * @brief Gets the latest Hp of Actor after every turn.

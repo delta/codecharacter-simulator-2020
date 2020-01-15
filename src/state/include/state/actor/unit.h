@@ -22,7 +22,7 @@ protected:
   /**
    * @brief Unit speed in map-units per turn.
    */
-  size_t speed = 5;
+  size_t speed;
   /**
    * @brief Destination that the soldier needs to navigate to. Valid only if
    * is_destination_set is true
@@ -55,7 +55,7 @@ public:
    * @param position
    */
   Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-       Vec2D position);
+       size_t max_hp, size_t speed, Vec2D position);
 
   /**
    * @brief Get the Unit's speed.

@@ -10,10 +10,10 @@
 namespace state {
 
 Unit::Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-           Vec2D position)
-    : Actor(id, player_id, actor_type, hp, position), destination(Vec2D::null),
-      is_destination_set(false), new_position(Vec2D::null),
-      is_new_position_set(false) {}
+           size_t max_hp, size_t speed, Vec2D position)
+    : Actor(id, player_id, actor_type, hp, max_hp, position), speed(speed),
+      destination(Vec2D::null), is_destination_set(false),
+      new_position(Vec2D::null), is_new_position_set(false) {}
 
 size_t Unit::getSpeed() const { return speed; }
 

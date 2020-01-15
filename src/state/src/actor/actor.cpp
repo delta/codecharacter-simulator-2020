@@ -12,11 +12,11 @@ namespace state {
 ActorId Actor::next_actor_id = 0;
 
 Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             Vec2D position)
+             size_t max_hp, Vec2D position)
     : id(id), player_id(player_id), actor_type(actor_type), hp(hp),
-      position(position){};
+      max_hp(max_hp), position(position){};
 
-Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp,
+Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
              Vec2D position)
     : id(++next_actor_id), player_id(player_id), actor_type(actor_type), hp(hp),
       position(position){};
@@ -41,7 +41,7 @@ void Actor::setHp(size_t hp) {
   this->hp = hp;
 }
 
-size_t Actor::getMaxHp() { return max_hp; }
+size_t Actor::getMaxHp() const { return max_hp; }
 
 size_t Actor::getLatestHp() const {
   return std::min<size_t>(0, hp - damage_incurred);
