@@ -7,7 +7,6 @@
 
 #include "physics/vector.hpp"
 #include "state/path_planner/graph/node.h"
-#include "state/path_planner/graph/node_edge_list.h"
 #include "state/path_planner/graph/open_list_entry.h"
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
@@ -20,6 +19,8 @@ typedef std::priority_queue<std::pair<double_t, Node>,
                             std::greater<>>
     Heap;
 
+typedef boost::unordered::unordered_map<Node, double_t> EdgeList;
+
 class Graph {
 private:
   /**
@@ -30,7 +31,7 @@ private:
   /**
    * Adjacency List for the nodes in graph
    */
-  boost::unordered::unordered_map<Node, NodeEdgeList> adjacency_list;
+  boost::unordered::unordered_map<Node, EdgeList> adjacency_list;
 
   /**
    * Map of Node and corresponding open list entry
@@ -74,8 +75,6 @@ private:
                        double_t distance, const Node &destination_node);
 
 public:
-  Graph();
-
   /**
    * Get number of nodes in the graph
    */

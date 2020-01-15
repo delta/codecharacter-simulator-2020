@@ -8,8 +8,6 @@
 
 namespace state {
 
-Graph::Graph() = default;
-
 size_t Graph::GetNumNodes() const { return nodes.size(); }
 
 bool Graph::CheckNodeExists(const Node &node) const {
@@ -25,8 +23,7 @@ bool Graph::CheckEdgeExists(const Vec2D &position_a, const Vec2D &position_b) {
   Node node_b = {position_b};
 
   if (CheckPositionExists(position_a) && CheckPositionExists(position_b)) {
-    return adjacency_list[node_a].neighbours.find(node_b) !=
-           adjacency_list[node_a].neighbours.end();
+    return adjacency_list[node_a].find(node_b) != adjacency_list[node_a].end();
   }
 
   return false;
@@ -37,7 +34,7 @@ void Graph::AddNode(Vec2D position) {
 
   // Insert the node only if it doesn't exist
   if (!CheckNodeExists(new_node)) {
-    NodeEdgeList edge_list;
+    EdgeList edge_list;
     adjacency_list.insert({new_node, edge_list});
 
     nodes.insert(new_node);
@@ -61,11 +58,11 @@ void Graph::AddEdge(Vec2D start_position, Vec2D end_position, double_t cost) {
     return;
 
   if (CheckNodeExists(start_node)) {
-    adjacency_list[start_node].neighbours.insert({end_node, cost});
+    adjacency_list[start_node].insert({end_node, cost});
   }
 
   if (CheckNodeExists(end_node)) {
-    adjacency_list[end_node].neighbours.insert({start_node, cost});
+    adjacency_list[end_node].insert({start_node, cost});
   }
 }
 
@@ -74,11 +71,11 @@ void Graph::RemoveEdge(Vec2D start_position, Vec2D end_position) {
   Node end_node = {end_position};
 
   if (CheckNodeExists(start_node)) {
-    adjacency_list[start_node].neighbours.erase(end_node);
+    adjacency_list[start_node].erase(end_node);
   }
 
   if (CheckNodeExists(end_node)) {
-    adjacency_list[end_node].neighbours.erase(start_node);
+    adjacency_list[end_node].erase(start_node);
   }
 }
 
@@ -138,19 +135,19 @@ void Graph::UpdateNeighbour(Node current_node, Node neighbour_node,
     open_list_heap.push(
         {neighbour_g_value + neighbour_h_value, neighbour_node});
   } else {
-    auto neighbour_open_list_node = &(open_list_entries[neighbour_node]);
+    auto neighbour_open_list_entry = &(open_list_entries[neighbour_node]);
 
     // Neighbour node is not closed, if closed, ignore
-    if (neighbour_open_list_node->is_open) {
-      auto current_total_value = neighbour_open_list_node->getTotalValue();
+    if (neighbour_open_list_entry->is_open) {
+      auto current_total_value = neighbour_open_list_entry->getTotalValue();
 
       // Update only if new total cost is less than previous total
       // cost
       if (current_total_value > (neighbour_g_value + neighbour_h_value)) {
 
-        neighbour_open_list_node->parent = current_node;
-        neighbour_open_list_node->g_value = neighbour_g_value;
-        neighbour_open_list_node->h_value = neighbour_h_value;
+        neighbour_open_list_entry->parent = current_node;
+        neighbour_open_list_entry->g_value = neighbour_g_value;
+        neighbour_open_list_entry->h_value = neighbour_h_value;
 
         open_list_heap.push(
             {neighbour_g_value + neighbour_h_value, neighbour_node});
@@ -201,7 +198,7 @@ std::vector<Vec2D> Graph::GetPath(Vec2D start_position, Vec2D end_position) {
     }
 
     // Add neighbours to openListHeap and updateOpenListEntries
-    for (auto neighbour : adjacency_list[{current_position}].neighbours) {
+    for (auto neighbour : adjacency_list[{current_position}]) {
       UpdateNeighbour({current_position}, neighbour.first, neighbour.second,
                       end_node);
     }
