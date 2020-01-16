@@ -18,8 +18,8 @@ Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
 
 Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
              Vec2D position)
-    : id(++next_actor_id), player_id(player_id), actor_type(actor_type), hp(hp),
-      position(position){};
+    : id(Actor::getNextActorId()), player_id(player_id), actor_type(actor_type),
+      hp(hp), position(position){};
 
 ActorId Actor::getActorId() const { return id; }
 
