@@ -68,6 +68,8 @@ private:
   void updateNeighbour(DoubleVec2D current_node, DoubleVec2D neighbour_node,
                        double_t distance, const DoubleVec2D &destination_node);
 
+  std::vector<DoubleVec2D> generateOpenListPath(DoubleVec2D node);
+
 public:
   /**
    * Get number of nodes in the graph

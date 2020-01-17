@@ -146,6 +146,21 @@ void Graph::updateNeighbour(DoubleVec2D current_node,
   }
 }
 
+std::vector<DoubleVec2D> Graph::generateOpenListPath(DoubleVec2D node) {
+  auto result = std::vector<DoubleVec2D>{};
+  auto result_node = node;
+
+  // Traceback through the nodes' parents to get the complete path
+  while (result_node &&
+         open_list_entries[result_node].parent != DoubleVec2D::null) {
+    result.push_back(result_node);
+    result_node = open_list_entries[result_node].parent;
+  }
+
+  std::reverse(result.begin(), result.end());
+  return result;
+}
+
 std::vector<DoubleVec2D> Graph::getPath(DoubleVec2D start_node,
                                         DoubleVec2D end_node) {
   if (!checkNodeExists(start_node) || !checkNodeExists(end_node)) {
@@ -169,18 +184,7 @@ std::vector<DoubleVec2D> Graph::getPath(DoubleVec2D start_node,
 
     // Return path
     if (current_node == end_node) {
-      auto result = std::vector<DoubleVec2D>{};
-      auto result_node = current_node;
-
-      // Traceback through the nodes' parents to get the complete path
-      while (result_node &&
-             open_list_entries[result_node].parent != DoubleVec2D::null) {
-        result.push_back(result_node);
-        result_node = open_list_entries[result_node].parent;
-      }
-
-      std::reverse(result.begin(), result.end());
-      return result;
+      return generateOpenListPath(current_node);
     }
 
     // Add neighbours to openListHeap and updateOpenListEntries
