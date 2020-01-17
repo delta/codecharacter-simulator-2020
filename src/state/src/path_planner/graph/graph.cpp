@@ -127,21 +127,23 @@ void Graph::updateNeighbour(DoubleVec2D current_node,
   } else {
     auto neighbour_open_list_entry = &(open_list_entries[neighbour_node]);
 
-    // Neighbour node is not closed, if closed, ignore
-    if (neighbour_open_list_entry->is_open) {
-      auto current_total_cost = neighbour_open_list_entry->getTotalCost();
+    if (!neighbour_open_list_entry->is_open) {
+      // Neighbour node is closed, so ignore
+      return;
+    }
 
-      // Update only if new total cost is less than previous total
-      // cost
-      if (current_total_cost > (neighbour_g_value + neighbour_h_value)) {
+    auto current_total_cost = neighbour_open_list_entry->getTotalCost();
 
-        neighbour_open_list_entry->parent = current_node;
-        neighbour_open_list_entry->g_value = neighbour_g_value;
-        neighbour_open_list_entry->h_value = neighbour_h_value;
+    // Update only if new total cost is less than previous total
+    // cost
+    if (current_total_cost > (neighbour_g_value + neighbour_h_value)) {
 
-        open_list_heap.push(
-            {neighbour_g_value + neighbour_h_value, neighbour_node});
-      }
+      neighbour_open_list_entry->parent = current_node;
+      neighbour_open_list_entry->g_value = neighbour_g_value;
+      neighbour_open_list_entry->h_value = neighbour_h_value;
+
+      open_list_heap.push(
+          {neighbour_g_value + neighbour_h_value, neighbour_node});
     }
   }
 }
