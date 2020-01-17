@@ -1,7 +1,6 @@
 /**
  * @file actor.cpp
  * @brief Defintion of Actor class.
- *
  */
 
 #include "state/actor/actor.h"
@@ -31,21 +30,24 @@ ActorType Actor::getActorType() const { return actor_type; }
 
 size_t Actor::getHp() const { return hp; }
 
-void Actor::setHp(size_t new_hp) {
-  if (new_hp > max_hp) {
-    throw std::out_of_range("`hp` cannot be greater than max_hp");
-  }
-  hp = new_hp;
+void Actor::setHp(size_t hp) {
+    if (hp < 0) {
+        throw std::out_of_range("`hp` must be a positive value");
+    }
+    if (hp > this->max_hp) {
+        throw std::out_of_range("`hp` cannot be greater than max_hp");
+    }
+    this->hp = hp;
 }
 
 size_t Actor::getMaxHp() const { return max_hp; }
 
 size_t Actor::getLatestHp() const {
-  return std::min<size_t>(0, hp - damage_incurred);
+    return std::min<size_t>(0, hp - damage_incurred);
 }
 
-void Actor::damage(size_t damage_amount) {
-  damage_incurred = std::min<size_t>(hp, damage_incurred + damage_amount);
+void Actor::damage(size_t damage_amout) {
+    damage_incurred = std::min<size_t>(hp, damage_incurred + damage_amout);
 }
 
 Vec2D Actor::getPosition() const { return position; }

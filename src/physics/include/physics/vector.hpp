@@ -38,6 +38,20 @@ template <typename T> class Vector {
     bool operator!=(const Vector<T> &rhs) const;
 
     /**
+     * @brief 	Less than operator for vector comparison
+     * @param 	rhs The vector to be compared against
+     * @return 	true if vector is less than rhs, else false
+     */
+    bool operator<(const Vector<T> &rhs) const;
+
+    /**
+     * @brief 	Greater than operator for vector comparison
+     * @param 	rhs The vector to be compared against
+     * @return 	true if vectors is greater than rhs, else false
+     */
+    bool operator>(const Vector<T> &rhs) const;
+
+    /**
      * @brief 	Vector addition operator
      * @param 	rhs The vector to be added with
      * @return 	Sum of two vectors
@@ -157,15 +171,15 @@ template <typename T> bool Vector<T>::operator!=(const Vector<T> &rhs) const {
 }
 
 template <typename T> bool Vector<T>::operator<(const Vector<T> &rhs) const {
-  if (x == rhs.x)
-    return y < rhs.y;
-  return x < rhs.x;
+    if (x == rhs.x)
+        return y < rhs.y;
+    return x < rhs.x;
 }
 
 template <typename T> bool Vector<T>::operator>(const Vector<T> &rhs) const {
-  if (x == rhs.x)
-    return y > rhs.y;
-  return x > rhs.x;
+    if (x == rhs.x)
+        return y > rhs.y;
+    return x > rhs.x;
 }
 
 template <typename T>
@@ -232,34 +246,19 @@ template <typename T> Vector<T> Vector<T>::ceil() const {
 }
 
 template <typename T> Vector<double_t> Vector<T>::to_double() const {
-<<<<<<< HEAD
-  return {static_cast<double_t>(x), static_cast<double_t>(y)};
+    return {static_cast<double_t>(x), static_cast<double_t>(y)};
 }
 
 template <typename T> Vector<int64_t> Vector<T>::to_int() const {
-  return {static_cast<int64_t>(x), static_cast<int64_t>(y)};
+    return {static_cast<int64_t>(x), static_cast<int64_t>(y)};
 }
 
 template <typename T> Vector<T>::operator bool() const {
-  return !(*this == Vector<T>::null);
+    return !(*this == Vector<T>::null);
 }
 
 template <typename T> std::size_t hash_value(const Vector<T> &val) {
-  return std::hash<T>{}(val.x * std::hash<T>{}(val.y));
-=======
-    return Vector<double_t>(static_cast<double_t>(x), static_cast<double_t>(y));
-}
-
-template <typename T> Vector<int64_t> Vector<T>::to_int() const {
-    return Vector<int64_t>(static_cast<int64_t>(x), static_cast<int64_t>(y));
-}
-
-template <typename T> Vector<T>::operator bool() const {
-    if (*this == Vector<T>::null) {
-        return false;
-    }
-    return true;
->>>>>>> Enforce new indentation rule in all CXX source files
+    return std::hash<T>{}(val.x * std::hash<T>{}(val.y));
 }
 
 } // namespace physics
