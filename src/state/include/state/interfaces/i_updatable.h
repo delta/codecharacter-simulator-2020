@@ -16,6 +16,12 @@ class STATE_EXPORT IUpdatable {
   public:
     virtual ~IUpdatable(){};
 
+<<<<<<< 4a375c0fa5a5d5ff3fec7b521f15ca9a29d582db
     virtual void Update() = 0;
+=======
+  virtual void Update() = 0;
+
+  virtual void LateUpdate() = 0;
+>>>>>>> Add i_actor_state interface
 };
 } // namespace state
