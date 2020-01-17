@@ -19,9 +19,9 @@ size_t Unit::getSpeed() const { return speed; }
 
 Vec2D Unit::getDestination() const { return destination; }
 
-void Unit::setDestination(Vec2D destination) {
+void Unit::setDestination(Vec2D new_destination) {
   clearDestination();
-  this->destination = destination;
+  destination = new_destination;
   is_destination_set = true;
 }
 
@@ -34,8 +34,8 @@ void Unit::clearDestination() {
 
 Vec2D Unit::getNewPosition() const { return new_position; }
 
-void Unit::setNewPosition(Vec2D position) {
-  this->new_position = position;
+void Unit::setNewPosition(Vec2D next_position) {
+  new_position = next_position;
   is_new_position_set = true;
 }
 
