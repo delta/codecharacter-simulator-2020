@@ -48,7 +48,7 @@ private:
    * @param start_node
    * @param destination_node
    */
-  void InitOpenList(DoubleVec2D start_node,
+  void initOpenList(DoubleVec2D start_node,
                     const DoubleVec2D &destination_node);
 
   /**
@@ -56,7 +56,7 @@ private:
    * @param next_position
    * @return next node in open list
    */
-  bool GetBestNextPosition(DoubleVec2D &next_position);
+  bool getBestNextPosition(DoubleVec2D &next_position);
 
   /**
    * Update the open list details of one neighbour of a node
@@ -65,25 +65,25 @@ private:
    * @param distance
    * @param destination_node Final destination
    */
-  void UpdateNeighbour(DoubleVec2D current_node, DoubleVec2D neighbour_node,
+  void updateNeighbour(DoubleVec2D current_node, DoubleVec2D neighbour_node,
                        double_t distance, const DoubleVec2D &destination_node);
 
 public:
   /**
    * Get number of nodes in the graph
    */
-  size_t GetNumNodes() const;
+  size_t getNumNodes() const;
 
   /**
    * Get nodes
    */
-  boost::unordered_set<DoubleVec2D> GetNodes() const;
+  boost::unordered_set<DoubleVec2D> getNodes() const;
 
   /**
    * Check node exists
    * @param node Node to be checked
    */
-  bool CheckNodeExists(const DoubleVec2D &node) const;
+  bool checkNodeExists(const DoubleVec2D &node) const;
 
   /**
    * Check if edge exists between two positions
@@ -91,20 +91,20 @@ public:
    * @param node_b
    * @return bool true, if there is an edge between two positions
    */
-  bool CheckEdgeExists(const DoubleVec2D &position_a,
+  bool checkEdgeExists(const DoubleVec2D &position_a,
                        const DoubleVec2D &position_b);
 
   /**
    * Add a new node to the list of nodes
    * @param position
    */
-  void AddNode(DoubleVec2D position);
+  void addNode(DoubleVec2D position);
 
   /**
    * Remove a node from the list of nodes
    * @param position
    */
-  void RemoveNode(DoubleVec2D position);
+  void removeNode(DoubleVec2D position);
 
   /**
    * Add an edge between two positions
@@ -112,7 +112,7 @@ public:
    * @param end_position
    * @param cost Cost of traversing from start position to end position
    */
-  void AddEdge(DoubleVec2D start_position, DoubleVec2D end_position,
+  void addEdge(DoubleVec2D start_position, DoubleVec2D end_position,
                double_t cost);
 
   /**
@@ -120,12 +120,12 @@ public:
    * @param start_position
    * @param end_position
    */
-  void RemoveEdge(DoubleVec2D start_position, DoubleVec2D end_position);
+  void removeEdge(DoubleVec2D start_position, DoubleVec2D end_position);
 
   /**
    * Clear all graph nodes and edges
    */
-  void ResetGraph();
+  void resetGraph();
 
   /**
    * Get the next node to move in the shortest path from start to end
@@ -133,7 +133,7 @@ public:
    * @param end_position
    * @return std::vector<DoubleVec2D> next node in the path
    */
-  std::vector<DoubleVec2D> GetPath(DoubleVec2D start_position,
+  std::vector<DoubleVec2D> getPath(DoubleVec2D start_position,
                                    DoubleVec2D end_position);
 };
 

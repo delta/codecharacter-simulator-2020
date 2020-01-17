@@ -8,26 +8,26 @@
 
 namespace state {
 
-size_t Graph::GetNumNodes() const { return nodes.size(); }
+size_t Graph::getNumNodes() const { return nodes.size(); }
 
-boost::unordered_set<DoubleVec2D> Graph::GetNodes() const { return nodes; }
+boost::unordered_set<DoubleVec2D> Graph::getNodes() const { return nodes; }
 
-bool Graph::CheckNodeExists(const DoubleVec2D &node) const {
+bool Graph::checkNodeExists(const DoubleVec2D &node) const {
   return (nodes.find(node) != nodes.end());
 }
 
-bool Graph::CheckEdgeExists(const DoubleVec2D &node_a,
+bool Graph::checkEdgeExists(const DoubleVec2D &node_a,
                             const DoubleVec2D &node_b) {
-  if (CheckNodeExists(node_a) && CheckNodeExists(node_b)) {
+  if (checkNodeExists(node_a) && checkNodeExists(node_b)) {
     return adjacency_list[node_a].find(node_b) != adjacency_list[node_a].end();
   }
 
   return false;
 }
 
-void Graph::AddNode(DoubleVec2D node) {
+void Graph::addNode(DoubleVec2D node) {
   // Insert the node only if it doesn't exist
-  if (!CheckNodeExists(node)) {
+  if (!checkNodeExists(node)) {
     EdgeList edge_list;
     adjacency_list.insert({node, edge_list});
 
@@ -35,45 +35,51 @@ void Graph::AddNode(DoubleVec2D node) {
   }
 }
 
-void Graph::RemoveNode(DoubleVec2D node) {
-  if (CheckNodeExists(node)) {
+void Graph::removeNode(DoubleVec2D node) {
+  if (checkNodeExists(node)) {
     nodes.erase(node);
+
+    // Remove node if referenced to in other nodes
+    for (auto edge : adjacency_list[node]) {
+      adjacency_list[edge.first].erase(node);
+    }
+
     adjacency_list.erase(node);
   }
 }
 
-void Graph::AddEdge(DoubleVec2D start_node, DoubleVec2D end_node,
+void Graph::addEdge(DoubleVec2D start_node, DoubleVec2D end_node,
                     double_t cost) {
   if (cost < 0)
     return;
 
-  if (CheckNodeExists(start_node)) {
+  if (checkNodeExists(start_node)) {
     adjacency_list[start_node].insert({end_node, cost});
   }
 
-  if (CheckNodeExists(end_node)) {
+  if (checkNodeExists(end_node)) {
     adjacency_list[end_node].insert({start_node, cost});
   }
 }
 
-void Graph::RemoveEdge(DoubleVec2D start_node, DoubleVec2D end_node) {
-  if (CheckNodeExists(start_node)) {
+void Graph::removeEdge(DoubleVec2D start_node, DoubleVec2D end_node) {
+  if (checkNodeExists(start_node)) {
     adjacency_list[start_node].erase(end_node);
   }
 
-  if (CheckNodeExists(end_node)) {
+  if (checkNodeExists(end_node)) {
     adjacency_list[end_node].erase(start_node);
   }
 }
 
-void Graph::ResetGraph() {
+void Graph::resetGraph() {
   nodes.clear();
   adjacency_list.clear();
   open_list_entries.clear();
   open_list_heap = Heap();
 }
 
-void Graph::InitOpenList(DoubleVec2D start_node,
+void Graph::initOpenList(DoubleVec2D start_node,
                          const DoubleVec2D &destination_node) {
   open_list_entries.clear();
   open_list_heap = Heap();
@@ -94,7 +100,7 @@ void Graph::InitOpenList(DoubleVec2D start_node,
   open_list_heap.push({start_node_entry.getTotalValue(), start_node});
 }
 
-bool Graph::GetBestNextPosition(DoubleVec2D &next_position) {
+bool Graph::getBestNextPosition(DoubleVec2D &next_position) {
   if (!open_list_heap.empty()) {
     // Top node in heap has the least total cost
     auto next_node = (open_list_heap.top()).second;
@@ -109,7 +115,7 @@ bool Graph::GetBestNextPosition(DoubleVec2D &next_position) {
   return false;
 }
 
-void Graph::UpdateNeighbour(DoubleVec2D current_node,
+void Graph::updateNeighbour(DoubleVec2D current_node,
                             DoubleVec2D neighbour_node, double_t distance,
                             const DoubleVec2D &destination_node) {
   // Neighbour's cost from start is cost of current node + distance between
@@ -150,9 +156,9 @@ void Graph::UpdateNeighbour(DoubleVec2D current_node,
   }
 }
 
-std::vector<DoubleVec2D> Graph::GetPath(DoubleVec2D start_node,
+std::vector<DoubleVec2D> Graph::getPath(DoubleVec2D start_node,
                                         DoubleVec2D end_node) {
-  if (!CheckNodeExists(start_node) || !CheckNodeExists(end_node)) {
+  if (!checkNodeExists(start_node) || !checkNodeExists(end_node)) {
     return std::vector<DoubleVec2D>{};
   }
 
@@ -160,12 +166,12 @@ std::vector<DoubleVec2D> Graph::GetPath(DoubleVec2D start_node,
     return std::vector<DoubleVec2D>{};
   }
 
-  InitOpenList(start_node, end_node);
+  initOpenList(start_node, end_node);
 
   // Current position while traversing through graph
   auto current_node = DoubleVec2D::null;
 
-  while (GetBestNextPosition(current_node)) {
+  while (getBestNextPosition(current_node)) {
     if (!open_list_entries[current_node].is_open)
       continue;
 
@@ -189,7 +195,7 @@ std::vector<DoubleVec2D> Graph::GetPath(DoubleVec2D start_node,
 
     // Add neighbours to openListHeap and updateOpenListEntries
     for (auto neighbour : adjacency_list[current_node]) {
-      UpdateNeighbour(current_node, neighbour.first, neighbour.second,
+      updateNeighbour(current_node, neighbour.first, neighbour.second,
                       end_node);
     }
   }
