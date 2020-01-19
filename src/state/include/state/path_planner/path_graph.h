@@ -9,12 +9,12 @@
 
 namespace state {
 
-class WaypointGraph {
+class PathGraph {
 private:
   /**
    * The size of the map
    */
-  const std::size_t map_size;
+  std::size_t map_size;
 
   /**
    * boolean array of (map_size x map_size)
@@ -117,8 +117,8 @@ private:
                                  DoubleVec2D destination) const;
 
 public:
-  WaypointGraph(std::size_t p_map_size,
-                std::vector<std::vector<bool>> p_valid_terrain);
+  PathGraph(std::size_t p_map_size,
+            std::vector<std::vector<bool>> p_valid_terrain);
 
   /**
    * Set map size and map terrain

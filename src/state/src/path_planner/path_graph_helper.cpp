@@ -3,12 +3,12 @@
  * Declares helper functions for waypoint graph
  */
 
-#include "state/path_planner/waypoint_graph.h"
+#include "state/path_planner/path_graph.h"
 
 namespace state {
 
-std::vector<double_t> WaypointGraph::generateIntersections(double_t a,
-                                                           double_t b) const {
+std::vector<double_t> PathGraph::generateIntersections(double_t a,
+                                                       double_t b) const {
   if (a > b)
     std::swap(a, b);
 
@@ -29,8 +29,7 @@ std::vector<double_t> WaypointGraph::generateIntersections(double_t a,
   return result;
 }
 
-double_t WaypointGraph::getSlope(const DoubleVec2D &a,
-                                 const DoubleVec2D &b) const {
+double_t PathGraph::getSlope(const DoubleVec2D &a, const DoubleVec2D &b) const {
   return (b.y - a.y) / (b.x - a.x);
 }
 

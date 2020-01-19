@@ -1,4 +1,4 @@
-#include "state/path_planner/waypoint_graph.h"
+#include "state/path_planner/path_graph.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -14,12 +14,12 @@ const auto F = false;
 class WaypointGraphTest : public testing::Test {
 protected:
   vector<vector<bool>> valid_terrain;
-  unique_ptr<WaypointGraph> waypointGraph;
+  unique_ptr<PathGraph> waypointGraph;
 
   WaypointGraphTest() {
     valid_terrain = std::vector<std::vector<bool>>(
         MAP_SIZE, std::vector<bool>(MAP_SIZE, true));
-    waypointGraph = make_unique<WaypointGraph>(MAP_SIZE, valid_terrain);
+    waypointGraph = make_unique<PathGraph>(MAP_SIZE, valid_terrain);
 
     for (double_t i = 1; i <= 7; i++)
       waypointGraph->addObstacle({2, i});

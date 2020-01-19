@@ -7,8 +7,8 @@ set(SOURCE_FILES
     src/path_planner/graph/graph.cpp
     src/actor/actor.cpp
     src/actor/unit.cpp
-    src/path_planner/waypoint_graph_helper.cpp
-    src/path_planner/waypoint_graph.cpp)
+    src/path_planner/path_graph_helper.cpp
+    src/path_planner/path_graph.cpp)
 
 set(INCLUDE_PATH include)
 

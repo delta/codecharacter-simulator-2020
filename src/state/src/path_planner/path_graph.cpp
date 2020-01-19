@@ -5,42 +5,41 @@
 
 #include <utility>
 
-#include "state/path_planner/waypoint_graph.h"
+#include "state/path_planner/path_graph.h"
 
 namespace state {
 
-WaypointGraph::WaypointGraph(std::size_t p_map_size,
-                             std::vector<std::vector<bool>> p_valid_terrain)
+PathGraph::PathGraph(std::size_t p_map_size,
+                     std::vector<std::vector<bool>> p_valid_terrain)
     : map_size(p_map_size), valid_terrain(std::move(p_valid_terrain)),
       graph(std::make_unique<Graph>()) {}
 
-void WaypointGraph::setValidTerrain(
+void PathGraph::setValidTerrain(
     std::vector<std::vector<bool>> p_valid_terrain) {
   valid_terrain = std::move(p_valid_terrain);
 
   recomputeWaypointGraph();
 }
 
-void WaypointGraph::addObstacle(const DoubleVec2D &position) {
+void PathGraph::addObstacle(const DoubleVec2D &position) {
   valid_terrain[position.x][position.y] = false;
 }
 
-void WaypointGraph::addObstacles(const std::vector<DoubleVec2D> &positions) {
+void PathGraph::addObstacles(const std::vector<DoubleVec2D> &positions) {
   for (auto position : positions) {
     addObstacle(position);
   }
 }
 
-void WaypointGraph::removeObstacle(const DoubleVec2D &position) {
+void PathGraph::removeObstacle(const DoubleVec2D &position) {
   valid_terrain[position.x][position.y] = true;
 }
 
-boost::unordered_set<DoubleVec2D> WaypointGraph::getWaypoints() const {
+boost::unordered_set<DoubleVec2D> PathGraph::getWaypoints() const {
   return graph->getNodes();
 }
 
-bool WaypointGraph::isValidPosition(const double_t &x,
-                                    const double_t &y) const {
+bool PathGraph::isValidPosition(const double_t &x, const double_t &y) const {
   if (x < 0 || y < 0)
     return false;
 
@@ -50,23 +49,23 @@ bool WaypointGraph::isValidPosition(const double_t &x,
   return valid_terrain[std::floor(x)][std::floor(y)];
 }
 
-bool WaypointGraph::isValidPosition(const DoubleVec2D &position) const {
+bool PathGraph::isValidPosition(const DoubleVec2D &position) const {
   return isValidPosition(position.x, position.y);
 }
 
-void WaypointGraph::resetWaypointGraph() { graph->resetGraph(); }
+void PathGraph::resetWaypointGraph() { graph->resetGraph(); }
 
-void WaypointGraph::addWaypoint(DoubleVec2D position) {
+void PathGraph::addWaypoint(DoubleVec2D position) {
   graph->addNode(position);
   recomputeWaypointEdges(position);
 }
 
-void WaypointGraph::removeWaypoint(DoubleVec2D position) {
+void PathGraph::removeWaypoint(DoubleVec2D position) {
   graph->removeNode(position);
 }
 
-bool WaypointGraph::isStraightLineTraversable(DoubleVec2D start,
-                                              DoubleVec2D destination) const {
+bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
+                                          DoubleVec2D destination) const {
   if (start > destination)
     std::swap(start, destination);
 
@@ -116,8 +115,8 @@ bool WaypointGraph::isStraightLineTraversable(DoubleVec2D start,
   return true;
 }
 
-bool WaypointGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
-                                               DoubleVec2D point_b) const {
+bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
+                                           DoubleVec2D point_b) const {
   // They are the same point
   if (point_a == point_b)
     return true;
@@ -159,7 +158,7 @@ bool WaypointGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
   return true;
 }
 
-void WaypointGraph::recomputeWaypoints() {
+void PathGraph::recomputeWaypoints() {
   auto corner_offsets =
       std::vector<DoubleVec2D>{{0, 0}, {0, 1}, {1, 0}, {1, 1}};
 
@@ -198,7 +197,7 @@ void WaypointGraph::recomputeWaypoints() {
   }
 }
 
-void WaypointGraph::recomputeWaypointEdges(DoubleVec2D position) {
+void PathGraph::recomputeWaypointEdges(DoubleVec2D position) {
   if (!graph->checkNodeExists(position))
     return;
 
@@ -212,13 +211,13 @@ void WaypointGraph::recomputeWaypointEdges(DoubleVec2D position) {
   }
 }
 
-void WaypointGraph::recomputeWaypointEdges() {
+void PathGraph::recomputeWaypointEdges() {
   for (auto waypoint : graph->getNodes()) {
     recomputeWaypointEdges(waypoint);
   }
 }
 
-void WaypointGraph::recomputeWaypointGraph() {
+void PathGraph::recomputeWaypointGraph() {
   // Remove any previous waypoints and edges
   resetWaypointGraph();
 
@@ -226,8 +225,8 @@ void WaypointGraph::recomputeWaypointGraph() {
   recomputeWaypointEdges();
 }
 
-std::vector<DoubleVec2D> WaypointGraph::getPath(DoubleVec2D start_position,
-                                                DoubleVec2D end_position) {
+std::vector<DoubleVec2D> PathGraph::getPath(DoubleVec2D start_position,
+                                            DoubleVec2D end_position) {
   addWaypoint(start_position);
   addWaypoint(end_position);
 
