@@ -27,21 +27,21 @@ Logger::Logger(ICommandTaker *state, size_t player_instruction_limit_turn,
 void Logger::LogState() { std::cout << "LogState called \n"; };
 
 void Logger::LogInstructionCount(state::PlayerId player_id, size_t count) {
-  std::cout << "LogInstructionCount called \n";
+    std::cout << "LogInstructionCount called \n";
 };
 
 void Logger::LogError(state::PlayerId player_id, ErrorType error_type,
                       std::string message) {
-  std::cout << "LogError called \n";
+    std::cout << "LogError called \n";
 };
 
 void Logger::LogFinalGameParams(state::PlayerId player_id,
                                 std::array<size_t, 2> final_scores) {
-  std::cout << "LogFinalGameParams called \n";
+    std::cout << "LogFinalGameParams called \n";
 };
 
 void Logger::WriteGame(std::ostream &write_stream) {
-  std::cout << "Write Game called \n";
+    std::cout << "Write Game called \n";
 };
 
 } // namespace logger
