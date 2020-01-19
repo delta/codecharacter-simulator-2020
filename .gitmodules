@@ -2,3 +2,9 @@
 	path = ext/googletest
 	url = https://github.com/google/googletest.git
 	branch = master
+
+
+[submodule "src/logger/proto"]
+	path = src/logger/proto
+	url = https://github.com/delta/codecharacter-proto-2020.git
+	branch = master
