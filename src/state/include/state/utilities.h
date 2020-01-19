@@ -28,9 +28,9 @@ enum class TerrainType { LAND, WATER, TOWER, FLAG };
  * Enum for the two game players
  */
 enum class PlayerId : int {
-  PLAYER1 = 0,
-  PLAYER2 = 1,
-  PLAYER_COUNT = 2,
-  PLAYER_NULL = 3
+    PLAYER1 = 0,
+    PLAYER2 = 1,
+    PLAYER_COUNT = 2,
+    PLAYER_NULL = 3
 };
 } // namespace state

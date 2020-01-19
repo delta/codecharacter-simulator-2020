@@ -4,9 +4,9 @@ jobs:
     docker:
       - image: buildpack-deps:bionic
     enviroment:
-          CXX: "clang++-8"
-          CMAKE_BUILD_TYPE: "Release"
-          LD_LIBRARY_PATH: "/root/project/simulator/lib:${LD_LIBRARY_PATH}"
+      CXX: "clang++-8"
+      CMAKE_BUILD_TYPE: "Release"
+      LD_LIBRARY_PATH: "/root/project/simulator/lib:${LD_LIBRARY_PATH}"
     steps:
       - checkout
       - run:
@@ -24,6 +24,7 @@ jobs:
             cp -r cmake-3.15.4-Linux-x86_64/share/* /usr/local/share
             mkdir /usr/local/share/boost
             cp -r boost_1_68_0/* /usr/local/share/boost
+            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format
             mkdir simulator build
       - run:
           name: Run CMake
