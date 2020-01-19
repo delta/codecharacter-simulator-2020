@@ -9,9 +9,12 @@ include(GenerateExportHeader)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# find modules go here
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/")
+
 if(NOT BUILD_PROJECT STREQUAL "no_tests")
-  include(clang-format.cmake)
-  include(cmake-format.cmake)
+  include(${CMAKE_MODULE_PATH}/clang-format.cmake)
+  include(${CMAKE_MODULE_PATH}/cmake-format.cmake)
 endif()
 
 set(BOOST_ROOT
