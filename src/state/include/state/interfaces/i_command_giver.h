@@ -1,6 +1,6 @@
 /**
  * @file i_command_giver.h
- * Interface for command giver which validates and run's user's commands
+ * Interface for command giver which validates and runs user's commands
  */
 
 #pragma once
@@ -11,10 +11,10 @@
 namespace state {
 class STATE_EXPORT ICommandGiver {
   public:
-    /*
-    **  Initializes the command giver interface
-    */
-    virtual ~ICommandGiver();
+    /**
+     *  Initializes the command giver interface
+     */
+    virtual ~ICommandGiver(){};
 
     /**
      * Runs the necessary commands on the command taker (state)
@@ -22,8 +22,8 @@ class STATE_EXPORT ICommandGiver {
      * @param[in] player_states Player state from which we get commands to run
      * @param[in] skip_player_turn If true for a player, turn is not processed
      */
-    virtual void RunCommands(std::array<player_state::State, 2> player_states,
-                             std::array<bool, 2> skip_turns) = 0;
+    virtual void runCommands(std::array<player_state::State, 2> player_states,
+                             std::array<bool, 2> skip_turn) = 0;
 };
 
 } // namespace state
