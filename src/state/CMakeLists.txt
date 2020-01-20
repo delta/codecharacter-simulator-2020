@@ -21,7 +21,8 @@ target_include_directories(
   state
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
          $<BUILD_INTERFACE:${EXPORTS_DIR}>
-         $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>)
+         $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>
+         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/logger/include>)
 
 install(
   TARGETS state
