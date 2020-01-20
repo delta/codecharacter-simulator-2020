@@ -11,9 +11,6 @@
 namespace state {
 class STATE_EXPORT ICommandGiver {
   public:
-    /**
-     *  Initializes the command giver interface
-     */
     virtual ~ICommandGiver(){};
 
     /**
@@ -22,8 +19,8 @@ class STATE_EXPORT ICommandGiver {
      * @param[in] player_states Player state from which we get commands to run
      * @param[in] skip_player_turn If true for a player, turn is not processed
      */
-    virtual void runCommands(std::array<player_state::State, 2> player_states,
-                             std::array<bool, 2> skip_turn) = 0;
+    virtual void runCommands(std::array<player_state::State, 2> &player_states,
+                             std::array<bool, 2> skip_turns) = 0;
 };
 
 } // namespace state
