@@ -29,17 +29,12 @@ void CommandGiver::moveBot(PlayerId player_id, ActorId bot_id,
 
 size_t CommandGiver::getMapSize() const {
     auto map = state->getMap();
-    return map->getSize();
 }
 
 DoubleVec2D CommandGiver::flipBotPosition(DoubleVec2D position) const {
     size_t map_size = getMapSize();
     return {(long)map_size - position.x, (long)map_size - position.y};
 }
-
-Vec2D CommandGiver::flipTowerPosition(Vec2D position) const {
-    size_t map_size = getMapSize();
-    return {(long)map_size - 1 - position.x, (long)map_size - 1 - position.y};
 }
 
 bool CommandGiver::isValidBotPosition(DoubleVec2D position) const {
