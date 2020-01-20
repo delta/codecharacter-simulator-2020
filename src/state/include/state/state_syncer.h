@@ -54,25 +54,25 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * @see IStateSyncer #GetScores
      */
-    std::array<int64_t, 2> GetScores(bool game_over);
+    std::array<int64_t, 2> getScores(bool game_over) override;
 
     /**
      *  Function to the assign player state bots their new states after
      * validation of user's actions
      */
-    void AssignBots(std::vector<player_state::Bot> player_bots, bool is_enemy);
+    void assignBots(std::vector<player_state::Bot> player_bots, bool is_enemy);
 
     /**
      *  Function to the assign player state towers their new states after
      * validation of user's actions
      */
-    void AssignTowers(std::vector<player_state::Tower> player_towers,
+    void assignTowers(std::vector<player_state::Tower> player_towers,
                       bool is_enemy);
 
     /**
      * Helper function to get the player id
      */
-    int64_t GetPlayerId(int id, bool is_enemy);
+    size_t getPlayerId(size_t player_id, bool is_enemy) const;
 };
 
 } // namespace state

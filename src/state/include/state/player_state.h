@@ -102,37 +102,53 @@ struct Bot : _Unit {
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
-    bool has_blasted;
-    bool has_transformed;
+    bool blasting;
+    // move and transform at set destination
+    DoubleVec2D transform_destination;
+    bool transforming;
     static size_t impact_radius;
 
     void reset() override {
         destination = DoubleVec2D::null;
+        transform_destination = DoubleVec2D::null;
         final_destination = DoubleVec2D::null;
-        has_blasted = false;
-        has_transformed = false;
+        blasting = false;
+        transforming = false;
     }
 
     void blast_bot() {
         reset();
-        has_blasted = true;
+        blasting = true;
     }
 
     // move to a target position and blast;
     void blast_bot(DoubleVec2D target_position) {
         reset();
-        final_destination = target_position;
-        has_blasted = true;
+        if (target_position == position) {
+            blasting = true;
+        } else {
+            final_destination = target_position;
+        }
     }
 
     void transform_bot() {
         reset();
-        has_transformed = true;
+        transforming = true;
+    }
+
+    void transform_bot(DoubleVec2D target_position) {
+        reset();
+        if (target_position == position) {
+            transforming = true;
+        } else {
+            transform_destination = target_position;
+        }
     }
 
     Bot()
         : _Unit(), state(BotState::IDLE), final_destination(DoubleVec2D::null),
-          has_blasted(false), has_transformed(false){};
+          transform_destination(DoubleVec2D::null), transforming(false),
+          blasting(false){};
 };
 
 size_t Bot::impact_radius = Constants::Actor::BOT_BLAST_IMPACT_RADIUS;
@@ -148,11 +164,11 @@ std::ostream &operator<<(std::ostream &os, Bot bot) {
 
 struct Tower : _Actor {
     TowerState state;
-    bool has_blasted;
+    bool blasting;
 
-    void blast_tower() { has_blasted = true; }
+    void blast_tower() { blasting = true; }
 
-    Tower() : _Actor(), state(TowerState::IDLE), has_blasted(false){};
+    Tower() : _Actor(), state(TowerState::IDLE), blasting(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {

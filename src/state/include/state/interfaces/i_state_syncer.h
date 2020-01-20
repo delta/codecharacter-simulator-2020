@@ -21,7 +21,7 @@ class STATE_EXPORT IStateSyncer {
     /**
      * Method to update the main state
      * @param [in] player_states Reference to the two player states
-     * @param [in] skip_turns True if player's turns shouldn't be executed
+     * @param [in] skip_turn True if player's turns shouldn't be executed
      */
     virtual void
     updateMainState(std::array<player_state::State, 2> &player_states,
