@@ -26,7 +26,7 @@ class PathGraph {
     /**
      * Graph of waypoints
      */
-    std::unique_ptr<Graph> graph;
+    Graph graph;
 
     /**
      * Remove all waypoints and edges

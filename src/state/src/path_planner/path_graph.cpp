@@ -12,7 +12,7 @@ namespace state {
 PathGraph::PathGraph(std::size_t p_map_size,
                      std::vector<std::vector<bool>> p_valid_terrain)
     : map_size(p_map_size), valid_terrain(std::move(p_valid_terrain)),
-      graph(std::make_unique<Graph>()) {}
+      graph(Graph()) {}
 
 void PathGraph::setValidTerrain(
     std::vector<std::vector<bool>> p_valid_terrain) {
@@ -26,7 +26,7 @@ void PathGraph::addObstacle(const DoubleVec2D &position) {
 }
 
 void PathGraph::addObstacles(const std::vector<DoubleVec2D> &positions) {
-    for (auto position : positions) {
+    for (auto const &position : positions) {
         addObstacle(position);
     }
 }
@@ -36,7 +36,7 @@ void PathGraph::removeObstacle(const DoubleVec2D &position) {
 }
 
 boost::unordered_set<DoubleVec2D> PathGraph::getWaypoints() const {
-    return graph->getNodes();
+    return graph.getNodes();
 }
 
 bool PathGraph::isValidPosition(const double_t &x, const double_t &y) const {
@@ -53,15 +53,15 @@ bool PathGraph::isValidPosition(const DoubleVec2D &position) const {
     return isValidPosition(position.x, position.y);
 }
 
-void PathGraph::resetWaypointGraph() { graph->resetGraph(); }
+void PathGraph::resetWaypointGraph() { graph.resetGraph(); }
 
 void PathGraph::addWaypoint(DoubleVec2D position) {
-    graph->addNode(position);
+    graph.addNode(position);
     recomputeWaypointEdges(position);
 }
 
 void PathGraph::removeWaypoint(DoubleVec2D position) {
-    graph->removeNode(position);
+    graph.removeNode(position);
 }
 
 bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
@@ -70,7 +70,7 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
         std::swap(start, destination);
 
     if (start.x == destination.x) {
-        // Both points are on a vertical line along
+        // Both points are on a vertical line along the same X value
 
         // True, if x is an integral value
         bool isIntegralX = false;
@@ -78,8 +78,9 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
             isIntegralX = true;
         }
 
-        for (auto y = std::floor(start.y); y < std::floor(destination.y); y++) {
-            if (destination.y == y)
+        for (int64_t y = std::floor(start.y); y < std::floor(destination.y);
+             y++) {
+            if (destination.y == (double_t)y)
                 break;
 
             if (isIntegralX) {
@@ -97,8 +98,9 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
             isIntegralY = true;
         }
 
-        for (auto x = std::floor(start.x); x < std::floor(destination.x); x++) {
-            if (destination.x == x)
+        for (int64_t x = std::floor(start.x); x < std::floor(destination.x);
+             x++) {
+            if (destination.x == (double_t)x)
                 break;
 
             if (isIntegralY) {
@@ -126,10 +128,12 @@ bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
     if (point_a > point_b)
         std::swap(point_a, point_b);
 
-    if (point_a.x != point_b.x) {
+    // Points are on vertical/horizontal line
+    if (point_a.y == point_b.y || point_a.x == point_b.x) {
+        return isStraightLineTraversable(point_a, point_b);
+    }
 
-        if (point_a.y == point_b.y)
-            return isStraightLineTraversable(point_a, point_b);
+    if (point_a.x != point_b.x) {
 
         // Get all integral x's which the line joining a and b intersect
         auto x_intersections = generateIntersections(point_a.x, point_b.x);
@@ -146,17 +150,17 @@ bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
             if (current_y > next_y)
                 std::swap(current_y, next_y);
 
-            for (auto y = std::floor(current_y); y <= std::floor(next_y); y++) {
+            for (int64_t y = std::floor(current_y); y <= std::floor(next_y);
+                 y++) {
                 // Check if position being traversed is valid
                 // If y is next_y, ending at next_y so needn't check that
                 // position
-                if (!isValidPosition(current_x, y) && y != next_y) {
+                if (!isValidPosition(current_x, y) && (double_t)y != next_y) {
                     return false;
                 }
             }
         }
-    } else
-        return isStraightLineTraversable(point_a, point_b);
+    }
 
     return true;
 }
@@ -180,14 +184,14 @@ void PathGraph::recomputeWaypoints() {
                     corner_x == 0 || corner_y == 0)
                     continue;
 
-                graph->addNode({corner_x, corner_y});
+                graph.addNode({corner_x, corner_y});
             }
         }
     }
 
     // If there exists a waypoint which is lying between two adjacent waypoints,
     // it is redundant
-    for (auto waypoint : graph->getNodes()) {
+    for (auto const &waypoint : graph.getNodes()) {
         auto x = waypoint.x;
         auto y = waypoint.y;
 
@@ -195,27 +199,27 @@ void PathGraph::recomputeWaypoints() {
             !(isValidPosition(x, y) || isValidPosition(x, y - 1)) ||
             !(isValidPosition(x - 1, y - 1) || isValidPosition(x, y - 1)) ||
             !(isValidPosition(x - 1, y - 1) || isValidPosition(x - 1, y))) {
-            graph->removeNode(waypoint);
+            graph.removeNode(waypoint);
         }
     }
 }
 
 void PathGraph::recomputeWaypointEdges(DoubleVec2D position) {
-    if (!graph->checkNodeExists(position))
+    if (!graph.checkNodeExists(position))
         return;
 
-    for (auto waypoint : graph->getNodes()) {
+    for (auto const &waypoint : graph.getNodes()) {
         if (waypoint == position)
             continue;
 
         if (arePointsDirectlyReachable(waypoint, position)) {
-            graph->addEdge(waypoint, position, position.distance(waypoint));
+            graph.addEdge(waypoint, position, position.distance(waypoint));
         }
     }
 }
 
 void PathGraph::recomputeWaypointEdges() {
-    for (auto waypoint : graph->getNodes()) {
+    for (auto const &waypoint : graph.getNodes()) {
         recomputeWaypointEdges(waypoint);
     }
 }
@@ -233,7 +237,7 @@ std::vector<DoubleVec2D> PathGraph::getPath(DoubleVec2D start_position,
     addWaypoint(start_position);
     addWaypoint(end_position);
 
-    auto result = graph->getPath(start_position, end_position);
+    auto result = graph.getPath(start_position, end_position);
 
     removeWaypoint(start_position);
     removeWaypoint(end_position);

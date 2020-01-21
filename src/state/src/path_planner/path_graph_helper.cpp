@@ -14,12 +14,12 @@ std::vector<double_t> PathGraph::generateIntersections(double_t a,
 
     auto result = std::vector<double_t>();
 
-    for (auto x = std::ceil(a); x <= std::floor(b); x++) {
-        result.push_back(x);
+    if (std::ceil(a) != a) {
+        result.insert(result.begin(), a);
     }
 
-    if (result.empty() || result[0] != a) {
-        result.insert(result.begin(), a);
+    for (auto x = std::ceil(a); x <= std::floor(b); x++) {
+        result.push_back(x);
     }
 
     if (result.empty() || result.back() != b) {
