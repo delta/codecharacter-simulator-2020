@@ -5,11 +5,19 @@ set(SOURCE_FILES
     src/state.cpp
     src/map/map.cpp
     src/path_planner/graph/graph.cpp
+    src/path_planner/path_graph_helper.cpp
+    src/path_planner/path_graph.cpp
     src/actor/actor.cpp
     src/actor/unit.cpp
     src/path_planner/path_graph_helper.cpp
     src/path_planner/path_graph.cpp
-    src/score_manager/score_manager.cpp)
+    src/score_manager/score_manager.cpp
+    src/actor/tower.cpp
+    src/actor/blaster.cpp
+    src/actor/tower_states/tower_state.cpp
+    src/actor/tower_states/tower_idle_state.cpp
+    src/actor/tower_states/tower_blast_state.cpp
+    src/actor/tower_states/tower_dead_state.cpp)
 
 set(INCLUDE_PATH include)
 
