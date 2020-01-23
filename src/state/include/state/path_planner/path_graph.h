@@ -1,6 +1,6 @@
 /**
- * @file waypoint_graph.h
- * Declares a wrapper for a graph with waypoints
+ * @file path_graph.h
+ * Declares a wrapper for a graph for path calculations
  */
 
 #pragma once
@@ -108,10 +108,10 @@ class PathGraph {
     double_t getSlope(const DoubleVec2D &a, const DoubleVec2D &b) const;
 
     /**
-     * Check if a path along integral x or y is traverseable
+     * Check if a path along integral x or y is traversable
      * @param start
      * @param destination
-     * @return True, if traverseable. Else, false
+     * @return True, if traversable. Else, false
      */
     bool isStraightLineTraversable(DoubleVec2D start,
                                    DoubleVec2D destination) const;

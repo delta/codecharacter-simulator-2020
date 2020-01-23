@@ -1,6 +1,6 @@
 /**
- * @file waypoint_graph_helper.cpp
- * Declares helper functions for waypoint graph
+ * @file path_graph_helper.cpp
+ * Declares helper functions for path graph
  */
 
 #include "state/path_planner/path_graph.h"
@@ -13,12 +13,13 @@ std::vector<double_t> PathGraph::generateIntersections(double_t a,
         std::swap(a, b);
 
     auto result = std::vector<double_t>();
+    result.reserve((std::size_t)std::floor(b) - (std::size_t)std::ceil(a) + 3);
 
     if (std::ceil(a) != a) {
         result.insert(result.begin(), a);
     }
 
-    for (auto x = std::ceil(a); x <= std::floor(b); x++) {
+    for (int64_t x = std::ceil(a); x <= std::floor(b); x++) {
         result.push_back(x);
     }
 

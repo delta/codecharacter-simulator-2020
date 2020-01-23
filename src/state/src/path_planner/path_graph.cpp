@@ -1,6 +1,6 @@
 /**
- * @file waypoint_graph.h
- * Graph which uses waypoints for path
+ * @file path_graph.cpp
+ * Declares a wrapper for a graph for path calculations
  */
 
 #include <utility>
