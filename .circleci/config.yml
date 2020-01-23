@@ -33,7 +33,7 @@ jobs:
           name: Run CMake
           working_directory: /root/project/build
           command: |
-            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/simulator -DCMAKE_CXX_COMPILER=clang++-8 -DBOOST_ROOT=/usr/local/share/boost
+            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/simulator -DCMAKE_CXX_COMPILER=clang++-9 -DBOOST_ROOT=/usr/local/share/boost
       - run:
           name: Run Make
           working_directory: /root/project/build
