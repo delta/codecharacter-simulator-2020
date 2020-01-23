@@ -19,7 +19,8 @@ class WaypointGraphTest : public testing::Test {
     WaypointGraphTest() {
         valid_terrain = std::vector<std::vector<bool>>(
             MAP_SIZE, std::vector<bool>(MAP_SIZE, true));
-        waypointGraph = make_unique<PathGraph>(MAP_SIZE, valid_terrain);
+        waypointGraph =
+            make_unique<PathGraph>(MAP_SIZE, valid_terrain, Graph());
 
         for (double_t i = 1; i <= 7; i++)
             waypointGraph->addObstacle({2, i});

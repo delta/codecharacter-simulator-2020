@@ -10,9 +10,10 @@
 namespace state {
 
 PathGraph::PathGraph(std::size_t p_map_size,
-                     std::vector<std::vector<bool>> p_valid_terrain)
+                     std::vector<std::vector<bool>> p_valid_terrain,
+                     Graph p_graph)
     : map_size(p_map_size), valid_terrain(std::move(p_valid_terrain)),
-      graph(Graph()) {}
+      graph(std::move(p_graph)) {}
 
 void PathGraph::setValidTerrain(
     std::vector<std::vector<bool>> p_valid_terrain) {

@@ -118,7 +118,7 @@ class PathGraph {
 
   public:
     PathGraph(std::size_t p_map_size,
-              std::vector<std::vector<bool>> p_valid_terrain);
+              std::vector<std::vector<bool>> p_valid_terrain, Graph p_graph);
 
     /**
      * Set map size and map terrain
