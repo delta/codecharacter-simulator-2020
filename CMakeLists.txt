@@ -9,8 +9,8 @@ include(GenerateExportHeader)
 
 set(CMAKE_CXX_STANDARD 14)
 
-# find modules go here
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/")
+# linter modules go here
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/linter_config/")
 
 if(NOT BUILD_PROJECT STREQUAL "no_tests")
   include(${CMAKE_MODULE_PATH}/clang-format.cmake)
