@@ -18,17 +18,12 @@ void ScoreManager::botExitedFlagArea(PlayerId player_id) {
 }
 
 void ScoreManager::updateScore() {
-    int64_t max = 0;
-    int dominant_player = -1;
-    for (int i = 0; i < (int)PlayerId::PLAYER_COUNT; i++) {
-        if (max == no_of_bots[i])
-            dominant_player = -1;
-        else if (max < no_of_bots[i]) {
-            dominant_player = i;
-            max = no_of_bots[i];
-        }
-    }
-    scores[dominant_player]++;
+    if (no_of_bots[(int)PlayerId::PLAYER1] > no_of_bots[(int)PlayerId::PLAYER2])
+        scores[(int)PlayerId::PLAYER1]++;
+
+    else if (no_of_bots[(int)PlayerId::PLAYER2] >
+             no_of_bots[(int)PlayerId::PLAYER1])
+        scores[(int)PlayerId::PLAYER2]++;
 }
 
 std::array<size_t, 2> ScoreManager::getScores() { return scores; }

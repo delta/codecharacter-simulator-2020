@@ -1,5 +1,6 @@
 /**
  * @file score_manager.h
+ * Manages the scores for the players
  */
 
 #pragma once
@@ -24,9 +25,9 @@ class STATE_EXPORT ScoreManager {
     std::array<size_t, 2> scores;
 
     /**
-     * Number of bots of player 1 in flag area
+     * Number of bots of player in flag area
      */
-    std::array<int16_t, 2> no_of_bots;
+    std::array<size_t, 2> no_of_bots;
 
   public:
     ScoreManager(std::array<size_t, 2> scores);
