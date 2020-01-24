@@ -5,12 +5,8 @@ set -o pipefail
 # Run cmake-format
 cd /root/project
 
-# find all cmake list files in working tree, excluding some directories and assigns them in array list
-filelist="$(find . -type d \( -wholename './build' -o -wholename './ext' -o -wholename './simulator' -o -name "*cmake*" \) -prune -o  \( -type f \( -iname '*.cmake' -o -iname 'CMakeLists.txt' \) -print \))"
-
-for file in $filelist; do
-    cmake-format -i $file -c ./.cmake-format.py
-done
+# Run cmakeformat make target
+make cmakeformat
 
 
 #Check git for changes
