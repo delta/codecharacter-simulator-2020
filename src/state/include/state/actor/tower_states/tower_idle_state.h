@@ -11,33 +11,33 @@
 
 namespace state {
 class STATE_EXPORT TowerIdleState : public TowerState {
-public:
-  /**
-   * Constructor
-   */
-  TowerIdleState();
+  public:
+    /**
+     * Constructor
+     */
+    TowerIdleState();
 
-  TowerIdleState(Tower *tower);
+    TowerIdleState(Tower *tower);
 
-  /**
-   * Called right after the tower switches to this state
-   */
-  void Enter() override;
+    /**
+     * Called right after the tower switches to this state
+     */
+    void enter() override;
 
-  /**
-   * Performs state transitions
-   * If the tower blasts, then the state will transition to blast state and dead
-   * state fron blast state
-   * Else, remain in idle state
-   *
-   * @return A unique pointer to the next state that the tower transitions into
-   */
+    /**
+     * Performs state transitions
+     * If the tower blasts, then the state will transition to blast state and
+     * dead state from blast state Else, remain in idle state
+     *
+     * @return A unique pointer to the next state that the tower transitions
+     * into
+     */
 
-  std::unique_ptr<IActorState> Update() override;
-  /**
-   * Called right before the tower switches from this state to another state
-   */
-  void Exit() override;
+    std::unique_ptr<IActorState> update() const override;
+    /**
+     * Called right before the tower switches from this state to another state
+     */
+    void exit() override;
 };
 
 } // namespace state

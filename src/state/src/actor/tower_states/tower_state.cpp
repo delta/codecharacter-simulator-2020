@@ -11,5 +11,5 @@ TowerState::TowerState() {}
 TowerState::TowerState(TowerStateName tower_state_name, Tower *tower)
     : state(tower_state_name), tower(tower) {}
 
-TowerStateName TowerState::GetName() { return state; }
+TowerStateName TowerState::getName() { return state; }
 } // namespace state

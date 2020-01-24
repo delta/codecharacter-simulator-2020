@@ -14,18 +14,20 @@ TowerBlastState::TowerBlastState() {}
 TowerBlastState::TowerBlastState(Tower *tower)
     : TowerState(TowerStateName::BLAST, tower) {}
 
-void TowerBlastState::Enter() {
-  size_t max_tower_hp = tower->getMaxHp();
-  tower->damage(max_tower_hp);
+void TowerBlastState::enter() {
+    size_t tower_hp = tower->getHp();
+    tower->damage(tower_hp);
+    tower->damageEnemyActors();
+    tower->setBlasting(false);
 }
 
-void TowerBlastState::Exit() {}
+void TowerBlastState::exit() {}
 
-std::unique_ptr<IActorState> TowerBlastState::Update() {
-  if (tower->getHp() == 0) {
-    return std::make_unique<TowerDeadState>(tower);
-  }
+std::unique_ptr<IActorState> TowerBlastState::update() const {
+    if (tower->getHp() == 0) {
+        return std::make_unique<TowerDeadState>(tower);
+    }
 
-  return nullptr;
+    return nullptr;
 }
 } // namespace state

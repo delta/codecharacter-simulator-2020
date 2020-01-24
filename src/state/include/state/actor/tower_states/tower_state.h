@@ -14,42 +14,42 @@ namespace state {
  * Define a name for each state
  */
 enum class TowerStateName {
-  // Tower isn't blasting
-  IDLE,
-  // Tower is blasting
-  BLAST,
-  // Factory is dead
-  DEAD
+    // Tower isn't blasting
+    IDLE,
+    // Tower is blasting
+    BLAST,
+    // Tower is dead
+    DEAD
 };
 
 /**
- * The base state that other FactoryStates inherit from
+ * The base state that other tower states inherit from
  */
 class STATE_EXPORT TowerState : public IActorState {
-protected:
-  /**
-   * Name of the state
-   */
-  TowerStateName state;
+  protected:
+    /**
+     * Name of the state
+     */
+    TowerStateName state;
 
-  /**
-   * The tower that this state is managing
-   */
-  Tower *tower;
+    /**
+     * The tower that this state is managing
+     */
+    Tower *tower;
 
-public:
-  /**
-   * Constructors
-   */
-  TowerState();
+  public:
+    /**
+     * Constructors
+     */
+    TowerState();
 
-  TowerState(TowerStateName tower_state_name, Tower *tower);
+    TowerState(TowerStateName tower_state_name, Tower *tower);
 
-  /**
-   * Getter function to return the TowerStateName
-   *
-   * @return TowerStateName of the tower
-   */
-  TowerStateName GetName();
+    /**
+     * Getter function to return the TowerStateName
+     *
+     * @return TowerStateName of the tower
+     */
+    TowerStateName getName();
 };
 } // namespace state

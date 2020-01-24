@@ -17,21 +17,21 @@ TowerIdleState::TowerIdleState() {}
 TowerIdleState::TowerIdleState(Tower *tower)
     : TowerState(TowerStateName::IDLE, tower) {}
 
-void TowerIdleState::Enter() {}
+void TowerIdleState::enter() {}
 
-std::unique_ptr<IActorState> TowerIdleState::Update() {
-  // If the tower hp is 0, transition to the dead state
-  if (tower->getHp() == 0) {
-    return std::make_unique<TowerDeadState>(tower);
-  }
+std::unique_ptr<IActorState> TowerIdleState::update() const {
+    // If the tower hp is 0, transition to the dead state
+    if (tower->getHp() == 0) {
+        return std::make_unique<TowerDeadState>(tower);
+    }
 
-  // If the tower is blasting, transitioning to the blast state
-  if (tower->IsBlasting()) {
-    return std::make_unique<TowerBlastState>(tower);
-  }
+    // If the tower is blasting, transitioning to the blast state
+    if (tower->isBlasting()) {
+        return std::make_unique<TowerBlastState>(tower);
+    }
 
-  return nullptr;
+    return nullptr;
 }
 
-void TowerIdleState::Exit() {}
+void TowerIdleState::exit() {}
 } // namespace state

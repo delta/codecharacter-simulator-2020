@@ -10,31 +10,32 @@
 
 namespace state {
 class STATE_EXPORT TowerDeadState : public TowerState {
-public:
-  /**
-   * Constructor
-   */
-  TowerDeadState();
+  public:
+    /**
+     * Constructor
+     */
+    TowerDeadState();
 
-  TowerDeadState(Tower *tower);
+    TowerDeadState(Tower *tower);
 
-  /**
-   * Called right after the tower switches to this state
-   */
-  void Enter() override;
+    /**
+     * Called right after the tower switches to this state
+     */
+    void enter() override;
 
-  /**
-   * Performs state transitions
-   * Finds all enemy actors within attack range, decreases their hp and
-   * transitions into the DEAD_STATE
-   *
-   * @return A unique pointer to the next state that the tower transitions into
-   */
-  std::unique_ptr<IActorState> Update() override;
+    /**
+     * Performs state transitions
+     * Simply returns a null pointer and this actor is removed by the end of
+     * this turn
+     *
+     * @return A unique pointer to the next state that the tower transitions
+     * into
+     */
+    std::unique_ptr<IActorState> update() const override;
 
-  /**
-   * Called right before the tower switches from this state to another state
-   */
-  void Exit() override;
+    /**
+     * Called right before the tower switches from this state to another state
+     */
+    void exit() override;
 };
 } // namespace state

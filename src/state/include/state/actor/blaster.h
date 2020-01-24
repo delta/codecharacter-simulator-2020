@@ -7,30 +7,66 @@
 
 #include "state/actor/actor.h"
 
+#include <functional>
 #include <vector>
 
 namespace state {
 
-class STATE_EXPORT Blaster : public Actor {
-protected:
-  size_t blast_range;
-  size_t damage_points;
+using BlastCallback = std::function<void(PlayerId, Vec2D)>;
 
-public:
-  /**
-   * Constructors
-   */
-  Blaster(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, size_t damage_incurred, Vec2D pos);
+class STATE_EXPORT Blaster {
+  protected:
+    /**
+     * All points for which the euclidean distance between blaster's position
+     * and that position are within the blast range
+     * The blast range is circular
+     */
+    size_t blast_range;
 
-  Blaster(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, size_t damage_incurred, Vec2D pos, int blast_range,
-          int damage_points);
+    /**
+     * The damage that this blaster inflicts upon blasting
+     */
+    size_t damage_points;
 
-  /**
-   * The actor blasts and the actor's state transitions to dead state
-   */
-  virtual void Blast() = 0;
+    /**
+     * True if the blaster is going to blast
+     * False if the blaster isn't blasting
+     */
+    bool blasting;
+
+    /**
+     * Callback to implement effect of blaster blasting through state
+     */
+    BlastCallback blast_callback;
+
+  public:
+    /**
+     * Constructors
+     */
+    Blaster();
+
+    Blaster(size_t blast_range, size_t damage_points,
+            BlastCallback blast_callback);
+
+    void setBlastCallback(BlastCallback blast_callback);
+
+    /**
+     * The actor blasts and the actor's state transitions to dead state
+     */
+    virtual void blast() = 0;
+
+    /**
+     * Helper function to check if the blaster is going to blast in a given turn
+     *
+     * @return true if the blaster is blasting
+     * @return false if the blaster is not blasting
+     */
+    bool isBlasting() const;
+
+    /**
+     * Helper function to set the blasting property of blaster
+     */
+    void setBlasting(bool p_blasting);
 };
 
 } // namespace state

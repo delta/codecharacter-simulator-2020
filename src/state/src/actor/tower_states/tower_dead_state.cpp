@@ -13,9 +13,9 @@ TowerDeadState::TowerDeadState() {}
 TowerDeadState::TowerDeadState(Tower *tower)
     : TowerState(TowerStateName::DEAD, tower) {}
 
-void TowerDeadState::Enter() {}
+void TowerDeadState::enter() {}
 
-void TowerDeadState::Exit() {}
+void TowerDeadState::exit() {}
 
-std::unique_ptr<IActorState> TowerDeadState::Update() { return nullptr; }
+std::unique_ptr<IActorState> TowerDeadState::update() const { return nullptr; }
 } // namespace state
