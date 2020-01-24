@@ -6,39 +6,29 @@
 
 namespace state {
 
-ScoreManager::ScoreManager(std::array<size_t, 2> scores,
-                           size_t flag_area_enter_reward,
-                           size_t flag_area_exit_reward)
-    : scores(scores), flag_area_enter_reward(flag_area_enter_reward),
-      flag_area_exit_reward(flag_area_exit_reward), no_player_1_bots(0),
-      no_player_2_bots(0) {}
+ScoreManager::ScoreManager(std::array<size_t, 2> scores)
+    : scores(scores), no_of_bots({0, 0}) {}
 
 void ScoreManager::botEnteredFlagArea(PlayerId player_id) {
-    switch (player_id) {
-    case PlayerId::PLAYER1:
-        no_player_1_bots++;
-        break;
-    case PlayerId::PLAYER2:
-        no_player_2_bots++;
-    }
+    no_of_bots[(int)player_id]++;
 }
 
 void ScoreManager::botExitedFlagArea(PlayerId player_id) {
-    switch (player_id) {
-    case PlayerId::PLAYER1:
-        no_player_1_bots--;
-        break;
-    case PlayerId::PLAYER2:
-        no_player_2_bots--;
-    }
+    no_of_bots[(int)player_id]--;
 }
 
 void ScoreManager::updateScore() {
-    if (no_player_1_bots > no_player_2_bots) {
-        scores[(int)PlayerId::PLAYER1]++;
-    } else if (no_player_2_bots > no_player_1_bots) {
-        scores[(int)PlayerId::PLAYER2]++;
+    int64_t max = 0;
+    int dominant_player = -1;
+    for (int i = 0; i < (int)PlayerId::PLAYER_COUNT; i++) {
+        if (max == no_of_bots[i])
+            dominant_player = -1;
+        else if (max < no_of_bots[i]) {
+            dominant_player = i;
+            max = no_of_bots[i];
+        }
     }
+    scores[dominant_player]++;
 }
 
 std::array<size_t, 2> ScoreManager::getScores() { return scores; }

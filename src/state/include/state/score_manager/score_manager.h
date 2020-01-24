@@ -24,28 +24,12 @@ class STATE_EXPORT ScoreManager {
     std::array<size_t, 2> scores;
 
     /**
-     * Reward for entering flag area
-     */
-    size_t flag_area_enter_reward;
-
-    /**
-     * Reward for exit flag area
-     */
-    size_t flag_area_exit_reward;
-
-    /**
      * Number of bots of player 1 in flag area
      */
-    int64_t no_player_1_bots;
-
-    /**
-     * Number of bots of player 2 in flag area
-     */
-    int64_t no_player_2_bots;
+    std::array<int16_t, 2> no_of_bots;
 
   public:
-    ScoreManager(std::array<size_t, 2> scores, size_t flag_area_enter_reward,
-                 size_t flag_area_exit_reward);
+    ScoreManager(std::array<size_t, 2> scores);
 
     /**
      * Record bot leaving
