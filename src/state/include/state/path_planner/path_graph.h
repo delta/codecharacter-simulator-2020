@@ -14,7 +14,7 @@ class PathGraph {
     /**
      * The size of the map
      */
-    std::size_t map_size;
+    size_t map_size;
 
     /**
      * boolean array of (map_size x map_size)
@@ -36,7 +36,7 @@ class PathGraph {
     /**
      * Check if given position is on valid terrain
      * @param position
-     * @return
+     * @return True, if position can be traversed, false otherwise
      */
     bool isValidPosition(const DoubleVec2D &position) const;
 
@@ -44,7 +44,7 @@ class PathGraph {
      * Check if given position is on valid terrain
      * @param x
      * @param y
-     * @return
+     * @return True, if position can be traversed, false otherwise
      */
     bool isValidPosition(const double_t &x, const double_t &y) const;
 
@@ -52,13 +52,13 @@ class PathGraph {
      * Add a new waypoint and create edges
      * @param position
      */
-    void addWaypoint(DoubleVec2D position);
+    void addWaypoint(const DoubleVec2D &position);
 
     /**
      * Remove a waypoint and corresponding edges
      * @param position
      */
-    void removeWaypoint(DoubleVec2D position);
+    void removeWaypoint(const DoubleVec2D &position);
 
     /**
      * Return all waypoints constructed
@@ -72,18 +72,18 @@ class PathGraph {
     void recomputeWaypoints();
 
     /**
-     * Check if two waypoints are directly reachable from each other
-     * @param waypoint_a
-     * @param waypoint_b
+     * Check if two points are directly reachable from each other
+     * @param point_a
+     * @param point_b
      * @return bool true, if they are directly reachable
      */
-    bool arePointsDirectlyReachable(DoubleVec2D waypoint_a,
-                                    DoubleVec2D waypoint_b) const;
+    bool arePointsDirectlyReachable(DoubleVec2D point_a,
+                                    DoubleVec2D point_b) const;
 
     /**
      * Recalculate all edges from a single waypoint
      */
-    void recomputeWaypointEdges(DoubleVec2D position);
+    void recomputeWaypointEdges(const DoubleVec2D &position);
 
     /**
      * Recalculate all edges between all waypoints
@@ -108,7 +108,7 @@ class PathGraph {
     double_t getSlope(const DoubleVec2D &a, const DoubleVec2D &b) const;
 
     /**
-     * Check if a path along integral x or y is traversable
+     * Check if a path along same x or same y is traversable
      * @param start
      * @param destination
      * @return True, if traversable. Else, false
@@ -117,8 +117,8 @@ class PathGraph {
                                    DoubleVec2D destination) const;
 
   public:
-    PathGraph(std::size_t p_map_size,
-              std::vector<std::vector<bool>> p_valid_terrain, Graph p_graph);
+    PathGraph(size_t p_map_size, std::vector<std::vector<bool>> p_valid_terrain,
+              Graph p_graph);
 
     /**
      * Set map size and map terrain

@@ -9,7 +9,7 @@
 
 namespace state {
 
-PathGraph::PathGraph(std::size_t p_map_size,
+PathGraph::PathGraph(size_t p_map_size,
                      std::vector<std::vector<bool>> p_valid_terrain,
                      Graph p_graph)
     : map_size(p_map_size), valid_terrain(std::move(p_valid_terrain)),
@@ -23,7 +23,12 @@ void PathGraph::setValidTerrain(
 }
 
 void PathGraph::addObstacle(const DoubleVec2D &position) {
-    valid_terrain[position.x][position.y] = false;
+    if (position.x < 0 || position.x >= map_size || position.y < 0 ||
+        position.y >= map_size) {
+        throw std::domain_error("Position not inside the range of map");
+    }
+
+    valid_terrain[std::floor(position.x)][std::floor(position.y)] = false;
 }
 
 void PathGraph::addObstacles(const std::vector<DoubleVec2D> &positions) {
@@ -33,7 +38,12 @@ void PathGraph::addObstacles(const std::vector<DoubleVec2D> &positions) {
 }
 
 void PathGraph::removeObstacle(const DoubleVec2D &position) {
-    valid_terrain[position.x][position.y] = true;
+    if (position.x < 0 || position.x >= map_size || position.y < 0 ||
+        position.y >= map_size) {
+        throw std::domain_error("Position not inside the range of map");
+    }
+
+    valid_terrain[std::floor(position.x)][std::floor(position.y)] = true;
 }
 
 boost::unordered_set<DoubleVec2D> PathGraph::getWaypoints() const {
@@ -56,12 +66,12 @@ bool PathGraph::isValidPosition(const DoubleVec2D &position) const {
 
 void PathGraph::resetWaypointGraph() { graph.resetGraph(); }
 
-void PathGraph::addWaypoint(DoubleVec2D position) {
+void PathGraph::addWaypoint(const DoubleVec2D &position) {
     graph.addNode(position);
     recomputeWaypointEdges(position);
 }
 
-void PathGraph::removeWaypoint(DoubleVec2D position) {
+void PathGraph::removeWaypoint(const DoubleVec2D &position) {
     graph.removeNode(position);
 }
 
@@ -74,16 +84,10 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
         // Both points are on a vertical line along the same X value
 
         // True, if x is an integral value
-        bool isIntegralX = false;
-        if (start.x == std::floor(start.x)) {
-            isIntegralX = true;
-        }
+        bool isIntegralX = (start.x == std::floor(start.x));
 
         for (int64_t y = std::floor(start.y); y < std::floor(destination.y);
              y++) {
-            if (destination.y == (double_t)y)
-                break;
-
             if (isIntegralX) {
                 if (!isValidPosition(start.x, y) &&
                     !isValidPosition(start.x - 1, y))
@@ -93,10 +97,7 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
             }
         }
     } else if (start.y == destination.y) {
-        bool isIntegralY = false;
-        if (start.y == std::floor(start.y)) {
-            isIntegralY = true;
-        }
+        bool isIntegralY = (start.y == std::floor(start.y));
 
         for (int64_t x = std::floor(start.x); x < std::floor(destination.x);
              x++) {
@@ -136,7 +137,7 @@ bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
     auto x_intersections = generateIntersections(point_a.x, point_b.x);
     auto slope = getSlope(point_a, point_b);
 
-    for (std::size_t i = 0; i < (x_intersections.size() - 1); i++) {
+    for (size_t i = 0; i < (x_intersections.size() - 1); i++) {
         auto current_x = x_intersections[i];
         auto next_x = x_intersections[i + 1];
 
@@ -165,8 +166,8 @@ void PathGraph::recomputeWaypoints() {
         std::vector<DoubleVec2D>{{0, 0}, {0, 1}, {1, 0}, {1, 1}};
 
     // All 4 points at the corners of an obstacle are waypoints
-    for (std::size_t row = 0; row < map_size; row++) {
-        for (std::size_t col = 0; col < map_size; col++) {
+    for (size_t row = 0; row < map_size; row++) {
+        for (size_t col = 0; col < map_size; col++) {
             if (valid_terrain[row][col])
                 continue;
 
@@ -214,7 +215,7 @@ void PathGraph::recomputeWaypoints() {
     }
 }
 
-void PathGraph::recomputeWaypointEdges(DoubleVec2D position) {
+void PathGraph::recomputeWaypointEdges(const DoubleVec2D &position) {
     if (!graph.checkNodeExists(position))
         return;
 
