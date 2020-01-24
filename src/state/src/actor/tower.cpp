@@ -10,45 +10,61 @@
 namespace state {
 
 Tower::Tower(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             size_t max_hp, size_t damage_incurred, Vec2D pos,
-             std::unique_ptr<TowerState> state)
-    : Blaster(id, player_id, actor_type, hp, max_hp, damage_incurred, pos),
-      state(std::move(state)) {}
+             size_t max_hp, Vec2D pos, size_t damage_points, size_t blast_range,
+             BlastCallback blast_callback)
 
-bool Tower::IsBlasting() { return blast; }
+    : Actor(id, player_id, actor_type, hp, max_hp, pos),
+      Blaster(blast_range, damage_points, std::move(blast_callback)),
+      state(std::make_unique<TowerIdleState>(this)) {}
 
-void Tower::Blast() { blast = true; }
+Tower::Tower(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
+             Vec2D pos, size_t damage_points, size_t blast_range,
+             BlastCallback blast_callback)
+    : Actor(player_id, actor_type, hp, max_hp, pos),
+      Blaster(blast_range, damage_points, std::move(blast_callback)),
+      state(std::make_unique<TowerIdleState>(this)) {}
 
-TowerStateName Tower::GetState() { return state->GetName(); }
+void Tower::blast() { blasting = true; }
 
-void Tower::Update() {
-  auto new_state = state->Update();
+void Tower::damageEnemyActors() { blast_callback(player_id, position); }
 
-  // Keep transitioning states until there are no more transitions
-  while (new_state != nullptr) {
-    state->Exit();
-    state = std::unique_ptr<TowerState>(
-        static_cast<TowerState *>(new_state.release()));
-    state->Enter();
-    new_state = state->Update();
-  }
+TowerStateName Tower::getState() { return state->getName(); }
+
+void Tower::update() {
+    auto new_state = state->update();
+
+    // Keep transitioning states until there are no more transitions
+    while (new_state != nullptr) {
+        state->exit();
+        /*
+            Here, state.reset destroys the state it is currently managing and
+           starts managing the new state object passed to it
+        */
+        state.reset(static_cast<TowerState *>(new_state.release()));
+        state->enter();
+        new_state = state->update();
+    }
 }
 
-void Tower::LateUpdate() {
-  // Updating the hp of the tower
-  setHp(hp - damage_incurred);
+void Tower::lateUpdate() {
+    // Updating the hp of the tower
+    size_t latest_hp = getLatestHp();
+    setHp(latest_hp);
 
-  // Resetting the damage incurred
-  damage(0);
+    // Resetting the damage incurred
+    setDamageIncurred(0);
 
-  auto new_state = state->Update();
+    auto new_state = state->update();
 
-  while (new_state != nullptr) {
-    state->Enter();
-    state = std::unique_ptr<TowerState>(
-        static_cast<TowerState *>(new_state.release()));
-    state->Exit();
-    new_state = state->Update();
-  }
+    while (new_state != nullptr) {
+        state->exit();
+        /*
+            Here, state.reset destroys the state it is currently managing and
+           starts managing the new state object passed to it
+        */
+        state.reset(static_cast<TowerState *>(new_state.release()));
+        state->enter();
+        new_state = state->update();
+    }
 }
 } // namespace state

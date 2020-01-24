@@ -6,60 +6,57 @@
 #pragma once
 
 #include "state/actor/blaster.h"
+#include "state/actor/tower_states/tower_idle_state.h"
 #include "state/actor/tower_states/tower_state.h"
 #include <memory>
 
 namespace state {
-class STATE_EXPORT Tower : public Blaster {
-private:
-  /**
-   * Controls logic for tower's current state
-   */
-  std::unique_ptr<TowerState> state;
+class STATE_EXPORT Tower : public Actor, public Blaster {
+  private:
+    /**
+     * Controls logic for tower's current state
+     */
+    std::unique_ptr<TowerState> state;
 
-  /**
-   * True if the tower is going to blast
-   * False if the tower isn't blasting
-   */
-  bool blast;
+  public:
+    /**
+     * Constructors
+     */
+    Tower(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
+          size_t max_hp, Vec2D pos, size_t damage_points, size_t blast_range,
+          BlastCallback blast_callback);
 
-public:
-  /**
-   * Constructors
-   */
-  Tower(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-        size_t max_hp, size_t damage_incurred, Vec2D pos,
-        std::unique_ptr<TowerState> state);
+    Tower(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
+          Vec2D pos, size_t damage_points, size_t blast_range,
+          BlastCallback blast_callback);
 
-  /**
-   * @see Blaster#Blast
-   */
-  void Blast() override;
+    /**
+     * @see Blaster#Blast
+     */
+    void blast() override;
 
-  /**
-   * Helper function to check if the tower is going to blast
-   *
-   * @return true if the tower is blasting
-   * @return false if the tower is not blasting
-   */
-  bool IsBlasting();
+    /**
+     * Function that uses callback function to damage enemy units due to
+    blasting
+     */
+    void damageEnemyActors();
 
-  /**
-   * Returns the name of the state that the tower is currently in
-   *
-   * @return The name of the tower's state
-   */
-  TowerStateName GetState();
+    /**
+     * Returns the name of the state that the tower is currently in
+     *
+     * @return The name of the tower's state
+     */
+    TowerStateName getState();
 
-  /**
-   * Updates the state of the factory and all related properties
-   */
-  void Update() override;
+    /**
+     * Updates the state of the tower and all related properties
+     */
+    void update() override;
 
-  /**
-   * Performs late updates for the factory
-   */
-  void LateUpdate() override;
+    /**
+     * Performs late updates for the tower
+     */
+    void lateUpdate() override;
 };
 
 } // namespace state

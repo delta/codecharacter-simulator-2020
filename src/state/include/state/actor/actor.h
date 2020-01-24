@@ -128,6 +128,21 @@ class STATE_EXPORT Actor : public IUpdatable {
     size_t getLatestHp() const;
 
     /**
+     * @brief Gets the damage incurred by the Actor during this turn.
+     *        All damages occuring to actor is accumulated
+     *
+     * @return size_t
+     */
+    size_t getDamageIncurred() const;
+
+    /**
+     * @brief Set the damage incurred of the Actor
+     *
+     * @throw std::out_of_range If the damange incurred is negative
+     */
+    void setDamageIncurred(int64_t damage_incurred);
+
+    /**
      * @brief Used to reduce hp of the Actor.
      *        Increases damage_incurred of Actor upto its Hp.
      *
