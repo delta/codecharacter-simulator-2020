@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.15.0)
 project(state)
 
-set(SOURCE_FILES src/state.cpp src/map/map.cpp src/path_planner/graph/graph.cpp
-                 src/actor/actor.cpp src/actor/unit.cpp)
+set(SOURCE_FILES
+    src/state.cpp
+    src/map/map.cpp
+    src/path_planner/graph/graph.cpp
+    src/actor/actor.cpp
+    src/actor/unit.cpp
+    src/path_planner/path_graph_helper.cpp
+    src/path_planner/path_graph.cpp)
 
 set(INCLUDE_PATH include)
 
