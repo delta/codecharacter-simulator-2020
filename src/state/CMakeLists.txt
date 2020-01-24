@@ -9,7 +9,7 @@ set(SOURCE_FILES
     src/actor/unit.cpp
     src/path_planner/path_graph_helper.cpp
     src/path_planner/path_graph.cpp
- src/score_manager/score_manager.cpp)
+    src/score_manager/score_manager.cpp)
 
 set(INCLUDE_PATH include)
 
