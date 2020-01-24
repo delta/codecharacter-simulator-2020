@@ -88,9 +88,8 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
                 if (!isValidPosition(start.x, y) &&
                     !isValidPosition(start.x - 1, y))
                     return false;
-            } else {
-                if (!isValidPosition(start.x, start.y))
-                    return false;
+            } else if (!isValidPosition(start.x, y)) {
+                return false;
             }
         }
     } else if (start.y == destination.y) {
@@ -108,9 +107,8 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
                 if (!isValidPosition(x, start.y) &&
                     !isValidPosition(x, start.y - 1))
                     return false;
-            } else {
-                if (!isValidPosition(start.x, start.y))
-                    return false;
+            } else if (!isValidPosition(x, start.y)) {
+                return false;
             }
         }
     } else {
@@ -134,31 +132,27 @@ bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
         return isStraightLineTraversable(point_a, point_b);
     }
 
-    if (point_a.x != point_b.x) {
+    // Get all integral x's which the line joining a and b intersect
+    auto x_intersections = generateIntersections(point_a.x, point_b.x);
+    auto slope = getSlope(point_a, point_b);
 
-        // Get all integral x's which the line joining a and b intersect
-        auto x_intersections = generateIntersections(point_a.x, point_b.x);
-        auto slope = getSlope(point_a, point_b);
+    for (std::size_t i = 0; i < (x_intersections.size() - 1); i++) {
+        auto current_x = x_intersections[i];
+        auto next_x = x_intersections[i + 1];
 
-        for (std::size_t i = 0; i < (x_intersections.size() - 1); i++) {
-            auto current_x = x_intersections[i];
-            auto next_x = x_intersections[i + 1];
+        // y = slope*(x - x1) + y1
+        auto current_y = slope * (current_x - point_a.x) + point_a.y;
+        auto next_y = slope * (next_x - point_a.x) + point_a.y;
 
-            // y = slope*(x - x1) + y1
-            auto current_y = slope * (current_x - point_a.x) + point_a.y;
-            auto next_y = slope * (next_x - point_a.x) + point_a.y;
+        if (current_y > next_y)
+            std::swap(current_y, next_y);
 
-            if (current_y > next_y)
-                std::swap(current_y, next_y);
-
-            for (int64_t y = std::floor(current_y); y <= std::floor(next_y);
-                 y++) {
-                // Check if position being traversed is valid
-                // If y is next_y, ending at next_y so needn't check that
-                // position
-                if (!isValidPosition(current_x, y) && (double_t)y != next_y) {
-                    return false;
-                }
+        for (int64_t y = std::floor(current_y); y <= std::floor(next_y); y++) {
+            // Check if position being traversed is valid
+            // If y is next_y, ending at next_y so needn't check that
+            // position
+            if (!isValidPosition(current_x, y) && (double_t)y != next_y) {
+                return false;
             }
         }
     }
@@ -196,10 +190,25 @@ void PathGraph::recomputeWaypoints() {
         auto x = waypoint.x;
         auto y = waypoint.y;
 
-        if (!(isValidPosition(x, y) || isValidPosition(x - 1, y)) ||
-            !(isValidPosition(x, y) || isValidPosition(x, y - 1)) ||
-            !(isValidPosition(x - 1, y - 1) || isValidPosition(x, y - 1)) ||
-            !(isValidPosition(x - 1, y - 1) || isValidPosition(x - 1, y))) {
+        bool removeNode = false;
+
+        if (!(isValidPosition(x, y) || isValidPosition(x - 1, y))) {
+            // Both tiles to the right are blocked
+            removeNode = true;
+        } else if (!(isValidPosition(x, y) || isValidPosition(x, y - 1))) {
+            // Both tiles to the top are blocked
+            removeNode = true;
+        } else if (!(isValidPosition(x - 1, y - 1) ||
+                     isValidPosition(x, y - 1))) {
+            // Both tiles to the left are blocked
+            removeNode = true;
+        } else if (!(isValidPosition(x - 1, y - 1) ||
+                     isValidPosition(x - 1, y))) {
+            // Both tiles to the bottom are blocked
+            removeNode = true;
+        }
+
+        if (removeNode) {
             graph.removeNode(waypoint);
         }
     }

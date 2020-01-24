@@ -23,7 +23,7 @@ std::vector<double_t> PathGraph::generateIntersections(double_t a,
         result.push_back(x);
     }
 
-    if (result.empty() || result.back() != b) {
+    if (result.back() != b) {
         result.push_back(b);
     }
 

@@ -22,6 +22,19 @@ class WaypointGraphTest : public testing::Test {
         waypointGraph =
             make_unique<PathGraph>(MAP_SIZE, valid_terrain, Graph());
 
+        /**
+         * Note: Bottom corner is (0,0)
+         * . . . . . . . . . . .
+         * . . . . . . . . . . .
+         * . . . . # . . # . . .
+         * . . . . # . . # . . .
+         * . . . . # . . # . . .
+         * . . . . # . . # . . .
+         * . . . . # . . # . . .
+         * . # # # # # # # . . .
+         * . . . . . . . . . . .
+         * . . . . . . . . . . .
+         */
         for (double_t i = 1; i <= 7; i++)
             waypointGraph->addObstacle({2, i});
         for (double_t i = 3; i <= 7; i++)
@@ -74,6 +87,18 @@ TEST_F(WaypointGraphTest, UnreachablityTest) {
     waypointGraph->addObstacle({7, 5});
     waypointGraph->addObstacle({7, 6});
 
+    /**
+     * . . . . . . . . . . .
+     * . . . . . . . . . . .
+     * . . . . # # # # . . .
+     * . . . . # . . # . . .
+     * . . . . # . . # . . .
+     * . . . . # . . # . . .
+     * . . . . # . . # . . .
+     * . # # # # # # # . . .
+     * . . . . . . . . . . .
+     * . . . . . . . . . . .
+     */
     waypointGraph->recomputeWaypointGraph();
 
     auto path = waypointGraph->getPath({5, 6}, {0, 7});
@@ -101,6 +126,19 @@ TEST_F(WaypointGraphTest, AlongWaypointTest) {
 }
 
 TEST_F(WaypointGraphTest, LongPathTest) {
+    /**
+     * . . . . . . . . . .
+     * # # # # # # # # # .
+     * . . . . . . . . . .
+     * . . . . . . . . . .
+     * . # # # # # # # # #
+     * . . . . . . . . . .
+     * . . . . . . . . . .
+     * # # # # # # # # # .
+     * . . . . . . . . . .
+     * . . . . . . . . . .
+     */
+
     auto test_terrain = valid_terrain;
     for (auto i = 0; i <= 8; i++)
         test_terrain[2][i] = false;
@@ -123,6 +161,19 @@ TEST_F(WaypointGraphTest, LongPathTest) {
 }
 
 TEST_F(WaypointGraphTest, SpiralPathTest) {
+    /**
+     * . . . . . . . . . .
+     * . . . . . . . . . .
+     * . # # # # # # # # .
+     * . # . . . . . . # .
+     * . # . # # # # . # .
+     * . # . # . . # . # .
+     * . # . . . . # . # .
+     * . # # # # # # . # .
+     * . . . . . . . . # .
+     * # # # # # # # # # .
+     */
+
     std::vector<std::vector<bool>> test_terrain{
         {F, T, T, T, T, T, T, T, T, T}, {F, T, F, F, F, F, F, F, T, T},
         {F, T, F, T, T, T, T, F, T, T}, {F, T, F, T, F, F, T, F, T, T},
