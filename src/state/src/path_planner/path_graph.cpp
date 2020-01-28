@@ -9,6 +9,8 @@
 
 namespace state {
 
+PathGraph::PathGraph() = default;
+
 PathGraph::PathGraph(size_t p_map_size,
                      std::vector<std::vector<bool>> p_valid_terrain,
                      Graph p_graph)

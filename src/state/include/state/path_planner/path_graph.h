@@ -35,13 +35,6 @@ class PathGraph {
 
     /**
      * Check if given position is on valid terrain
-     * @param position
-     * @return True, if position can be traversed, false otherwise
-     */
-    bool isValidPosition(const DoubleVec2D &position) const;
-
-    /**
-     * Check if given position is on valid terrain
      * @param x
      * @param y
      * @return True, if position can be traversed, false otherwise
@@ -117,6 +110,7 @@ class PathGraph {
                                    DoubleVec2D destination) const;
 
   public:
+    PathGraph();
     PathGraph(size_t p_map_size, std::vector<std::vector<bool>> p_valid_terrain,
               Graph p_graph);
 
@@ -131,6 +125,13 @@ class PathGraph {
      * Recalculate waypoints and edges from valid_terrain
      */
     void recomputeWaypointGraph();
+
+    /**
+     * Check if given position is on valid terrain
+     * @param position
+     * @return True, if position can be traversed, false otherwise
+     */
+    bool isValidPosition(const DoubleVec2D &position) const;
 
     /**
      * Adds obstacle in a position

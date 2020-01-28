@@ -22,7 +22,7 @@ class IPathPlanner {
      * @param speed Movement speed in one turn
      * @return DoubleVec2D Next position to move to
      */
-    virtual DoubleVec2D GetNextPosition(DoubleVec2D source,
+    virtual DoubleVec2D getNextPosition(DoubleVec2D source,
                                         DoubleVec2D destination,
                                         size_t speed) = 0;
 };
