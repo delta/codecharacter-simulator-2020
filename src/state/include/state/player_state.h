@@ -152,7 +152,7 @@ struct Tower : _Actor {
 
     void blast_tower() { has_blasted = true; }
 
-    Tower() : _Actor(), state(TowerState::IDLE), has_blasted(false){};
+    Tower() : _Actor::_Actor(), state(TowerState::IDLE), has_blasted(false){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {

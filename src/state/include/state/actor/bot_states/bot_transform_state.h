@@ -1,6 +1,6 @@
 /**
- * @file bot_blash_state.h
- * @brief Declares the Bot Blast State class
+ * @file bot_transform_state.h
+ * @brief Declares the Bot Transform State class
  */
 
 #pragma once
@@ -10,9 +10,9 @@
 
 namespace state {
 
-class STATE_EXPORT BotBlastState : public BotState {
+class STATE_EXPORT BotTransformState : public BotState {
   public:
-    BotBlastState(Bot *bot);
+    BotTransformState(Bot *bot);
     void enter() override;
     std::unique_ptr<IActorState> update() override;
     void exit() override;

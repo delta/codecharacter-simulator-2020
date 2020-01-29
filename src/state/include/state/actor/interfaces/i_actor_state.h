@@ -3,6 +3,8 @@
  * Declares an interface for actor states
  */
 
+#pragma once
+
 #include "state/state_export.h"
 #include <memory>
 

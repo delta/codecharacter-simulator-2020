@@ -14,7 +14,7 @@ class STATE_EXPORT BotMoveState : public BotState {
   public:
     BotMoveState(Bot *bot);
     void enter() override;
-    std::unique_ptr<IActorState> update();
+    std::unique_ptr<IActorState> update() override;
     void exit() override;
 };
 

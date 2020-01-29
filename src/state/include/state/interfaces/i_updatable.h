@@ -16,8 +16,14 @@ class STATE_EXPORT IUpdatable {
   public:
     virtual ~IUpdatable(){};
 
+    /**
+     * @brief Update function of Bot/Tower
+     */
     virtual void update() = 0;
 
+    /**
+     * @brief Late Update function of Bot/Tower. After the end of every turn.
+     */
     virtual void lateUpdate() = 0;
 };
 } // namespace state
