@@ -135,16 +135,6 @@ class STATE_EXPORT Unit : public Actor {
      * @param destination The destination to move to.
      */
     void move(DoubleVec2D destination);
-
-    /**
-     *  Update function of Unit
-     */
-    virtual void update() = 0;
-
-    /**
-     *  Late Update function of unit. After the end of every turn.
-     */
-    virtual void lateUpdate() = 0;
 };
 
 } // namespace state

@@ -1,6 +1,6 @@
 /**
  * @file bot_dead_state.h
- * @brief Declares the Bot Dead State class
+ * Declares the Bot Dead State class
  */
 
 #pragma once
@@ -14,7 +14,7 @@ class STATE_EXPORT BotDeadState : public BotState {
   public:
     BotDeadState(Bot *bot);
     void enter() override;
-    std::unique_ptr<IActorState> update();
+    std::unique_ptr<IActorState> update() const override; 
     void exit() override;
 };
 
