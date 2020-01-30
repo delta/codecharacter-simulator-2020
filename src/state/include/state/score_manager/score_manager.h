@@ -38,9 +38,9 @@ class STATE_EXPORT ScoreManager {
      *
      * @param player_id
      *
-     * @return size_t
+     * @return double
      */
-    size_t getIndividualPoints(PlayerId player_id) const;
+    double getIndividualPoints(PlayerId player_id) const;
 
   public:
     ScoreManager(std::array<size_t, 2> scores);
@@ -82,7 +82,7 @@ class STATE_EXPORT ScoreManager {
     /**
      * Returns the scores
      *
-     * @return std::array<size_t, PlayerId::PLAYER_COUNT> scores
+     * @return std::array<size_t, 2> scores
      */
     std::array<size_t, 2> getScores() const;
 };

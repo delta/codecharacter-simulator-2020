@@ -11,9 +11,9 @@ namespace state {
 ScoreManager::ScoreManager(std::array<size_t, 2> scores)
     : scores(scores), num_bots({0, 0}), num_towers({0, 0}) {}
 
-size_t ScoreManager::getIndividualPoints(PlayerId player_id) const {
+double ScoreManager::getIndividualPoints(PlayerId player_id) const {
     using namespace Constants::Score;
-    size_t player_points = 0;
+    double player_points = 0;
     player_points +=
         BOT_SCORE_MULTIPLIER * num_bots[static_cast<size_t>(player_id)];
     player_points +=
