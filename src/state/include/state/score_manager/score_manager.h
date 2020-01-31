@@ -34,50 +34,36 @@ class STATE_EXPORT ScoreManager {
     std::array<size_t, 2> num_towers;
 
     /**
-     * Get the Individual Points based on number of player bots and towers
+     * Get points based on number of bots and towers owned by the player
      *
      * @param player_id
      *
      * @return double
      */
-    double getIndividualPoints(PlayerId player_id) const;
+    double getPlayerPoints(PlayerId player_id) const;
 
   public:
     ScoreManager(std::array<size_t, 2> scores);
 
     /**
-     * Record bot entering flag
+     * Record actor entering flag
      *
      * @param player_id
      */
-    void botEnteredFlagArea(PlayerId player_id);
+    void actorEnteredFlagArea(ActorType actor_type, PlayerId player_id);
 
     /**
-     * Record bot exiting flag
+     * Record actor exiting flag
      *
      * @param player_id
      */
-    void botExitedFlagArea(PlayerId player_id);
-
-    /**
-     * Record tower entering flag
-     *
-     * @param player_id
-     */
-    void towerEnteredFlagArea(PlayerId player_id);
-
-    /**
-     * Record tower exiting flag
-     *
-     * @param player_id
-     */
-    void towerExitedFlagArea(PlayerId player_id);
+    void actorExitedFlagArea(ActorType actor_type, PlayerId player_id);
 
     /**
      * Update the score
      * This function is called after every frame
      */
-    void updateScore();
+    void updateScores();
 
     /**
      * Returns the scores
