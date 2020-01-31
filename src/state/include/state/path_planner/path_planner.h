@@ -15,14 +15,25 @@ class PathPlanner : public IPathPlanner {
 
     /**
      * Map instance to determine terrain
+     * Not changed during game, acts as a reference for the original terrain of
+     * a given position
      */
     std::unique_ptr<Map> map;
 
     /**
      * PathGraph class handles all path calculations
+     * PathGraph also keeps track of towers as obstacles
      */
     PathGraph path_graph;
 
+    /**
+     * Helper function to get a point along the direction of a line segment
+     * given the endpoints
+     * @param point_a Start point of line segment
+     * @param point_b End point of line segment
+     * @param distance Target distance from start point
+     * @return DoubleVec2D Target point
+     */
     static DoubleVec2D getPointAlongLine(DoubleVec2D point_a,
                                          DoubleVec2D point_b,
                                          double_t distance);

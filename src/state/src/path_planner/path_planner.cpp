@@ -18,6 +18,8 @@ PathPlanner::PathPlanner(std::unique_ptr<Map> map) : map(std::move(map)) {
         for (size_t col = 0; col < map_size; col++) {
             auto position_terrain =
                 map->GetTerrainType((int64_t)row, (int64_t)col);
+
+            // The square from (row, col) to (row+1,col+1) is of this terrain
             valid_terrain[row][col] = (position_terrain == TerrainType::LAND ||
                                        position_terrain == TerrainType::FLAG);
         }
@@ -28,23 +30,14 @@ PathPlanner::PathPlanner(std::unique_ptr<Map> map) : map(std::move(map)) {
 }
 
 bool PathPlanner::isPositionBlocked(DoubleVec2D position) {
-    auto position_terrain = map->GetTerrainType(position.x, position.y);
-
-    switch (position_terrain) {
-    case TerrainType::LAND:
-    case TerrainType::FLAG: {
-        return !path_graph.isValidPosition(position);
-    }
-    default: {
-        return true;
-    }
-    }
+    return !path_graph.isValidPosition(position);
 }
 
 void PathPlanner::addTower(DoubleVec2D position) {
     if (isPositionBlocked(position)) {
         return;
     }
+
     path_graph.addObstacle(position);
 }
 
@@ -54,6 +47,7 @@ void PathPlanner::removeTower(DoubleVec2D position) {
         !isPositionBlocked(position)) {
         return;
     }
+
     path_graph.removeObstacle(position);
 }
 
@@ -62,6 +56,10 @@ void PathPlanner::recomputePathGraph() { path_graph.recomputeWaypointGraph(); }
 DoubleVec2D PathPlanner::getPointAlongLine(DoubleVec2D point_a,
                                            DoubleVec2D point_b,
                                            double_t distance) {
+    if (point_a == point_b) {
+        throw std::invalid_argument("Start and end points cannot be same");
+    }
+
     double_t magnitude = point_a.distance(point_b);
     DoubleVec2D unit_vector = {(point_b.x - point_a.x) / magnitude,
                                (point_b.y - point_a.y) / magnitude};
@@ -74,13 +72,15 @@ DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          size_t speed) {
     std::vector<DoubleVec2D> path = path_graph.getPath(source, destination);
 
+    if (path.empty()) {
+        return DoubleVec2D::null;
+    }
+
     double distance_left = speed;
     DoubleVec2D current_position = source;
 
     for (auto next_position : path) {
-        if (distance_left == 0)
-            break;
-        if (current_position == destination)
+        if (distance_left == 0 || current_position == destination)
             break;
 
         if (current_position.distance(next_position) >= distance_left) {
