@@ -52,12 +52,17 @@ boost::unordered_set<DoubleVec2D> PathGraph::getWaypoints() const {
     return graph.getNodes();
 }
 
-bool PathGraph::isValidPosition(const double_t &x, const double_t &y) const {
+bool PathGraph::isValidPosition(double_t x, double_t y) const {
     if (x < 0 || y < 0)
         return false;
 
-    if (x >= map_size || y >= map_size)
+    if (x > map_size || y > map_size)
         return false;
+
+    if (x == map_size)
+        x--;
+    if (y == map_size)
+        y--;
 
     return valid_terrain[std::floor(x)][std::floor(y)];
 }

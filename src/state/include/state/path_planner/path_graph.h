@@ -39,7 +39,7 @@ class PathGraph {
      * @param y
      * @return True, if position can be traversed, false otherwise
      */
-    bool isValidPosition(const double_t &x, const double_t &y) const;
+    bool isValidPosition(double_t x, double_t y) const;
 
     /**
      * Add a new waypoint and create edges

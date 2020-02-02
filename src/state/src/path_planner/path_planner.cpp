@@ -8,9 +8,8 @@
 
 namespace state {
 
-PathPlanner::PathPlanner(std::unique_ptr<Map> map) : map(std::move(map)) {
+PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
     auto map_size = map->GetSize();
-
     auto valid_terrain = std::vector<std::vector<bool>>(
         map_size, std::vector<bool>(map_size, true));
 
@@ -35,7 +34,7 @@ bool PathPlanner::isPositionBlocked(DoubleVec2D position) {
 
 void PathPlanner::addTower(DoubleVec2D position) {
     if (isPositionBlocked(position)) {
-        return;
+        throw std::invalid_argument("Position is already blocked");
     }
 
     path_graph.addObstacle(position);
@@ -45,7 +44,7 @@ void PathPlanner::removeTower(DoubleVec2D position) {
     auto position_terrain = map->GetTerrainType(position.x, position.y);
     if (position_terrain == TerrainType::WATER ||
         !isPositionBlocked(position)) {
-        return;
+        throw std::invalid_argument("No tower in position");
     }
 
     path_graph.removeObstacle(position);
