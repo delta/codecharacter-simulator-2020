@@ -20,4 +20,8 @@ bool Blaster::isBlasting() const { return blasting; }
 
 void Blaster::setBlasting(bool p_blasting) { blasting = p_blasting; }
 
+size_t Blaster::getBlastRange() const { return blast_range; }
+
+size_t Blaster::getBlastDamage() const { return damage_points; }
+
 } // namespace state

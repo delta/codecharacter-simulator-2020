@@ -78,22 +78,22 @@ std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
 struct _Actor {
     int64_t id;
     int64_t hp;
-    Vec2D position;
+    DoubleVec2D position;
 
-    _Actor() : id(0), hp(100), position(Vec2D{0, 0}){};
+    _Actor() : id(0), hp(100), position(DoubleVec2D{0, 0}){};
 };
 
 struct _Unit : _Actor {
-    Vec2D destination;
+    DoubleVec2D destination;
     static size_t speed;
 
-    virtual void reset() { destination = Vec2D::null; }
-    void move(Vec2D p_destination) {
+    virtual void reset() { destination = DoubleVec2D::null; }
+    void move(DoubleVec2D p_destination) {
         reset();
         destination = p_destination;
     }
 
-    _Unit() : _Actor(), destination(Vec2D::null){};
+    _Unit() : _Actor(), destination(DoubleVec2D::null){};
 };
 
 size_t _Unit::speed = Constants::Actor::BOT_SPEED;
@@ -101,14 +101,14 @@ size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 struct Bot : _Unit {
     BotState state;
     // move and blast at set destination
-    Vec2D final_destination;
+    DoubleVec2D final_destination;
     bool has_blasted;
     bool has_transformed;
     static size_t impact_radius;
 
     void reset() override {
-        destination = Vec2D::null;
-        final_destination = Vec2D::null;
+        destination = DoubleVec2D::null;
+        final_destination = DoubleVec2D::null;
         has_blasted = false;
         has_transformed = false;
     }
@@ -119,7 +119,7 @@ struct Bot : _Unit {
     }
 
     // move to a target position and blast;
-    void blast_bot(Vec2D target_position) {
+    void blast_bot(DoubleVec2D target_position) {
         reset();
         final_destination = target_position;
         has_blasted = true;
@@ -131,7 +131,7 @@ struct Bot : _Unit {
     }
 
     Bot()
-        : _Unit(), state(BotState::IDLE), final_destination(Vec2D::null),
+        : _Unit(), state(BotState::IDLE), final_destination(DoubleVec2D::null),
           has_blasted(false), has_transformed(false){};
 };
 

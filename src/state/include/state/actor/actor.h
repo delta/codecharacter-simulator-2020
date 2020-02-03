@@ -57,14 +57,33 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      * @brief Actor position
      */
-    Vec2D position;
+    DoubleVec2D position;
 
   public:
+    /**
+     * @brief Construct a new Actor object
+     *
+     * @param id
+     * @param player_id
+     * @param actor_type
+     * @param hp
+     * @param max_hp
+     * @param position
+     */
     Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, Vec2D position);
+          size_t max_hp, DoubleVec2D position);
 
+    /**
+     * @brief Construct a new Actor object, with auto incrementing id.
+     *
+     * @param player_id
+     * @param actor_type
+     * @param hp
+     * @param max_hp
+     * @param position
+     */
     Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-          Vec2D position);
+          DoubleVec2D position);
 
     virtual ~Actor() {}
 
@@ -153,9 +172,9 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      * @brief Get the Position of Actor
      *
-     * @return Vec2D
+     * @return DoubleVec2D
      */
-    Vec2D getPosition() const;
+    DoubleVec2D getPosition() const;
 };
 
 } // namespace state
