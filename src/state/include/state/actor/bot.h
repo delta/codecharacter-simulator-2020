@@ -169,11 +169,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     /**
      *  Updates the state of the bot and all related properties
      *
-     */
     void update() override;
-
-    /**
-     * Performs late updates for the bot
      */
     void lateUpdate() override;
 };
