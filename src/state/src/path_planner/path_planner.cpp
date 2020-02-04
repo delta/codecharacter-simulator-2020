@@ -28,33 +28,131 @@ PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
     path_graph = PathGraph(map_size, valid_terrain, graph);
 }
 
-bool PathPlanner::isPositionBlocked(DoubleVec2D position) {
+bool PathPlanner::isOffsetBlocked(const DoubleVec2D &position) const {
     return !path_graph.isValidPosition(position);
 }
 
-void PathPlanner::addTower(DoubleVec2D position) {
-    if (isPositionBlocked(position)) {
-        throw std::invalid_argument("Position is already blocked");
+bool PathPlanner::isInMapRange(DoubleVec2D position,
+                               state::PlayerId player_id) {
+    if (position.x < 0 || position.y < 0 || position.x > map->GetSize() ||
+        position.y > map->GetSize()) {
+        return false;
     }
 
-    path_graph.addObstacle(position);
+    if (player_id == PlayerId::PLAYER1) {
+        return !(position.x == map->GetSize() || position.y == map->GetSize());
+    } else {
+        return !(position.x == 0 || position.y == 0);
+    }
 }
 
-void PathPlanner::removeTower(DoubleVec2D position) {
-    auto position_terrain = map->GetTerrainType(position.x, position.y);
-    if (position_terrain == TerrainType::WATER ||
-        !isPositionBlocked(position)) {
-        throw std::invalid_argument("No tower in position");
+DoubleVec2D PathPlanner::getOffset(DoubleVec2D position,
+                                   state::PlayerId player_id) {
+    if (!isInMapRange(position, player_id)) {
+        return DoubleVec2D::null;
     }
 
-    path_graph.removeObstacle(position);
+    if (player_id == PlayerId::PLAYER1) {
+        position.x = std::floor(position.x);
+        position.y = std::floor(position.y);
+
+        return {position.x, position.y};
+    } else {
+        position.x = std::ceil(position.x);
+        position.y = std::ceil(position.y);
+
+        return {position.x - 1, position.y - 1};
+    }
+}
+
+bool PathPlanner::isValidTowerPosition(DoubleVec2D position,
+                                       PlayerId player_id) {
+    auto tower_base_position = getOffset(position, player_id);
+
+    if (tower_base_position == DoubleVec2D::null) {
+        return false;
+    }
+
+    return path_graph.isValidPosition(tower_base_position);
+}
+
+std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
+    std::vector<double_t> xs;
+    std::vector<double_t> ys;
+
+    DoubleVec2D position_floor = {std::floor(position.x),
+                                  std::floor(position.y)};
+
+    xs.push_back(position_floor.x);
+    if (position.x == position_floor.x) {
+        xs.push_back(position_floor.x - 1);
+    }
+
+    ys.push_back(position_floor.y);
+    if (position.y == position_floor.y) {
+        ys.push_back(position_floor.y - 1);
+    }
+
+    std::vector<DoubleVec2D> ans;
+
+    for (auto x : xs) {
+        for (auto y : ys) {
+            if (path_graph.isValidPosition({x, y})) {
+                ans.emplace_back(x, y);
+            }
+        }
+    }
+
+    return ans;
+}
+
+bool PathPlanner::isValidBotPosition(DoubleVec2D position) {
+    auto adjacent_tiles = getAdjacentOffsets(position);
+
+    for (auto adjacent_tile : adjacent_tiles) {
+        if (path_graph.isValidPosition(adjacent_tile)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+DoubleVec2D PathPlanner::addTower(DoubleVec2D position, PlayerId player_id) {
+    DoubleVec2D tower_offset = getOffset(position, player_id);
+
+    if (tower_offset == DoubleVec2D::null) {
+        throw std::invalid_argument("Invalid tower build position for player");
+    }
+
+    if (isOffsetBlocked(tower_offset)) {
+        return DoubleVec2D::null;
+    }
+
+    path_graph.addObstacle(tower_offset);
+    return tower_offset;
+}
+
+bool PathPlanner::removeTower(DoubleVec2D tower_offset) {
+    if (tower_offset == DoubleVec2D::null) {
+        throw std::invalid_argument("Invalid tower position for player");
+    }
+
+    auto position_terrain = map->GetTerrainType(tower_offset.x, tower_offset.y);
+    if (position_terrain == TerrainType::WATER ||
+        !isOffsetBlocked(tower_offset)) {
+        return false;
+    }
+
+    path_graph.removeObstacle(tower_offset);
+    return true;
 }
 
 void PathPlanner::recomputePathGraph() { path_graph.recomputeWaypointGraph(); }
 
-DoubleVec2D PathPlanner::getPointAlongLine(DoubleVec2D point_a,
-                                           DoubleVec2D point_b,
-                                           double_t distance) {
+DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
+                                           const DoubleVec2D &point_b,
+                                           const double_t &distance) {
     if (point_a == point_b) {
         throw std::invalid_argument("Start and end points cannot be same");
     }

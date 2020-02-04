@@ -11,12 +11,12 @@ const auto MAP_SIZE = size_t{10};
 const auto T = true;
 const auto F = false;
 
-class WaypointGraphTest : public testing::Test {
+class PathGraphTest : public testing::Test {
   protected:
     vector<vector<bool>> valid_terrain;
     unique_ptr<PathGraph> waypointGraph;
 
-    WaypointGraphTest() {
+    PathGraphTest() {
         valid_terrain = std::vector<std::vector<bool>>(
             MAP_SIZE, std::vector<bool>(MAP_SIZE, true));
         waypointGraph =
@@ -46,7 +46,7 @@ class WaypointGraphTest : public testing::Test {
     }
 };
 
-TEST_F(WaypointGraphTest, FMapTest1) {
+TEST_F(PathGraphTest, FMapTest1) {
     auto path = waypointGraph->getPath({5, 6}, {0, 4});
     ASSERT_EQ(path.size(), 5);
     ASSERT_EQ(path[0], DoubleVec2D(8, 5));
@@ -56,7 +56,7 @@ TEST_F(WaypointGraphTest, FMapTest1) {
     ASSERT_EQ(path[4], DoubleVec2D(0, 4));
 }
 
-TEST_F(WaypointGraphTest, FMapTest2) {
+TEST_F(PathGraphTest, FMapTest2) {
     auto path = waypointGraph->getPath({5, 6}, {0, 7});
     ASSERT_EQ(path.size(), 4);
     ASSERT_EQ(path[0], DoubleVec2D(8, 7));
@@ -65,25 +65,25 @@ TEST_F(WaypointGraphTest, FMapTest2) {
     ASSERT_EQ(path[3], DoubleVec2D(0, 7));
 }
 
-TEST_F(WaypointGraphTest, FMapTest3) {
+TEST_F(PathGraphTest, FMapTest3) {
     auto path = waypointGraph->getPath({0, 4}, {0, 7});
     ASSERT_EQ(path.size(), 1);
     ASSERT_EQ(path[0], DoubleVec2D(0, 7));
 }
 
-TEST_F(WaypointGraphTest, FMapTest4) {
+TEST_F(PathGraphTest, FMapTest4) {
     auto path = waypointGraph->getPath({0, 0}, {9, 0});
     ASSERT_EQ(path.size(), 1);
     ASSERT_EQ(path[0], DoubleVec2D(9, 0));
 }
 
-TEST_F(WaypointGraphTest, FMapTest5) {
+TEST_F(PathGraphTest, FMapTest5) {
     auto path = waypointGraph->getPath({5.5, 5.5}, {6.5, 6.5});
     ASSERT_EQ(path.size(), 1);
     ASSERT_EQ(path[0], DoubleVec2D(6.5, 6.5));
 }
 
-TEST_F(WaypointGraphTest, UnreachablityTest) {
+TEST_F(PathGraphTest, UnreachablityTest) {
     waypointGraph->addObstacle({7, 5});
     waypointGraph->addObstacle({7, 6});
 
@@ -110,22 +110,22 @@ TEST_F(WaypointGraphTest, UnreachablityTest) {
     waypointGraph->recomputeWaypointGraph();
 }
 
-TEST_F(WaypointGraphTest, InvalidStartTest) {
+TEST_F(PathGraphTest, InvalidStartTest) {
     auto path = waypointGraph->getPath({2.5, 2}, {0, 7});
     ASSERT_EQ(path.size(), 0);
 }
 
-TEST_F(WaypointGraphTest, InvalidDestinationTest) {
+TEST_F(PathGraphTest, InvalidDestinationTest) {
     auto path = waypointGraph->getPath({0, 7}, {2.5, 1.5});
     ASSERT_EQ(path.size(), 0);
 }
 
-TEST_F(WaypointGraphTest, AlongWaypointTest) {
+TEST_F(PathGraphTest, AlongWaypointTest) {
     auto path = waypointGraph->getPath({3, 1}, {8, 4});
     ASSERT_EQ(path.size(), 1);
 }
 
-TEST_F(WaypointGraphTest, LongPathTest) {
+TEST_F(PathGraphTest, LongPathTest) {
     /**
      * . . . . . . . . . .
      * # # # # # # # # # .
@@ -160,7 +160,7 @@ TEST_F(WaypointGraphTest, LongPathTest) {
     ASSERT_EQ(path[6], DoubleVec2D(9.5, 0.5));
 }
 
-TEST_F(WaypointGraphTest, SpiralPathTest) {
+TEST_F(PathGraphTest, SpiralPathTest) {
     /**
      * . . . . . . . . . .
      * . . . . . . . . . .

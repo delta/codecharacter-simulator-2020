@@ -47,58 +47,159 @@ class PathPlannerTest : public testing::Test {
 };
 
 TEST_F(PathPlannerTest, IsPositionBlockedTest) {
-    ASSERT_EQ(path_planner->isPositionBlocked({15, 0}), true);
-    ASSERT_EQ(path_planner->isPositionBlocked({0, 15}), true);
-    ASSERT_EQ(path_planner->isPositionBlocked({20, 20}), false);
-    ASSERT_EQ(path_planner->isPositionBlocked({10, 10}), false);
-    ASSERT_EQ(path_planner->isPositionBlocked({0, 0}), false);
+    ASSERT_EQ(path_planner->isOffsetBlocked({15, 0}), true);
+    ASSERT_EQ(path_planner->isOffsetBlocked({0, 15}), true);
+    ASSERT_EQ(path_planner->isOffsetBlocked({10, 10}), false);
+    ASSERT_EQ(path_planner->isOffsetBlocked({0, 0}), false);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionBoundaryPlayer1Test) {
+
+    // Checking on map boundary for Player1
+    ASSERT_EQ(path_planner->isValidTowerPosition({MAP_SIZE, MAP_SIZE},
+                                                 PlayerId::PLAYER1),
+              false);
+    ASSERT_EQ(
+        path_planner->isValidTowerPosition({0, MAP_SIZE}, PlayerId::PLAYER1),
+        false);
+    ASSERT_EQ(path_planner->isValidTowerPosition({0, 0}, PlayerId::PLAYER1),
+              true);
+    ASSERT_EQ(path_planner->isValidTowerPosition({0, 5}, PlayerId::PLAYER1),
+              true);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionWaterPlayer1Test) {
+
+    // Checking on water
+    ASSERT_EQ(
+        path_planner->isValidTowerPosition({0.5, 14.5}, PlayerId::PLAYER1),
+        false);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionLandPlayer1Test) {
+
+    // Checking on land
+    ASSERT_EQ(path_planner->isValidTowerPosition({3.5, 3.5}, PlayerId::PLAYER1),
+              true);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionBoundaryPlayer2Test) {
+
+    // Checking on map boundary for Player2
+    ASSERT_EQ(path_planner->isValidTowerPosition({0, 0}, PlayerId::PLAYER2),
+              false);
+    ASSERT_EQ(
+        path_planner->isValidTowerPosition({0, MAP_SIZE}, PlayerId::PLAYER1),
+        false);
+    ASSERT_EQ(path_planner->isValidTowerPosition({MAP_SIZE, MAP_SIZE},
+                                                 PlayerId::PLAYER2),
+              true);
+    ASSERT_EQ(
+        path_planner->isValidTowerPosition({MAP_SIZE, 7}, PlayerId::PLAYER2),
+        true);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionWaterPlayer2Test) {
+
+    // Checking on water
+    ASSERT_EQ(
+        path_planner->isValidTowerPosition({0.5, 14.5}, PlayerId::PLAYER2),
+        false);
+}
+
+TEST_F(PathPlannerTest, isValidTowerPositionLandPlayer2Test) {
+    // Checking on land
+    ASSERT_EQ(path_planner->isValidTowerPosition({3.5, 3.5}, PlayerId::PLAYER2),
+              true);
+}
+
+TEST_F(PathPlannerTest, isValidBotPositionBoundaryTest) {
+
+    // Checking on map boundary
+    ASSERT_EQ(path_planner->isValidBotPosition({MAP_SIZE, MAP_SIZE}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, MAP_SIZE}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, 5}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, 0}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({MAP_SIZE, 7}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({MAP_SIZE, 7}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, 14.5}), false);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, 14}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({0, 15}), false);
+}
+
+TEST_F(PathPlannerTest, isValidBotPositionWaterTest) {
+
+    // Checking on water
+    ASSERT_EQ(path_planner->isValidBotPosition({0.5, 14.5}), false);
+    ASSERT_EQ(path_planner->isValidBotPosition({0.5, 14.5}), false);
+}
+
+TEST_F(PathPlannerTest, isValidBotPositionLandTest) {
+
+    // Checking on land
+    ASSERT_EQ(path_planner->isValidBotPosition({3.5, 3.5}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({3.5, 3.5}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({1, 14.5}), false);
+    ASSERT_EQ(path_planner->isValidBotPosition({14, 6}), true);
+    ASSERT_EQ(path_planner->isValidBotPosition({17, 3}), true);
+}
+
+TEST_F(PathPlannerTest, AddTowerPlayer1Test) {
+    // Build tower
+    ASSERT_EQ(path_planner->addTower({0, 0}, PlayerId::PLAYER1),
+              DoubleVec2D(0, 0));
+    ASSERT_EQ(path_planner->isOffsetBlocked({0, 0}), true);
+    ASSERT_EQ(path_planner->addTower({8.5, 8.5}, PlayerId::PLAYER1),
+              DoubleVec2D(8, 8));
+    ASSERT_EQ(path_planner->isOffsetBlocked({8, 8}), true);
+    ASSERT_EQ(path_planner->addTower({14, 5}, PlayerId::PLAYER1),
+              DoubleVec2D::null);
+
+    // Invalid position
+    bool get_exception = false;
+    try {
+        path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER1);
+    } catch (...) {
+        get_exception = true;
+    }
+    ASSERT_EQ(get_exception, true);
 }
 
 TEST_F(PathPlannerTest, AddTowerTest) {
-    path_planner->addTower({8.5, 8.5});
-    ASSERT_EQ(path_planner->isPositionBlocked({8.2, 8.2}), true);
 
-    // Building a tower at invalid position, should not construct a tower
+    // Build tower
+    ASSERT_EQ(path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2),
+              DoubleVec2D(MAP_SIZE - 1, MAP_SIZE - 1));
+    ASSERT_EQ(path_planner->isOffsetBlocked({MAP_SIZE - 1, MAP_SIZE - 1}),
+              true);
+    ASSERT_EQ(path_planner->addTower({14, 7}, PlayerId::PLAYER2),
+              DoubleVec2D(13, 6));
+
+    // Invalid position
     bool get_exception = false;
     try {
-        path_planner->addTower({20, 20});
-    } catch (...) {
-        get_exception = true;
-    }
-    ASSERT_EQ(get_exception, true);
-
-    // Building tower on water
-    get_exception = false;
-    try {
-        path_planner->addTower({14.5, 0.5});
+        path_planner->addTower({0, 0}, PlayerId::PLAYER2);
     } catch (...) {
         get_exception = true;
     }
     ASSERT_EQ(get_exception, true);
 }
 
-TEST_F(PathPlannerTest, RemoveTowerTest) {
-    path_planner->addTower({8.5, 8.5});
-    path_planner->removeTower({8, 8});
-    ASSERT_EQ(path_planner->isPositionBlocked({8.2, 8.2}), false);
+TEST_F(PathPlannerTest, RemoveTowerBasicTest) {
+    auto tower_offset = path_planner->addTower({0.5, 0.5}, PlayerId::PLAYER1);
+    ASSERT_EQ(path_planner->removeTower(tower_offset), true);
+    ASSERT_EQ(path_planner->isOffsetBlocked(tower_offset), false);
 
-    // Removing a tower where there is no obstacle
-    bool get_exception = false;
-    try {
-        path_planner->removeTower({3.5, 3.5});
-    } catch (...) {
-        get_exception = true;
-    }
-    ASSERT_EQ(get_exception, true);
+    tower_offset =
+        path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2);
+    ASSERT_EQ(path_planner->removeTower(tower_offset), true);
+    ASSERT_EQ(path_planner->isOffsetBlocked(tower_offset), false);
+}
 
-    // Removing water as an obstacle
-    get_exception = false;
-    try {
-        path_planner->removeTower({0.5, 14.5});
-    } catch (...) {
-        get_exception = true;
-    }
-    ASSERT_EQ(get_exception, true);
+TEST_F(PathPlannerTest, RemoveTowerInvalidTest) {
+    ASSERT_EQ(path_planner->removeTower({0, 0}), false);
+    ASSERT_EQ(path_planner->removeTower({14, 1}), false);
+    ASSERT_EQ(path_planner->isOffsetBlocked({14, 1}), true);
 }
 
 TEST_F(PathPlannerTest, GetNextPositionTest) {
