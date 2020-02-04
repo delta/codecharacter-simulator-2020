@@ -29,17 +29,18 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool is_final_destination_set;
 
     /**
-     * @brief
+     * @brief The destination after which the bot becomes a wall
      */
     DoubleVec2D transform_destination;
 
     /**
-     * @brief
+     * @brief Tracks transform_destination
      */
-    bool is_transform_destinaion_set;
+    bool is_transform_destination_set;
 
     /**
-     * @brief
+     * @brief  True if the bot is going to transform
+     *         False if otherwise
      */
     bool transforming;
 
@@ -80,7 +81,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
         size_t damage_points, BlastCallback blast_callback);
 
     /**
-     * @brief
+     * @brief check if final_destination is set
      *
      * @return true
      * @return false
@@ -88,26 +89,26 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isFinalDestinationSet() const;
 
     /**
-     * @brief Set the Final Destination object
+     * @brief Sets final_destination with passed destination
      *
      * @param final_destination
      */
-    void setFinalDestination(DoubleVec2D final_destination);
+    void setFinalDestination(DoubleVec2D p_final_destination);
 
     /**
-     * @brief Get the Final Destination object
+     * @brief Get the value of final_destination
      *
      * @return DoubleVec2D
      */
     DoubleVec2D getFinalDestination() const;
 
     /**
-     * @brief
+     * @brief resets final_destination to DoubleVec2D::null
      */
     void clearFinalDestination();
 
     /**
-     * @brief
+     * @brief check if transform_destination is set
      *
      * @return true
      * @return false
@@ -115,14 +116,14 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isTransformDestinationSet() const;
 
     /**
-     * @brief Set the Transform Destination object
+     * @brief Set the transform_destination property
      *
      * @param transform_destination
      */
-    void setTransformDestination(DoubleVec2D transform_destination);
+    void setTransformDestination(DoubleVec2D p_transform_destination);
 
     /**
-     * @brief
+     * @brief checks if transforming property is set or not
      *
      * @return true
      * @return false
@@ -130,26 +131,26 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isTransforming() const;
 
     /**
-     * @brief Set the Transforming object
+     * @brief Set the transforming property
      *
      * @param p_transforming
      */
     void setTransforming(bool p_transforming);
 
     /**
-     * @brief Get the Transform Destination object
+     * @brief Get the transform_destination property
      *
      * @return DoubleVec2D
      */
     DoubleVec2D getTransformDestination() const;
 
     /**
-     * @brief
+     * @brief resets transform_destination
      */
     void clearTransformDestination();
 
     /**
-     * @brief Get the State object
+     * @brief Get the current state of bot
      *
      * @return BotStateName
      */
@@ -163,7 +164,6 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     /**
      * @brief Changes bot state to BotStateName::Transform and the state
      * transitions to BotStateName::IDLE
-     *
      */
     void transform();
 

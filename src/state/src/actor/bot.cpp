@@ -23,27 +23,27 @@ void Bot::clearFinalDestination() {
 
 void Bot::clearTransformDestination() {
     transform_destination = DoubleVec2D::null;
-    is_transform_destinaion_set = false;
+    is_transform_destination_set = false;
 }
 
 bool Bot::isFinalDestinationSet() const { return is_final_destination_set; }
 
-void Bot::setFinalDestination(DoubleVec2D new_final_destination) {
+void Bot::setFinalDestination(DoubleVec2D p_final_destination) {
     clearDestination();
     clearFinalDestination();
-    final_destination = new_final_destination;
+    final_destination = p_final_destination;
     is_final_destination_set = true;
 }
 
 bool Bot::isTransformDestinationSet() const {
-    return is_transform_destinaion_set;
+    return is_transform_destination_set;
 }
 
-void Bot::setTransformDestination(DoubleVec2D new_transform_destination) {
+void Bot::setTransformDestination(DoubleVec2D p_transform_destination) {
     clearDestination();
     clearFinalDestination();
-    transform_destination = new_transform_destination;
-    is_transform_destinaion_set = true;
+    transform_destination = p_transform_destination;
+    is_transform_destination_set = true;
 }
 
 void Bot::setTransforming(bool p_transforming) {

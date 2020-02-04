@@ -42,18 +42,18 @@ enum class BotStateName {
 class STATE_EXPORT BotState : public IActorState {
   protected:
     /**
-     * @brief
+     * @brief Name of the state
      */
     BotStateName state_name;
 
     /**
-     * @brief
+     * @brief The bot object that this state is managing
      */
     Bot *bot;
 
   public:
     /**
-     * @brief Construct a new Bot State object
+     * @brief Construct a new BotState object
      *
      * @param state_name
      * @param state
@@ -61,7 +61,7 @@ class STATE_EXPORT BotState : public IActorState {
     BotState(BotStateName state_name, Bot *state);
 
     /**
-     * @brief Get the Name object
+     * @brief Getter function which returns the current state name of bot
      *
      * @return BotStateName
      */

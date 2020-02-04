@@ -11,7 +11,7 @@
 namespace state {
 
 /**
- * @brief
+ * @brief The Idle state class of bot
  */
 class STATE_EXPORT BotIdleState : public BotState {
   public:
@@ -23,19 +23,24 @@ class STATE_EXPORT BotIdleState : public BotState {
     BotIdleState(Bot *bot);
 
     /**
-     * @brief
+     * @brief Called right after the bot switches to this state
      */
     void enter() override;
 
     /**
-     * @brief
+     * @brief Performs state transitions
+     *        If the bot blasts, then the state will transition to blast state
+     * and dead state from blast state Else, remain in idle state if the bot
+     * transforms, the state will transitions to transform state and goes to
+     * idle state
      *
-     * @return std::unique_ptr<IActorState>
+     * @return std::unique_ptr<IActorState> a new state
      */
     std::unique_ptr<IActorState> update() const override;
 
     /**
-     * @brief
+     * @brief Called right before the bot switches from this state to another
+     * state
      */
     void exit() override;
 };
