@@ -7,17 +7,20 @@ set(SOURCE_FILES
     src/path_planner/graph/graph.cpp
     src/path_planner/path_graph_helper.cpp
     src/path_planner/path_graph.cpp
-    src/actor/actor.cpp
-    src/actor/unit.cpp
     src/path_planner/path_graph_helper.cpp
     src/path_planner/path_graph.cpp
+    src/actor/actor.cpp
     src/score_manager/score_manager.cpp
-    src/actor/tower.cpp
+    src/actor/unit.cpp
     src/actor/blaster.cpp
+    src/actor/tower.cpp
     src/actor/tower_states/tower_state.cpp
     src/actor/tower_states/tower_idle_state.cpp
     src/actor/tower_states/tower_blast_state.cpp
-    src/actor/tower_states/tower_dead_state.cpp)
+    src/actor/tower_states/tower_dead_state.cpp
+    src/actor/bot.cpp
+    src/actor/bot_states/bot_state.cpp
+    src/actor/bot_states/bot_idle_state.cpp)
 
 set(INCLUDE_PATH include)
 

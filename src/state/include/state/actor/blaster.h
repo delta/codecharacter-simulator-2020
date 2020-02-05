@@ -12,7 +12,7 @@
 
 namespace state {
 
-using BlastCallback = std::function<void(PlayerId, Vec2D)>;
+using BlastCallback = std::function<void(PlayerId, DoubleVec2D)>;
 
 class STATE_EXPORT Blaster {
   protected:
@@ -67,6 +67,20 @@ class STATE_EXPORT Blaster {
      * Helper function to set the blasting property of blaster
      */
     void setBlasting(bool p_blasting);
+
+    /**
+     *  Get the Blast Range value
+     *
+     * @return size_t blast_range
+     */
+    size_t getBlastRange() const;
+
+    /**
+     *  Get the Blast Damage value
+     *
+     * @return size_t damage_points
+     */
+    size_t getBlastDamage() const;
 };
 
 } // namespace state

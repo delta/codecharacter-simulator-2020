@@ -1,6 +1,6 @@
 /**
  * @file actor.cpp
- * @brief Defintion of Actor class.
+ *  Defintion of Actor class.
  */
 
 #include "state/actor/actor.h"
@@ -11,12 +11,12 @@ namespace state {
 ActorId Actor::next_actor_id = 0;
 
 Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             size_t max_hp, Vec2D position)
+             size_t max_hp, DoubleVec2D position)
     : id(id), player_id(player_id), actor_type(actor_type), hp(hp),
       max_hp(max_hp), damage_incurred(0), position(position) {}
 
 Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-             Vec2D position)
+             DoubleVec2D position)
     : id(Actor::getNextActorId()), player_id(player_id), actor_type(actor_type),
       hp(hp), max_hp(max_hp), damage_incurred(0), position(position) {}
 
@@ -59,6 +59,6 @@ void Actor::damage(size_t damage_amout) {
     damage_incurred = std::min<size_t>(hp, damage_incurred + damage_amout);
 }
 
-Vec2D Actor::getPosition() const { return position; }
+DoubleVec2D Actor::getPosition() const { return position; }
 
 } // namespace state

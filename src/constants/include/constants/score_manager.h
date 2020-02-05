@@ -1,6 +1,6 @@
 /**
  * @file score_manager.h
- * @brief Constants needed for score_manager
+ * Constants needed for score_manager
  */
 
 namespace Constants::Score {
