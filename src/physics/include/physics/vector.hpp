@@ -104,7 +104,7 @@ template <typename T> class Vector {
                                     const Vector<T2> &vector);
 
     /**
-     *  heck for non-null vector
+     *  Check for non-null vector
      * @return true, if non-null vector, false if null vector
      */
     explicit operator bool() const;
@@ -130,25 +130,25 @@ template <typename T> class Vector {
     double distance(const Vector<T> &other) const;
 
     /**
-     *  alculates the floor of vector members
+     *  Calculates the floor of vector members
      * @return new vector with floored values
      */
     Vector<T> floor() const;
 
     /**
-     *  alculates the ceil of vector members
+     *  Calculates the ceil of vector members
      * @return new vector with ceiled values
      */
     Vector<T> ceil() const;
 
     /**
-     *  eturn a new Vector<double_t> from another Vector type
+     *  Return a new Vector<double_t> from another Vector type
      * @return Vector<double_t>
      */
     Vector<double_t> to_double() const;
 
     /**
-     *  eturn a new Vector<int64_t> from another Vector type
+     *  Return a new Vector<int64_t> from another Vector type
      * @return Vector<int64_t>
      */
     Vector<int64_t> to_int() const;
