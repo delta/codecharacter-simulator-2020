@@ -25,7 +25,6 @@ size_t Unit::getSpeed() const { return speed; }
 DoubleVec2D Unit::getDestination() const { return destination; }
 
 void Unit::setDestination(DoubleVec2D new_destination) {
-    clearDestination();
     destination = new_destination;
     is_destination_set = true;
 }

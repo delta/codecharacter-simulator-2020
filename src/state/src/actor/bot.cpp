@@ -49,7 +49,7 @@ bool Bot::isFinalDestinationSet() const { return is_final_destination_set; }
 
 void Bot::setFinalDestination(DoubleVec2D p_final_destination) {
     clearDestination();
-    clearFinalDestination();
+    clearTransformDestination();
     final_destination = p_final_destination;
     is_final_destination_set = true;
 }
