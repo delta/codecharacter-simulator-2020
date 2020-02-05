@@ -19,13 +19,21 @@ enum class BotStateName {
      */
     MOVE,
     /**
-     *  Bot is currently transforming, transforming is set to true
+     * Bot is moving with aim to transform to a Tower at transform_destination
+     */
+    MOVE_TO_TRANSFORM,
+    /**
+     *  Bot is currently transforming, is_transforming is set to true
      */
     TRANSFORM,
     /**
      *  Bot is blasting
      */
     BLAST,
+    /**
+     * Bot is moving with aim to blast at blast_destination
+     */
+    MOVE_TO_BLAST,
     /**
      *  Bot is doing nothing, not moving, blasting or transforming
      */

@@ -29,7 +29,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool is_final_destination_set;
 
     /**
-     *  The destination after which the bot becomes a wall
+     *  The destination after which the bot becomes a tower
      */
     DoubleVec2D transform_destination;
 
@@ -42,7 +42,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  True if the bot is going to transform
      *  False if otherwise
      */
-    bool transforming;
+    bool is_transforming;
 
   public:
     /**
@@ -123,7 +123,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void setTransformDestination(DoubleVec2D p_transform_destination);
 
     /**
-     *  checks if transforming property is set or not
+     *  checks if is_transforming property is set or not
      *
      * @return true
      * @return false
@@ -131,7 +131,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isTransforming() const;
 
     /**
-     *  Set the transforming property
+     *  Set the is_transforming property
      *
      * @param p_transforming
      */
@@ -162,8 +162,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void blast() override;
 
     /**
-     *  Changes bot state to BotStateName::Transform and the state
-     * transitions to BotStateName::IDLE
+     *  Changes bot state to Transform
      */
     void transform();
 

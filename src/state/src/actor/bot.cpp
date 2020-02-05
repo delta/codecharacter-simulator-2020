@@ -11,19 +11,38 @@ namespace state {
 
 Bot::Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
          size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_pointsm, BlastCallback blast_callback)
+         size_t damage_points, BlastCallback blast_callback)
     : Unit::Unit(id, player_id, actor_type, hp, max_hp, speed, position),
-      Blaster::Blaster(blast_range, damage_points, blast_callback),
-      state(std::make_unique<BotIdleState>(this)) {}
+      Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
+      state(std::make_unique<BotIdleState>(this)),
+      final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      transform_destination(DoubleVec2D::null),
+      is_transform_destination_set(false), is_transforming(false) {}
+
+Bot::Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
+         DoubleVec2D position, size_t speed, size_t blast_range,
+         size_t damage_points, BlastCallback blast_callback)
+    : Unit::Unit(player_id, actor_type, hp, max_hp, speed, position),
+      Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
+      state(std::make_unique<BotIdleState>(this)),
+      final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      transform_destination(DoubleVec2D::null),
+      is_transform_destination_set(false), is_transforming(false) {}
 
 void Bot::clearFinalDestination() {
     final_destination = DoubleVec2D::null;
     is_final_destination_set = false;
 }
 
+DoubleVec2D Bot::getFinalDestination() const { return final_destination; }
+
 void Bot::clearTransformDestination() {
     transform_destination = DoubleVec2D::null;
     is_transform_destination_set = false;
+}
+
+DoubleVec2D Bot::getTransformDestination() const {
+    return transform_destination;
 }
 
 bool Bot::isFinalDestinationSet() const { return is_final_destination_set; }
@@ -47,10 +66,12 @@ void Bot::setTransformDestination(DoubleVec2D p_transform_destination) {
 }
 
 void Bot::setTransforming(bool p_transforming) {
-    transforming = p_transforming;
+    is_transforming = p_transforming;
 }
 
 BotStateName Bot::getState() const { return state->getName(); }
+
+bool Bot::isTransforming() const { return is_transforming; }
 
 void Bot::blast() {
     clearDestination();
