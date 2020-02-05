@@ -1,6 +1,6 @@
 /**
  * @file bot_state.cpp
- * @brief Defines the BotState class
+ *  Defines the BotState class
  */
 
 #include "state/actor/bot_states/bot_state.h"

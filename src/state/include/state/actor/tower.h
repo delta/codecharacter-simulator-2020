@@ -20,7 +20,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
 
   public:
     /**
-     * @brief Construct a new Tower object
+     *  Construct a new Tower object
      *
      * @param id
      * @param player_id
@@ -37,7 +37,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
           size_t blast_range, BlastCallback blast_callback);
 
     /**
-     * @brief Construct a new Tower object, with auto incrementing id
+     *  Construct a new Tower object, with auto incrementing id
      *
      * @param player_id
      * @param actor_type

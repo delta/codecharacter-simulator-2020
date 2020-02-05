@@ -1,6 +1,6 @@
 /**
  * @file unit.cpp
- * @brief Definition of Unit class
+ * Definition of Unit class
  */
 
 #include "state/actor/unit.h"

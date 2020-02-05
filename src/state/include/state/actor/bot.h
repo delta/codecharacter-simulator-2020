@@ -1,6 +1,6 @@
 /**
  * @file bot.h
- * @brief Declares the Bot Class
+ *  Declares the Bot Class
  */
 
 #pragma once
@@ -14,39 +14,39 @@ namespace state {
 class STATE_EXPORT Bot : public Unit, public Blaster {
   private:
     /**
-     * @brief Controls logic for bot's current state
+     *  Controls logic for bot's current state
      */
     std::unique_ptr<BotState> state;
 
     /**
-     * @brief The destination after which the bot transitions to blast state
+     *  The destination after which the bot transitions to blast state
      */
     DoubleVec2D final_destination;
 
     /**
-     * @brief Tracks final_destination
+     *  Tracks final_destination
      */
     bool is_final_destination_set;
 
     /**
-     * @brief The destination after which the bot becomes a wall
+     *  The destination after which the bot becomes a wall
      */
     DoubleVec2D transform_destination;
 
     /**
-     * @brief Tracks transform_destination
+     *  Tracks transform_destination
      */
     bool is_transform_destination_set;
 
     /**
-     * @brief  True if the bot is going to transform
-     *         False if otherwise
+     *  True if the bot is going to transform
+     *  False if otherwise
      */
     bool transforming;
 
   public:
     /**
-     * @brief Construct a new Bot object
+     *  Construct a new Bot object
      *
      * @param id
      * @param player_id
@@ -64,7 +64,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
         size_t damage_points, BlastCallback blast_callback);
 
     /**
-     * @brief Construct a new Bot object, with auto incrementing id.
+     *  Construct a new Bot object, with auto incrementing id.
      *
      * @param player_id
      * @param actor_type
@@ -81,7 +81,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
         size_t damage_points, BlastCallback blast_callback);
 
     /**
-     * @brief check if final_destination is set
+     *  check if final_destination is set
      *
      * @return true
      * @return false
@@ -89,26 +89,26 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isFinalDestinationSet() const;
 
     /**
-     * @brief Sets final_destination with passed destination
+     *  Sets final_destination with passed destination
      *
      * @param final_destination
      */
     void setFinalDestination(DoubleVec2D p_final_destination);
 
     /**
-     * @brief Get the value of final_destination
+     *  Get the value of final_destination
      *
      * @return DoubleVec2D
      */
     DoubleVec2D getFinalDestination() const;
 
     /**
-     * @brief resets final_destination to DoubleVec2D::null
+     *  resets final_destination to DoubleVec2D::null
      */
     void clearFinalDestination();
 
     /**
-     * @brief check if transform_destination is set
+     *  check if transform_destination is set
      *
      * @return true
      * @return false
@@ -116,14 +116,14 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isTransformDestinationSet() const;
 
     /**
-     * @brief Set the transform_destination property
+     *  Set the transform_destination property
      *
      * @param transform_destination
      */
     void setTransformDestination(DoubleVec2D p_transform_destination);
 
     /**
-     * @brief checks if transforming property is set or not
+     *  checks if transforming property is set or not
      *
      * @return true
      * @return false
@@ -131,26 +131,26 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     bool isTransforming() const;
 
     /**
-     * @brief Set the transforming property
+     *  Set the transforming property
      *
      * @param p_transforming
      */
     void setTransforming(bool p_transforming);
 
     /**
-     * @brief Get the transform_destination property
+     *  Get the transform_destination property
      *
      * @return DoubleVec2D
      */
     DoubleVec2D getTransformDestination() const;
 
     /**
-     * @brief resets transform_destination
+     *  resets transform_destination
      */
     void clearTransformDestination();
 
     /**
-     * @brief Get the current state of bot
+     *  Get the current state of bot
      *
      * @return BotStateName
      */
@@ -162,13 +162,13 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void blast() override;
 
     /**
-     * @brief Changes bot state to BotStateName::Transform and the state
+     *  Changes bot state to BotStateName::Transform and the state
      * transitions to BotStateName::IDLE
      */
     void transform();
 
     /**
-     * @brief Updates the state of the bot and all related properties
+     *  Updates the state of the bot and all related properties
      *
      */
     void update() override;

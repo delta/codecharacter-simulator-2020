@@ -1,6 +1,6 @@
 /**
  * @file bot.cpp
- * @brief Definition of Bot class
+ *  Definition of Bot class
  */
 
 #include "state/actor/bot.h"

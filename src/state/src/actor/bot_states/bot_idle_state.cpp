@@ -1,6 +1,6 @@
 /**
  * @file bot_idle_state.cpp
- * @brief Definition of bot idle state
+ *  Definition of bot idle state
  */
 
 #include "state/actor/bot_states/bot_idle_state.h"

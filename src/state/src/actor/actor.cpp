@@ -1,6 +1,6 @@
 /**
  * @file actor.cpp
- * @brief Defintion of Actor class.
+ *  Defintion of Actor class.
  */
 
 #include "state/actor/actor.h"

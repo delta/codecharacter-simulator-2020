@@ -1,6 +1,6 @@
 /**
  * @file bot_state.h
- * @brief Declares interface for all Bot states
+ *  Declares interface for all Bot states
  */
 
 #pragma once
@@ -11,49 +11,49 @@
 namespace state {
 
 /**
- * @brief
+ *
  */
 enum class BotStateName {
     /**
-     * @brief Bot is currently moving
+     *  Bot is currently moving
      */
     MOVE,
     /**
-     * @brief Bot is currently transforming, transforming is set to true
+     *  Bot is currently transforming, transforming is set to true
      */
     TRANSFORM,
     /**
-     * @brief Bot is blasting
+     *  Bot is blasting
      */
     BLAST,
     /**
-     * @brief Bot is doing nothing, not moving, blasting or transforming
+     *  Bot is doing nothing, not moving, blasting or transforming
      */
     IDLE,
     /**
-     * @brief Bot is dead.
+     *  Bot is dead.
      */
     DEAD
 };
 
 /**
- * @brief
+ *
  */
 class STATE_EXPORT BotState : public IActorState {
   protected:
     /**
-     * @brief Name of the state
+     *  Name of the state
      */
     BotStateName state_name;
 
     /**
-     * @brief The bot object that this state is managing
+     *  The bot object that this state is managing
      */
     Bot *bot;
 
   public:
     /**
-     * @brief Construct a new BotState object
+     *  Construct a new BotState object
      *
      * @param state_name
      * @param state
@@ -61,7 +61,7 @@ class STATE_EXPORT BotState : public IActorState {
     BotState(BotStateName state_name, Bot *state);
 
     /**
-     * @brief Getter function which returns the current state name of bot
+     *  Getter function which returns the current state name of bot
      *
      * @return BotStateName
      */

@@ -69,14 +69,14 @@ class STATE_EXPORT Blaster {
     void setBlasting(bool p_blasting);
 
     /**
-     * @brief Get the Blast Range value
+     *  Get the Blast Range value
      *
      * @return size_t blast_range
      */
     size_t getBlastRange() const;
 
     /**
-     * @brief Get the Blast Damage value
+     *  Get the Blast Damage value
      *
      * @return size_t damage_points
      */
