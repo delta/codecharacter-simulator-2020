@@ -1,6 +1,6 @@
 /**
  * @file bot_move_state.cpp
- * @brief Definition of bot move state
+ * Definition of bot move state
  */
 #include "state/actor/bot_states/bot_move_state.h"
 #include "state/actor/bot.h"
@@ -16,7 +16,7 @@ BotMoveState::BotMoveState(Bot *bot) : BotState(BotStateName::MOVE, bot) {}
 
 void BotMoveState::enter() {}
 
-std::unique_ptr<IActorState> BotMoveState::update() {
+std::unique_ptr<IActorState> BotMoveState::update() const {
 
     if (bot->getHp() == 0) {
         return std::make_unique<BotDeadState>(bot);
@@ -27,12 +27,12 @@ std::unique_ptr<IActorState> BotMoveState::update() {
         return std::make_unique<BotIdleState>(bot);
     }
 
-    if (bot->isFinalDestinationSet &&
+    if (bot->isFinalDestinationSet() &&
         bot->getPosition() == bot->getFinalDestination()) {
         return std::make_unique<BotBlastState>(bot);
     }
 
-    if (bot->isTransformDestinationSet &&
+    if (bot->isTransformDestinationSet() &&
         bot->getPosition() == bot->getFinalDestination()) {
         return std::make_unique<BotTransformState>(bot);
     }

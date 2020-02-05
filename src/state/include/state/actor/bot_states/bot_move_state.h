@@ -1,6 +1,6 @@
 /**
  * @file bot_move_state.h
- * @brief Declares the Bot Move State class
+ * Declares the Bot Move State class
  */
 
 #pragma once
@@ -14,7 +14,7 @@ class STATE_EXPORT BotMoveState : public BotState {
   public:
     BotMoveState(Bot *bot);
     void enter() override;
-    std::unique_ptr<IActorState> update() override;
+    std::unique_ptr<IActorState> update() const override;
     void exit() override;
 };
 

@@ -17,12 +17,12 @@ class STATE_EXPORT IUpdatable {
     virtual ~IUpdatable(){};
 
     /**
-     * @brief Update function of Bot/Tower
+     * Update function of Bot/Tower
      */
     virtual void update() = 0;
 
     /**
-     * @brief Late Update function of Bot/Tower. After the end of every turn.
+     * Late Update function of Bot/Tower. After the end of every turn.
      */
     virtual void lateUpdate() = 0;
 };

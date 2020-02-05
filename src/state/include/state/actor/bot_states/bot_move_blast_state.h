@@ -1,20 +1,18 @@
 /**
- * @file bot_blash_state.h
- * Declares the Bot Blast State class
+ * @file bot_move_blast_state.h
+ * Declares the bot move_blast state
  */
 
 #pragma once
 
+#include "state/actor/bot.fwd.h"
 #include "state/actor/bot_states/bot_state.h"
 
 namespace state {
-
-class STATE_EXPORT BotBlastState : public BotState {
-  public:
-    BotBlastState(Bot *bot);
+class BotMoveBlastState : public BotState {
+    BotMoveBlastState(Bot *bot);
     void enter() override;
     std::unique_ptr<IActorState> update() const override;
     void exit() override;
 };
-
 } // namespace state

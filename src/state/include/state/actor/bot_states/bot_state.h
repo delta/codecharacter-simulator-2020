@@ -64,9 +64,9 @@ class STATE_EXPORT BotState : public IActorState {
      *  Construct a new BotState object
      *
      * @param state_name
-     * @param state
+     * @param bot
      */
-    BotState(BotStateName state_name, Bot *state);
+    BotState(BotStateName state_name, Bot *bot);
 
     /**
      *  Getter function which returns the current state name of bot

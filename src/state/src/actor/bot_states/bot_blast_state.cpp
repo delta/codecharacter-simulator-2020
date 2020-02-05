@@ -1,12 +1,11 @@
 /**
  * @file bot_blast_state.cpp
- * @brief Definition of bot blast state
+ * Definition of bot blast state
  */
 
 #include "state/actor/bot_states/bot_blast_state.h"
-#include "state/actor/bot.h"
 #include "state/actor/bot_states/bot_dead_state.h"
-#include "state/actor/bot_states/bot_state.h"
+#include "state/actor/bot.h"
 
 namespace state {
 
@@ -17,7 +16,7 @@ void BotBlastState::enter() {
     bot->damage(bot->getHp());
 }
 
-std::unique_ptr<IActorState> BotBlastState::update() {
+std::unique_ptr<IActorState> BotBlastState::update() const {
 
     // TODO: inflict harm on bots/towers in range.
 

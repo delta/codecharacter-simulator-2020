@@ -1,6 +1,6 @@
 /**
  * @file bot_dead_state.cpp
- * @brief Definition of bot dead state
+ * Definition of bot dead state
  */
 
 #include "state/actor/bot_states/bot_dead_state.h"
@@ -12,7 +12,7 @@ BotDeadState::BotDeadState(Bot *bot) : BotState(BotStateName::DEAD, bot) {}
 
 void BotDeadState::enter() {}
 
-std::unique_ptr<IActorState> BotDeadState::update() { return nullptr; }
+std::unique_ptr<IActorState> BotDeadState::update() const { return nullptr; }
 
 void BotDeadState::exit() {}
 

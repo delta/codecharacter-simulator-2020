@@ -1,6 +1,6 @@
 /**
  * @file bot_move_state.cpp
- * @brief Definition of bot move state
+ * Definition of bot move state
  */
 
 #include "state/actor/bot_states/bot_transform_state.h"
@@ -15,7 +15,7 @@ BotTransformState::BotTransformState(Bot *bot)
 
 void BotTransformState::enter() {}
 
-std::unique_ptr<IActorState> BotTransformState::update() {
+std::unique_ptr<IActorState> BotTransformState::update() const {
 
     if (bot->getHp() == 0) {
         return std::make_unique<BotDeadState>(bot);
