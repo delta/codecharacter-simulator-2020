@@ -71,12 +71,12 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
     TowerStateName getState();
 
     /**
-     * Updates the state of the tower and all related properties
+     * @see IUpdatable#update
      */
     void update() override;
 
     /**
-     * Performs late updates for the tower
+     * @see IUpdatable#lateUpdate
      */
     void lateUpdate() override;
 };
