@@ -13,14 +13,14 @@ namespace state {
 BotTransformState::BotTransformState(Bot *bot)
     : BotState(BotStateName::TRANSFORM, bot) {}
 
-void BotTransformState::enter() {}
+void BotTransformState::enter() {
+    size_t bot_hp = bot->getHp();
+    bot->damage(bot_hp);
+    bot->produceTower(bot->getPlayerId(), bot->getPosition());
+}
 
 std::unique_ptr<IActorState> BotTransformState::update() const {
-
-    if (bot->getHp() == 0) {
-        return std::make_unique<BotDeadState>(bot);
-    }
-    //
+    return std::make_unique<BotDeadState>(bot);
 }
 
 void BotTransformState::exit() {}

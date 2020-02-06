@@ -10,11 +10,34 @@
 
 namespace state {
 
+/**
+ *
+ */
 class STATE_EXPORT BotDeadState : public BotState {
   public:
+    /**
+     * Construct a new Bot Dead State object
+     *
+     * @param bot instance
+     */
     BotDeadState(Bot *bot);
+
+    /**
+     * @see IActorState#enter
+     */
     void enter() override;
-    std::unique_ptr<IActorState> update() const override; 
+
+    /**
+     *
+     *
+     * @return std::unique_ptr<IActorState> The next state the bot transitions
+     * to.
+     */
+    std::unique_ptr<IActorState> update() const override;
+
+    /**
+     * @see IActorState#exit
+     */
     void exit() override;
 };
 

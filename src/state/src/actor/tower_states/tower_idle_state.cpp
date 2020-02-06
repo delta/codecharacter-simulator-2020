@@ -20,14 +20,15 @@ TowerIdleState::TowerIdleState(Tower *tower)
 void TowerIdleState::enter() {}
 
 std::unique_ptr<IActorState> TowerIdleState::update() const {
+    using std::make_unique;
     // If the tower hp is 0, transition to the dead state
     if (tower->getHp() == 0) {
-        return std::make_unique<TowerDeadState>(tower);
+        return make_unique<TowerDeadState>(tower);
     }
 
     // If the tower is blasting, transitioning to the blast state
     if (tower->isBlasting()) {
-        return std::make_unique<TowerBlastState>(tower);
+        return make_unique<TowerBlastState>(tower);
     }
 
     return nullptr;

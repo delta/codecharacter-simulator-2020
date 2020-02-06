@@ -11,6 +11,7 @@
 
 namespace state {
 
+using ProduceTowerCallback = std::function<void(PlayerId, DoubleVec2D)>;
 class STATE_EXPORT Bot : public Unit, public Blaster {
   private:
     /**
@@ -27,6 +28,11 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Tracks final_destination
      */
     bool is_final_destination_set;
+
+    /**
+     *
+     */
+    ProduceTowerCallback produce_tower_callback;
 
     /**
      *  The destination after which the bot becomes a tower
@@ -58,10 +64,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_range
      * @param damage_points
      * @param blast_callback
+     * @param produce_tower_callback
      */
     Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
         size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+        size_t damage_points, BlastCallback blast_callback,
+        ProduceTowerCallback produce_tower_callback);
 
     /**
      *  Construct a new Bot object, with auto incrementing id.
@@ -75,10 +83,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_range
      * @param damage_points
      * @param blast_callback
+     * @param produce_tower_callback
      */
     Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
         DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+        size_t damage_points, BlastCallback blast_callback,
+        ProduceTowerCallback produce_tower_callback);
 
     /**
      *  check if final_destination is set
@@ -148,6 +158,14 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  resets transform_destination
      */
     void clearTransformDestination();
+
+    /**
+     *
+     *
+     * @param player_id
+     * @param position
+     */
+    void produceTower(PlayerId player_id, DoubleVec2D position);
 
     /**
      *  Get the current state of bot

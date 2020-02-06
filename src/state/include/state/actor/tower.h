@@ -58,12 +58,6 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
     void blast() override;
 
     /**
-     * Function that uses callback function to damage enemy units due to
-    blasting
-     */
-    void damageEnemyActors();
-
-    /**
      * Returns the name of the state that the tower is currently in
      *
      * @return The name of the tower's state

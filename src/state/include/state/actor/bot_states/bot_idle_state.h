@@ -23,7 +23,7 @@ class STATE_EXPORT BotIdleState : public BotState {
     BotIdleState(Bot *bot);
 
     /**
-     *  Called right after the bot switches to this state
+     * @see IActorState#enter
      */
     void enter() override;
 
@@ -39,8 +39,7 @@ class STATE_EXPORT BotIdleState : public BotState {
     std::unique_ptr<IActorState> update() const override;
 
     /**
-     *  Called right before the bot switches from this state to another
-     * state
+     * @see IActorState#exit
      */
     void exit() override;
 };

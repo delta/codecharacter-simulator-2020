@@ -1,6 +1,6 @@
 /**
- * @file bot_blash_state.h
- * Declares the Bot Blast State class
+ * @file bot_move_to_blast_state.h
+ * Declares the bot move_blast state
  */
 
 #pragma once
@@ -13,14 +13,14 @@ namespace state {
 /**
  *
  */
-class STATE_EXPORT BotBlastState : public BotState {
+class BotMoveToBlastState : public BotState {
   public:
     /**
-     * Construct a new Bot Blast State object
+     * Construct a new Bot Move Blast State object
      *
      * @param bot instance
      */
-    BotBlastState(Bot *bot);
+    BotMoveToBlastState(Bot *bot);
 
     /**
      * @see IActorState#enter
@@ -28,7 +28,6 @@ class STATE_EXPORT BotBlastState : public BotState {
     void enter() override;
 
     /**
-     *
      *
      * @return std::unique_ptr<IActorState>
      */
@@ -39,5 +38,4 @@ class STATE_EXPORT BotBlastState : public BotState {
      */
     void exit() override;
 };
-
 } // namespace state

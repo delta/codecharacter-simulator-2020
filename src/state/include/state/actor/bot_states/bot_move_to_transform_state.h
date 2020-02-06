@@ -1,6 +1,6 @@
 /**
- * @file bot_blash_state.h
- * Declares the Bot Blast State class
+ * @file bot_move_to_transform_state.h
+ * Declares the Bot Move_Transform State class
  */
 
 #pragma once
@@ -13,14 +13,14 @@ namespace state {
 /**
  *
  */
-class STATE_EXPORT BotBlastState : public BotState {
+class STATE_EXPORT BotMoveToTransformState : public BotState {
   public:
     /**
-     * Construct a new Bot Blast State object
+     * Construct a new Bot Move To Transform State object
      *
      * @param bot instance
      */
-    BotBlastState(Bot *bot);
+    BotMoveToTransformState(Bot *bot);
 
     /**
      * @see IActorState#enter

@@ -11,21 +11,25 @@ namespace state {
 
 Bot::Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
          size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, BlastCallback blast_callback)
+         size_t damage_points, BlastCallback blast_callback,
+         ProduceTowerCallback produce_tower_callback)
     : Unit::Unit(id, player_id, actor_type, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
       state(std::make_unique<BotIdleState>(this)),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      produce_tower_callback(std::move(produce_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
 
 Bot::Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
          DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, BlastCallback blast_callback)
+         size_t damage_points, BlastCallback blast_callback,
+         ProduceTowerCallback produce_tower_callback)
     : Unit::Unit(player_id, actor_type, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
       state(std::make_unique<BotIdleState>(this)),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      produce_tower_callback(std::move(produce_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
 
@@ -70,6 +74,10 @@ void Bot::setTransforming(bool p_transforming) {
 }
 
 BotStateName Bot::getState() const { return state->getName(); }
+
+void Bot::produceTower(PlayerId player_id, DoubleVec2D tower_position) {
+    produce_tower_callback(player_id, tower_position);
+}
 
 bool Bot::isTransforming() const { return is_transforming; }
 
