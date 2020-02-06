@@ -25,8 +25,6 @@ Tower::Tower(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
 
 void Tower::blast() { setBlasting(true); }
 
-void Tower::damageEnemyActors() { blast_callback(player_id, position); }
-
 TowerStateName Tower::getState() { return state->getName(); }
 
 uint64_t Tower::getAge() const { return age; }

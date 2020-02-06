@@ -21,13 +21,15 @@ set(SOURCE_FILES
     src/actor/tower_states/tower_dead_state.cpp
     src/actor/bot.cpp
     src/actor/bot_states/bot_state.cpp
-    src/actor/bot_states/bot_blast_state.cpp
     src/actor/bot_states/bot_idle_state.cpp
+    src/actor/bot_states/bot_blast_state.cpp
     src/actor/bot_states/bot_dead_state.cpp
     src/actor/bot_states/bot_move_state.cpp
     src/actor/bot_states/bot_transform_state.cpp
     src/actor/bot_states/bot_move_blast_state.cpp
     src/actor/bot_states/bot_move_transform_state.cpp
+    src/actor/bot_states/bot_move_to_blast_state.cpp
+    src/actor/bot_states/bot_move_to_transform_state.cpp)
     src/score_manager/score_manager.cpp
     src/path_planner/path_planner.cpp)
     )

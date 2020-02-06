@@ -11,6 +11,10 @@
 #include <memory>
 
 namespace state {
+
+/**
+ *  Declaration of Tower class
+ */
 class STATE_EXPORT Tower : public Actor, public Blaster {
   private:
     /**
@@ -61,12 +65,6 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @see Blaster#Blast
      */
     void blast() override;
-
-    /**
-     * Function that uses callback function to damage enemy units due to
-    blasting
-     */
-    void damageEnemyActors();
 
     /**
      * Returns the name of the state that the tower is currently in

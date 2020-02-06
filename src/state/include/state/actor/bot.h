@@ -11,6 +11,11 @@
 
 namespace state {
 
+using ConstructTowerCallback = std::function<void(PlayerId, DoubleVec2D)>;
+
+/**
+ * Declaration of Bot class
+ */
 class STATE_EXPORT Bot : public Unit, public Blaster {
   private:
     /**
@@ -19,7 +24,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     std::unique_ptr<BotState> state;
 
     /**
-     *  The destination after which the bot transitions to blast state
+     *  The position at which the bot transitions to blast state
      */
     DoubleVec2D final_destination;
 
@@ -27,6 +32,11 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Tracks final_destination
      */
     bool is_final_destination_set;
+
+    /**
+     * Callback to implement effect of bot transformation to tower through state
+     */
+    ConstructTowerCallback construct_tower_callback;
 
     /**
      *  The destination after which the bot becomes a tower
@@ -58,10 +68,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_range
      * @param damage_points
      * @param blast_callback
+     * @param construct_tower_callback
      */
     Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
         size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+        size_t damage_points, BlastCallback blast_callback,
+        ConstructTowerCallback construct_tower_callback);
 
     /**
      *  Construct a new Bot object, with auto incrementing id.
@@ -75,10 +87,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_range
      * @param damage_points
      * @param blast_callback
+     * @param construct_tower_callback
      */
     Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
         DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+        size_t damage_points, BlastCallback blast_callback,
+        ConstructTowerCallback construct_tower_callback);
 
     /**
      *  check if final_destination is set
@@ -148,6 +162,14 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  resets transform_destination
      */
     void clearTransformDestination();
+
+    /**
+     *  Method to execute construct_tower_callback
+     *
+     * @param player_id
+     * @param position
+     */
+    void constructTower(PlayerId player_id, DoubleVec2D position);
 
     /**
      *  Get the current state of bot

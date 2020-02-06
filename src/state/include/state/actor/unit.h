@@ -15,7 +15,6 @@
 namespace state {
 /**
  *  Unit base class
- *
  */
 class STATE_EXPORT Unit : public Actor {
   protected:

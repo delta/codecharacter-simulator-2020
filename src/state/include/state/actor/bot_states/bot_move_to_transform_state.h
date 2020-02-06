@@ -1,6 +1,6 @@
 /**
- * @file bot_blast_state.h
- * Declares the Bot Blast State class
+ * @file bot_move_to_transform_state.h
+ * Declares the Bot Move_Transform State class
  */
 
 #pragma once
@@ -11,27 +11,25 @@
 namespace state {
 
 /**
- *  Declaration of Blast state class.
+ *  Declaration of Move to Transform state of Bot
  */
-class STATE_EXPORT BotBlastState : public BotState {
+class STATE_EXPORT BotMoveToTransformState : public BotState {
   public:
     /**
-     * Construct a new Bot Blast State object
+     * Construct a new Bot Move To Transform State object
      *
      * @param bot instance
      */
-    BotBlastState(Bot *bot);
+    BotMoveToTransformState(Bot *bot);
 
     /**
      * @see IActorState#enter
-     *
-     * Damages enemy actors, sets its own hp to 0, resets isBlasting
-     *
      */
     void enter() override;
 
     /**
-     * Returns dead state
+     * Moves bot towards transform_destination and transitions to transform
+     * state
      *
      * @return std::unique_ptr<IActorState>
      */

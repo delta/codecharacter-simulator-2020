@@ -22,7 +22,7 @@ class STATE_EXPORT IUpdatable {
     virtual void update() = 0;
 
     /**
-     * Late Update function of Bot/Tower. After the end of every turn.
+     * Late Update function of Bot/Tower. At the end of every turn.
      */
     virtual void lateUpdate() = 0;
 };

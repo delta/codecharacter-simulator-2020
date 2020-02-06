@@ -11,7 +11,7 @@
 namespace state {
 
 /**
- *
+ *  Declares the possible states of Bot
  */
 enum class BotStateName {
     /**

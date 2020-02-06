@@ -11,7 +11,7 @@ using namespace testing;
 namespace test {
 
 // Mock function for blasting enemy actors
-void blast_enemies(PlayerId player_id, DoubleVec2D pos) {}
+void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D pos) {}
 class TowerTest : public Test {
   protected:
     unique_ptr<Tower> tower, enemy_tower;
@@ -21,7 +21,6 @@ class TowerTest : public Test {
 
   public:
     TowerTest() {
-        // Create a default map
         hp = 100;
         max_hp = 100;
         blast_range = 3;
@@ -64,8 +63,8 @@ TEST_F(TowerTest, BlastTest) {
 
     // When the tower updates to blast state, it must call DamageEnemyActors to
     // increase all enemy actor's damage incurred
-    /// TODO : Add a mock state object and check if state is being called to
-    /// damage enemy units within blast range of given position
+    // TODO : Add a mock state object and check if state is being called to
+    // damage enemy units within blast range of given position
 
     // Check if the tower is in the blast state
     tower->update();
