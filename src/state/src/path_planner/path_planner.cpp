@@ -39,10 +39,13 @@ bool PathPlanner::isInMapRange(DoubleVec2D position,
         return false;
     }
 
-    if (player_id == PlayerId::PLAYER1) {
+    switch (player_id) {
+    case PlayerId::PLAYER1:
         return !(position.x == map->GetSize() || position.y == map->GetSize());
-    } else {
+    case PlayerId::PLAYER2:
         return !(position.x == 0 || position.y == 0);
+    default:
+        return false;
     }
 }
 
@@ -52,15 +55,14 @@ DoubleVec2D PathPlanner::getOffset(DoubleVec2D position,
         return DoubleVec2D::null;
     }
 
-    if (player_id == PlayerId::PLAYER1) {
+    switch (player_id) {
+    case PlayerId::PLAYER1:
         position.x = std::floor(position.x);
         position.y = std::floor(position.y);
-
         return {position.x, position.y};
-    } else {
+    case PlayerId::PLAYER2:
         position.x = std::ceil(position.x);
         position.y = std::ceil(position.y);
-
         return {position.x - 1, position.y - 1};
     }
 }
