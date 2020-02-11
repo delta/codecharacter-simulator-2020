@@ -29,6 +29,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_subdirectory(src/logger)
 add_subdirectory(ext/googletest)
+add_subdirectory(src/player_wrapper)
 add_subdirectory(src/main)
 add_subdirectory(src/physics)
 add_subdirectory(src/state)
