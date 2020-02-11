@@ -19,7 +19,6 @@ class PLAYER_WRAPPER_EXPORT IPlayerCode {
   protected:
     /**
      * Player's debug logs
-     *
      * To be returned and cleared every turn
      */
     std::ostringstream logr;
@@ -27,7 +26,6 @@ class PLAYER_WRAPPER_EXPORT IPlayerCode {
   public:
     /**
      * Player AI update function (main logic of the AI)
-     *
      * Takes in a player state, allows player to read and write to it, and
      * returns the modified player state
      *
@@ -35,14 +33,14 @@ class PLAYER_WRAPPER_EXPORT IPlayerCode {
      *
      * @return     The new player state
      */
-    virtual player_state::State Update(player_state::State state) = 0;
+    virtual player_state::State update(player_state::State state) = 0;
 
     /**
      * Gets and clears player's debug logs
      *
      * @return     Debug logs
      */
-    virtual std::string GetAndClearDebugLogs() {
+    std::string getAndClearDebugLogs() {
         auto logs = this->logr.str();
         this->logr.str("");
         return logs;

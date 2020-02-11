@@ -1,6 +1,7 @@
 /**
  * @file transfer_state.h
  * Defines a version of the player state that can be written to SHM
+ * TODO: Move transfer_state to drivers
  */
 
 // SHM cannot handle vectors, so this version of the player state uses arrays
@@ -52,11 +53,11 @@ ConvertToPlayerState(const transfer_state::State &ts) {
     // Copy Map
     ps.map = ts.map;
 
-    // Copy Soldiers
+    // Copy Bots
     ps.bots = arrayToVector(ts.bots, ts.num_bots);
     ps.enemy_bots = arrayToVector(ts.enemy_bots, ts.num_enemy_bots);
 
-    // Copy Villagers
+    // Copy Towers
     ps.towers = arrayToVector(ts.towers, ts.num_towers);
     ps.enemy_towers = arrayToVector(ts.enemy_towers, ts.num_enemy_towers);
 
@@ -80,11 +81,11 @@ ConvertToTransferState(const player_state::State &ps) {
     // Copy map
     ts.map = ps.map;
 
-    // Copy soldiers
+    // Copy bots
     ts.bots = vectorToArray<Actor::MAX_NUM_BOTS>(ps.bots);
     ts.enemy_bots = vectorToArray<Actor::MAX_NUM_BOTS>(ps.enemy_bots);
 
-    // Copy Villagers
+    // Copy Towers
     ts.towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.towers);
     ts.enemy_towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.enemy_towers);
 
@@ -94,8 +95,8 @@ ConvertToTransferState(const player_state::State &ps) {
     // Copy sizes
     ts.num_bots = ps.bots.size();
     ts.num_enemy_bots = ps.enemy_bots.size();
-    ts.num_bots = ps.bots.size();
-    ts.num_enemy_bots = ps.enemy_bots.size();
+    ts.num_towers = ps.towers.size();
+    ts.num_enemy_towers = ps.enemy_towers.size();
 
     return ts;
 }

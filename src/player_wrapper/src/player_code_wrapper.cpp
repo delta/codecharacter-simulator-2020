@@ -13,8 +13,8 @@ PlayerCodeWrapper::PlayerCodeWrapper(std::unique_ptr<IPlayerCode> player_code)
 
 std::string PlayerCodeWrapper::Update(transfer_state::State &transfer_state) {
     auto player_state = transfer_state::ConvertToPlayerState(transfer_state);
-    player_state = player_code->Update(player_state);
+    player_state = player_code->update(player_state);
     transfer_state = transfer_state::ConvertToTransferState(player_state);
-    return player_code->GetAndClearDebugLogs();
+    return player_code->getAndClearDebugLogs();
 }
 } // namespace player_wrapper
