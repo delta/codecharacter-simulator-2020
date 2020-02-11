@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11.1)
+cmake_minimum_required(VERSION 3.15.0)
 project(player_wrapper)
 
 set(SOURCE_FILES src/player_code_wrapper.cpp)
