@@ -101,9 +101,9 @@ class PathPlanner : public IPathPlanner {
 
     /**
      * Destroy a tower at given position
-     * @param position
+     * @param tower_offset
      */
-    bool destroyTower(DoubleVec2D position);
+    bool destroyTower(DoubleVec2D tower_offset);
 
     /**
      * Called every turn to update the path graph based on current obstacles

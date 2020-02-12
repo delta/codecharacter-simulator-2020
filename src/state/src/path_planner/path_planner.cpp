@@ -102,6 +102,10 @@ bool PathPlanner::isValidTowerPosition(DoubleVec2D position,
 }
 
 std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
+    // Eg: For (1.5, 1.5), result = {(1, 1)}
+    // For (1, 1), result = {(0,0), (0,1), (1,0), (1, 1)}
+    // For (0.5, 1), result = {(0,0), (0,1)}
+
     std::vector<double_t> xs;
     std::vector<double_t> ys;
 
@@ -109,11 +113,13 @@ std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
                                   std::floor(position.y)};
 
     xs.push_back(position_floor.x);
+    // If x is integral, both offsets including x are taken
     if (position.x == position_floor.x) {
         xs.push_back(position_floor.x - 1);
     }
 
     ys.push_back(position_floor.y);
+    // If y is integral, both offsets including y are taken
     if (position.y == position_floor.y) {
         ys.push_back(position_floor.y - 1);
     }
@@ -134,6 +140,8 @@ std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
 bool PathPlanner::isValidBotPosition(DoubleVec2D position) {
     auto adjacent_tiles = getAdjacentOffsets(position);
 
+    // If one of the adjacent tiles is traversable, the position can be a valid
+    // position for a bot
     for (auto adjacent_tile : adjacent_tiles) {
         if (path_graph.isValidPosition(adjacent_tile)) {
             return true;
@@ -158,17 +166,18 @@ DoubleVec2D PathPlanner::buildTower(DoubleVec2D position, PlayerId player_id) {
     return tower_offset;
 }
 
-bool PathPlanner::destroyTower(DoubleVec2D position) {
-    if (position == DoubleVec2D::null) {
-        throw std::invalid_argument("Invalid tower position for player");
+bool PathPlanner::destroyTower(DoubleVec2D tower_offset) {
+    if (tower_offset == DoubleVec2D::null) {
+        throw std::invalid_argument("Invalid tower build position for player");
     }
 
-    auto position_terrain = map->GetTerrainType(position.x, position.y);
-    if (position_terrain == TerrainType::WATER || !isOffsetBlocked(position)) {
+    auto position_terrain = map->GetTerrainType(tower_offset.x, tower_offset.y);
+    if (position_terrain == TerrainType::WATER ||
+        !isOffsetBlocked(tower_offset)) {
         return false;
     }
 
-    path_graph.removeObstacle(position);
+    path_graph.removeObstacle(tower_offset);
     return true;
 }
 
@@ -205,6 +214,7 @@ DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
             break;
 
         if (current_position.distance(next_position) >= distance_left) {
+            // The destination can be reached in a straight line
             current_position = getPointAlongLine(current_position,
                                                  next_position, distance_left);
             distance_left = 0;
