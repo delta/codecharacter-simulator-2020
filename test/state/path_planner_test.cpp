@@ -146,19 +146,19 @@ TEST_F(PathPlannerTest, isValidBotPositionLandTest) {
 
 TEST_F(PathPlannerTest, AddTowerPlayer1Test) {
     // Build tower
-    ASSERT_EQ(path_planner->addTower({0, 0}, PlayerId::PLAYER1),
+    ASSERT_EQ(path_planner->buildTower({0, 0}, PlayerId::PLAYER1),
               DoubleVec2D(0, 0));
     ASSERT_EQ(path_planner->isOffsetBlocked({0, 0}), true);
-    ASSERT_EQ(path_planner->addTower({8.5, 8.5}, PlayerId::PLAYER1),
+    ASSERT_EQ(path_planner->buildTower({8.5, 8.5}, PlayerId::PLAYER1),
               DoubleVec2D(8, 8));
     ASSERT_EQ(path_planner->isOffsetBlocked({8, 8}), true);
-    ASSERT_EQ(path_planner->addTower({14, 5}, PlayerId::PLAYER1),
+    ASSERT_EQ(path_planner->buildTower({14, 5}, PlayerId::PLAYER1),
               DoubleVec2D::null);
 
     // Invalid position
     bool get_exception = false;
     try {
-        path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER1);
+        path_planner->buildTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER1);
     } catch (...) {
         get_exception = true;
     }
@@ -168,17 +168,17 @@ TEST_F(PathPlannerTest, AddTowerPlayer1Test) {
 TEST_F(PathPlannerTest, AddTowerTest) {
 
     // Build tower
-    ASSERT_EQ(path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2),
+    ASSERT_EQ(path_planner->buildTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2),
               DoubleVec2D(MAP_SIZE - 1, MAP_SIZE - 1));
     ASSERT_EQ(path_planner->isOffsetBlocked({MAP_SIZE - 1, MAP_SIZE - 1}),
               true);
-    ASSERT_EQ(path_planner->addTower({14, 7}, PlayerId::PLAYER2),
+    ASSERT_EQ(path_planner->buildTower({14, 7}, PlayerId::PLAYER2),
               DoubleVec2D(13, 6));
 
     // Invalid position
     bool get_exception = false;
     try {
-        path_planner->addTower({0, 0}, PlayerId::PLAYER2);
+        path_planner->buildTower({0, 0}, PlayerId::PLAYER2);
     } catch (...) {
         get_exception = true;
     }
@@ -186,19 +186,19 @@ TEST_F(PathPlannerTest, AddTowerTest) {
 }
 
 TEST_F(PathPlannerTest, RemoveTowerBasicTest) {
-    auto tower_offset = path_planner->addTower({0.5, 0.5}, PlayerId::PLAYER1);
-    ASSERT_EQ(path_planner->removeTower(tower_offset), true);
+    auto tower_offset = path_planner->buildTower({0.5, 0.5}, PlayerId::PLAYER1);
+    ASSERT_EQ(path_planner->destroyTower(tower_offset), true);
     ASSERT_EQ(path_planner->isOffsetBlocked(tower_offset), false);
 
     tower_offset =
-        path_planner->addTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2);
-    ASSERT_EQ(path_planner->removeTower(tower_offset), true);
+        path_planner->buildTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2);
+    ASSERT_EQ(path_planner->destroyTower(tower_offset), true);
     ASSERT_EQ(path_planner->isOffsetBlocked(tower_offset), false);
 }
 
 TEST_F(PathPlannerTest, RemoveTowerInvalidTest) {
-    ASSERT_EQ(path_planner->removeTower({0, 0}), false);
-    ASSERT_EQ(path_planner->removeTower({14, 1}), false);
+    ASSERT_EQ(path_planner->destroyTower({0, 0}), false);
+    ASSERT_EQ(path_planner->destroyTower({14, 1}), false);
     ASSERT_EQ(path_planner->isOffsetBlocked({14, 1}), true);
 }
 

@@ -40,13 +40,16 @@ class PathPlanner : public IPathPlanner {
 
     /**
      * Helper function for path planner to check if a position is inside the map
-     * tower construction boundaries for a given player
-     * @param position
+     * boundaries for a given player
+     * NOTE: For tower, the boundaries with one of the coordinates as MAP_SIZE
+     * is invalid
+     * @param position Position to be checked
      * @param player_id
+     * @param is_tower True, if the check if for tower operations
      * @return True, if the position is valid for the player
      *         False, otherwise
      */
-    bool isInMapRange(DoubleVec2D position, PlayerId player_id);
+    bool isInMapRange(DoubleVec2D position, PlayerId player_id, bool is_tower);
 
     /**
      * Given a position, return the offset
@@ -54,7 +57,7 @@ class PathPlanner : public IPathPlanner {
      * @param player_id
      * @return position of base
      */
-    DoubleVec2D getOffset(DoubleVec2D position, PlayerId player_id);
+    Vec2D getOffset(DoubleVec2D position, PlayerId player_id);
 
     /**
      * Given a position, get all offsets which the position intersects with
@@ -71,7 +74,7 @@ class PathPlanner : public IPathPlanner {
      * @param position
      * @return True, if offset is blocked. False, otherwise.
      */
-    bool isOffsetBlocked(const DoubleVec2D &position) const;
+    bool isOffsetBlocked(const Vec2D &position) const;
 
     /**
      * Check if it is possible to construct a tower at position by a player
@@ -94,13 +97,13 @@ class PathPlanner : public IPathPlanner {
      * Build a new tower at given position
      * @param position
      */
-    DoubleVec2D addTower(DoubleVec2D position, PlayerId player_id);
+    DoubleVec2D buildTower(DoubleVec2D position, PlayerId player_id);
 
     /**
      * Destroy a tower at given position
      * @param position
      */
-    bool removeTower(DoubleVec2D position);
+    bool destroyTower(DoubleVec2D position);
 
     /**
      * Called every turn to update the path graph based on current obstacles

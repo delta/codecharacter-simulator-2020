@@ -50,7 +50,7 @@ class Map {
      * @param y
      * @return the tile's terrain type
      */
-    TerrainType GetTerrainType(int64_t x, int64_t y) const;
+    TerrainType GetTerrainType(size_t x, size_t y) const;
 
     TerrainType GetTerrainType(double x, double y) const;
 

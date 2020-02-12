@@ -24,6 +24,12 @@ template <typename T> class Vector {
     static Vector<T> null;
 
     /**
+     * Equal operator for vector casting
+     * @param rhs The vector to be casted
+     */
+    template <typename T2> Vector(const Vector<T2> &rhs);
+
+    /**
      *  Equal to operator for vector comparison
      * @param 	rhs The vector to be compared against
      * @return 	true if vectors are equal, else false
@@ -161,6 +167,13 @@ template <typename T> Vector<T> Vector<T>::null = Vector<T>{-1, -1};
 template <typename T> Vector<T>::Vector() : x(), y() {}
 
 template <typename T> Vector<T>::Vector(T x, T y) : x(x), y(y) {}
+
+template <typename T>
+template <typename T2>
+Vector<T>::Vector(const Vector<T2> &rhs) {
+    x = rhs.x;
+    y = rhs.y;
+}
 
 template <typename T> bool Vector<T>::operator==(const Vector<T> &rhs) const {
     return (x == rhs.x && y == rhs.y);
