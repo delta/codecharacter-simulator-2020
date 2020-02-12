@@ -64,7 +64,7 @@ class PathPlanner : public IPathPlanner {
      * @param position
      * @return Vector of offset positions intersecting the given position
      */
-    std::vector<DoubleVec2D> getAdjacentOffsets(DoubleVec2D position);
+    std::vector<Vec2D> getAdjacentOffsets(DoubleVec2D position);
 
   public:
     PathPlanner(std::unique_ptr<Map> p_map);
@@ -96,14 +96,16 @@ class PathPlanner : public IPathPlanner {
     /**
      * Build a new tower at given position
      * @param position
+     * @return Vec2D If successfully built, Offset in which tower has been built
+     *               Null, otherwise
      */
-    DoubleVec2D buildTower(DoubleVec2D position, PlayerId player_id);
+    Vec2D buildTower(DoubleVec2D position, PlayerId player_id);
 
     /**
      * Destroy a tower at given position
      * @param tower_offset
      */
-    bool destroyTower(DoubleVec2D tower_offset);
+    bool destroyTower(Vec2D tower_offset);
 
     /**
      * Called every turn to update the path graph based on current obstacles

@@ -9,14 +9,14 @@
 namespace state {
 
 PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
-    auto map_size = map->GetSize();
+    auto map_size = map->getSize();
     auto valid_terrain = std::vector<std::vector<bool>>(
         map_size, std::vector<bool>(map_size, true));
 
     for (size_t row = 0; row < map_size; row++) {
         for (size_t col = 0; col < map_size; col++) {
             auto position_terrain =
-                map->GetTerrainType((size_t)row, (size_t)col);
+                map->getTerrainType((size_t)row, (size_t)col);
 
             // The square from (row, col) to (row+1,col+1) is of this terrain
             valid_terrain[row][col] = (position_terrain == TerrainType::LAND ||
@@ -34,8 +34,8 @@ bool PathPlanner::isOffsetBlocked(const Vec2D &position) const {
 
 bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
                                bool is_tower) {
-    if (position.x < 0 || position.y < 0 || position.x > map->GetSize() ||
-        position.y > map->GetSize()) {
+    if (position.x < 0 || position.y < 0 || position.x > map->getSize() ||
+        position.y > map->getSize()) {
         return false;
     }
 
@@ -49,7 +49,7 @@ bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
     // For player 1, the top (x, MAP_SIZE) and right (MAP_SIZE, y) map borders
     // are invalid tower positions
     case PlayerId::PLAYER1:
-        return !(position.x == map->GetSize() || position.y == map->GetSize());
+        return !(position.x == map->getSize() || position.y == map->getSize());
 
     // For player 2, the bottom (x, 0) and left (0, y) map borders
     // are invalid tower positions
@@ -101,7 +101,7 @@ bool PathPlanner::isValidTowerPosition(DoubleVec2D position,
     return path_graph.isValidPosition(tower_base_position);
 }
 
-std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
+std::vector<Vec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
     // Eg: For (1.5, 1.5), result = {(1, 1)}
     // For (1, 1), result = {(0,0), (0,1), (1,0), (1, 1)}
     // For (0.5, 1), result = {(0,0), (0,1)}
@@ -124,7 +124,7 @@ std::vector<DoubleVec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
         ys.push_back(position_floor.y - 1);
     }
 
-    std::vector<DoubleVec2D> ans;
+    std::vector<Vec2D> ans;
 
     for (auto x : xs) {
         for (auto y : ys) {
@@ -151,7 +151,7 @@ bool PathPlanner::isValidBotPosition(DoubleVec2D position) {
     return false;
 }
 
-DoubleVec2D PathPlanner::buildTower(DoubleVec2D position, PlayerId player_id) {
+Vec2D PathPlanner::buildTower(DoubleVec2D position, PlayerId player_id) {
     DoubleVec2D tower_offset = getOffset(position, player_id);
 
     if (tower_offset == DoubleVec2D::null) {
@@ -166,12 +166,13 @@ DoubleVec2D PathPlanner::buildTower(DoubleVec2D position, PlayerId player_id) {
     return tower_offset;
 }
 
-bool PathPlanner::destroyTower(DoubleVec2D tower_offset) {
+bool PathPlanner::destroyTower(Vec2D tower_offset) {
     if (tower_offset == DoubleVec2D::null) {
         throw std::invalid_argument("Invalid tower build position for player");
     }
 
-    auto position_terrain = map->GetTerrainType(tower_offset.x, tower_offset.y);
+    auto position_terrain =
+        map->getTerrainType((size_t)tower_offset.x, (size_t)tower_offset.y);
     if (position_terrain == TerrainType::WATER ||
         !isOffsetBlocked(tower_offset)) {
         return false;
