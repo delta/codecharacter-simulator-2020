@@ -85,6 +85,9 @@ class STATE_EXPORT Actor : public IUpdatable {
     Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
           DoubleVec2D position);
 
+    /**
+     * Destructor
+     */
     virtual ~Actor() {}
 
     /**

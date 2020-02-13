@@ -68,6 +68,11 @@ class STATE_EXPORT Unit : public Actor {
          size_t speed, DoubleVec2D position);
 
     /**
+     * Destructor
+     */
+    virtual ~Unit() {}
+
+    /**
      *  Get the Unit's speed.
      *
      * @return size_t

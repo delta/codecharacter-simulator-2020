@@ -14,7 +14,7 @@ namespace test {
 void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D pos) {}
 class TowerTest : public Test {
   protected:
-    unique_ptr<Tower> tower, enemy_tower;
+    unique_ptr<Tower> tower;
     size_t hp, max_hp, damage_points, blast_range;
 
     BlastCallback blast_callback;
@@ -24,6 +24,7 @@ class TowerTest : public Test {
         hp = 100;
         max_hp = 100;
         blast_range = 3;
+        damage_points = 0;
         DoubleVec2D start_pos = DoubleVec2D(0, 0);
 
         blast_callback = &blast_enemies;
@@ -31,10 +32,6 @@ class TowerTest : public Test {
         tower = make_unique<Tower>(1, PlayerId::PLAYER1, ActorType::TOWER, hp,
                                    max_hp, start_pos, damage_points,
                                    blast_range, blast_callback);
-
-        enemy_tower = make_unique<Tower>(1, PlayerId::PLAYER2, ActorType::TOWER,
-                                         hp, max_hp, start_pos, damage_points,
-                                         blast_range, blast_callback);
     }
 };
 
@@ -45,6 +42,17 @@ TEST_F(TowerTest, AgeTest) {
     tower->lateUpdate();
 
     ASSERT_EQ(tower->getAge(), 1);
+}
+
+TEST_F(TowerTest, InitialValuesTest) {
+    // check all member values for new tower instance
+    ASSERT_EQ(tower->getState(), TowerStateName::IDLE);
+    ASSERT_EQ(tower->getHp(), 100);
+    ASSERT_EQ(tower->getMaxHp(), 100);
+    ASSERT_EQ(tower->getBlastRange(), 3);
+    ASSERT_EQ(tower->getBlastDamage(), 0);
+    ASSERT_EQ(tower->getPosition(), DoubleVec2D(0, 0));
+    ASSERT_EQ(tower->isBlasting(), false);
 }
 
 TEST_F(TowerTest, BlastTest) {

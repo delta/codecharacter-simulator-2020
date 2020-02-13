@@ -14,12 +14,12 @@ namespace test {
 // Defined in test namespace in tower_test.cpp
 void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
 
-// Mock function defintion for transforming bot to tower
+// Mock function definition for transforming bot to tower
 void construct_tower(PlayerId player_id, DoubleVec2D position) {}
 
 class BotTest : public Test {
   protected:
-    unique_ptr<Bot> bot, enemy_bot;
+    unique_ptr<Bot> bot;
     size_t hp, max_hp, damage_points, blast_range, speed;
 
     BlastCallback blast_callback;
@@ -30,6 +30,7 @@ class BotTest : public Test {
         hp = 150;
         max_hp = 150;
         blast_range = 5;
+        damage_points = 0;
         speed = 3;
         DoubleVec2D start_position = DoubleVec2D(0, 0);
 
@@ -40,18 +41,32 @@ class BotTest : public Test {
             make_unique<Bot>(1, PlayerId::PLAYER1, ActorType::BOT, hp, max_hp,
                              start_position, speed, blast_range, damage_points,
                              blast_callback, construct_tower_callback);
-
-        enemy_bot =
-            make_unique<Bot>(2, PlayerId::PLAYER1, ActorType::BOT, hp, max_hp,
-                             start_position, speed, blast_range, damage_points,
-                             blast_callback, construct_tower_callback);
     }
 };
 
-TEST_F(BotTest, MoveTest) {
+TEST_F(BotTest, InitialValuesTest) {
+    // check all member values for new bot instance
     ASSERT_EQ(bot->getState(), BotStateName::IDLE);
+    ASSERT_EQ(bot->getHp(), 150);
+    ASSERT_EQ(bot->getMaxHp(), 150);
+    ASSERT_EQ(bot->getBlastRange(), 5);
+    ASSERT_EQ(bot->getBlastDamage(), 0);
+    ASSERT_EQ(bot->getSpeed(), 3);
+    ASSERT_EQ(bot->getPosition(), DoubleVec2D(0, 0));
+    ASSERT_EQ(bot->getDestination(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isDestinationSet(), false);
+    ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isNewPostitionSet(), false);
+    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isFinalDestinationSet(), false);
+    ASSERT_EQ(bot->isTransformDestinationSet(), false);
+    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isBlasting(), false);
+    ASSERT_EQ(bot->isTransforming(), false);
+}
 
-    //  making the bot move to {1, 1}, and checking for move state transition
+TEST_F(BotTest, MoveTest) {
+    //  make the bot move to {1, 1}, and check for move state transition
     auto destination_position = DoubleVec2D(1, 0);
     bot->move(destination_position);
 
@@ -76,9 +91,7 @@ TEST_F(BotTest, MoveTest) {
 }
 
 TEST_F(BotTest, BlastTest) {
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
-
-    // Making the bot blast and checking for the transition to the blast state
+    // Make the bot blast and check for the transition to the blast state
     // and then transition to the dead state
     bot->blast();
 
@@ -94,6 +107,11 @@ TEST_F(BotTest, BlastTest) {
     // TODO : Add a mock state object and check if state is being called to
     // damage enemy units within blast range of given position
 
+    // TODO: check case where two bots blast at the same frame, within blast
+    // range of each other
+
+    // TODO: check above case with enemy bot and ally bot
+
     // Check if the bot is in the blast state
     bot->update();
     ASSERT_EQ(bot->getState(), BotStateName::BLAST);
@@ -108,9 +126,7 @@ TEST_F(BotTest, BlastTest) {
 }
 
 TEST_F(BotTest, MoveToBlastTest) {
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
-
-    //  making the bot move to {1, 1}, and checking for move state transition
+    //  make the bot move to {1, 1}, and check for move state transition
     auto blow_up_position = DoubleVec2D(1, 1);
     bot->setFinalDestination(blow_up_position);
 
@@ -139,7 +155,6 @@ TEST_F(BotTest, MoveToBlastTest) {
 // Bot is attacked by neighbour, hence, his damage incurred is set
 TEST_F(BotTest, AttackTest) {
     // Setting the damage incurred of the bot
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
     bot->setDamageIncurred(hp);
 
     // After update, the bot must still be in the idle state
@@ -152,7 +167,6 @@ TEST_F(BotTest, AttackTest) {
 }
 
 TEST_F(BotTest, DeathTest) {
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
     ASSERT_EQ(bot->getHp(), hp);
 
     // Setting the bot hp to 0 and checking for state transition to dead state
@@ -163,12 +177,10 @@ TEST_F(BotTest, DeathTest) {
 }
 
 TEST_F(BotTest, TransformTest) {
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
-
-    //  making the bot transform into a tower
+    //  make the bot transform into a tower
     bot->transform();
 
-    // check transfom related properties
+    // check transform related properties
     ASSERT_EQ(bot->isTransforming(), true);
 
     // updating bot to transition state from idle to transform
@@ -188,14 +200,12 @@ TEST_F(BotTest, TransformTest) {
 }
 
 TEST_F(BotTest, MoveToTransformTest) {
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
-
-    //  making the bot move to transform to tower
+    //  make the bot move to transform to tower
     auto transform_to_tower_destination = DoubleVec2D(1, 1);
 
     bot->setTransformDestination(transform_to_tower_destination);
 
-    // check transfom to blast related properties
+    // check transform to blast related properties
     ASSERT_EQ(bot->isTransformDestinationSet(), true);
     ASSERT_EQ(bot->getTransformDestination(), transform_to_tower_destination);
 
