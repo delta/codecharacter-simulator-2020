@@ -7,13 +7,13 @@
 
 #include "constants/constants.h"
 #include "physics/vector.hpp"
-#include "state/interfaces/i_updatable.h"
 #include "state/utilities.h"
 
 #include <array>
 
 namespace player_state {
-using TerrainType = state::TerrainType;
+
+enum class TerrainType { LAND, WATER, TOWER, FLAG };
 
 enum class BotState : int8_t {
     // Bot is doing  nothing
@@ -28,7 +28,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, BotState bot_state) {
+inline std::ostream &operator<<(std::ostream &os, BotState bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -59,7 +59,7 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
+inline std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -96,7 +96,7 @@ struct _Blaster {
 
 struct _Unit : _Actor {
     DoubleVec2D destination;
-    static size_t speed;
+    size_t speed;
 
     virtual void reset() { destination = DoubleVec2D::null; }
     void move(DoubleVec2D p_destination) {
@@ -107,9 +107,13 @@ struct _Unit : _Actor {
     _Unit() : _Actor(), destination(DoubleVec2D::null){};
 };
 
+<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
 size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
 struct Bot : _Unit, _Blaster {
+=======
+struct Bot : _Unit {
+>>>>>>> Add state syncer implementation
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
@@ -117,6 +121,10 @@ struct Bot : _Unit, _Blaster {
     // move and transform at set destination
     DoubleVec2D transform_destination;
     bool transforming;
+<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
+=======
+    size_t impact_radius;
+>>>>>>> Add state syncer implementation
 
     void reset() override {
 
@@ -162,7 +170,11 @@ struct Bot : _Unit, _Blaster {
           transform_destination(DoubleVec2D::null), transforming(false){};
 };
 
+<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
 std::ostream &operator<<(std::ostream &os, const Bot &bot) {
+=======
+inline std::ostream &operator<<(std::ostream &os, Bot bot) {
+>>>>>>> Add state syncer implementation
     using std::endl;
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
@@ -179,7 +191,7 @@ struct Tower : _Actor, _Blaster {
     Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
-std::ostream &operator<<(std::ostream &os, Tower tower) {
+inline std::ostream &operator<<(std::ostream &os, Tower tower) {
     using std::endl;
     os << "Tower(id: " << tower.id << ") {" << endl;
     os << "   hp: " << tower.hp << endl;
@@ -226,7 +238,11 @@ struct State {
           score(0) {}
 };
 
+<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
 std::ostream &operator<<(std::ostream &os, const State &state) {
+=======
+inline std::ostream &operator<<(std::ostream &os, State state) {
+>>>>>>> Add state syncer implementation
     using std::endl;
 
     os << "Map:" << endl;

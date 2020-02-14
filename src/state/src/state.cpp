@@ -3,8 +3,6 @@
  * Definitions for functions of the State class
  */
 
-#pragma once
-
 #include "state/state.h"
 
 namespace state {
@@ -22,8 +20,6 @@ const Map *State::getMap() const { return map.get(); }
 const std::array<size_t, 2> State::getScores(bool game_over) const {
     return score_manager->getScores();
 }
-
-bool State::isGameOver(PlayerId &winner) {}
 
 void State::moveBot(PlayerId player_id, ActorId actor_id,
                     DoubleVec2D position) {}
@@ -67,4 +63,5 @@ const std::array<std::vector<Bot *>, 2> State::getBots() {
     return getRawPtrsFromUniquePtrs(bots);
 }
 
+bool State::isGameOver(PlayerId &winner) {}
 } // namespace state
