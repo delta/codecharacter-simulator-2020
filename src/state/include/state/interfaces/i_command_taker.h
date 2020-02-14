@@ -10,7 +10,6 @@
 #include "state/actor/tower.h"
 #include "state/interfaces/i_updatable.h"
 #include "state/map/map.h"
-#include "state/state_export.h"
 #include "state/utilities.h"
 
 #include <memory>
@@ -22,7 +21,7 @@ namespace state {
  */
 class STATE_EXPORT ICommandTaker : public IUpdatable {
   public:
-    virtual ~ICommandTaker() {}
+    virtual ~ICommandTaker(){};
 
     /**
      * Handles bot movement

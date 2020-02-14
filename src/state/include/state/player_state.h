@@ -7,13 +7,13 @@
 
 #include "constants/constants.h"
 #include "physics/vector.hpp"
-#include "state/interfaces/i_updatable.h"
 #include "state/utilities.h"
 
 #include <array>
 
 namespace player_state {
-using TerrainType = state::TerrainType;
+
+enum class TerrainType { LAND, WATER, TOWER, FLAG };
 
 enum class BotState : int8_t {
     // Bot is doing  nothing
@@ -28,7 +28,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, BotState bot_state) {
+inline std::ostream &operator<<(std::ostream &os, BotState bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -59,7 +59,7 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
+inline std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -85,7 +85,7 @@ struct _Actor {
 
 struct _Unit : _Actor {
     DoubleVec2D destination;
-    static size_t speed;
+    size_t speed;
 
     virtual void reset() { destination = DoubleVec2D::null; }
     void move(DoubleVec2D p_destination) {
@@ -96,8 +96,6 @@ struct _Unit : _Actor {
     _Unit() : _Actor(), destination(DoubleVec2D::null){};
 };
 
-size_t _Unit::speed = Constants::Actor::BOT_SPEED;
-
 struct Bot : _Unit {
     BotState state;
     // move and blast at set destination
@@ -106,7 +104,7 @@ struct Bot : _Unit {
     // move and transform at set destination
     DoubleVec2D transform_destination;
     bool transforming;
-    static size_t impact_radius;
+    size_t impact_radius;
 
     void reset() override {
         destination = DoubleVec2D::null;
@@ -151,9 +149,7 @@ struct Bot : _Unit {
           blasting(false){};
 };
 
-size_t Bot::impact_radius = Constants::Actor::BOT_BLAST_IMPACT_RADIUS;
-
-std::ostream &operator<<(std::ostream &os, Bot bot) {
+inline std::ostream &operator<<(std::ostream &os, Bot bot) {
     using std::endl;
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
@@ -171,7 +167,7 @@ struct Tower : _Actor {
     Tower() : _Actor(), state(TowerState::IDLE), blasting(false){};
 };
 
-std::ostream &operator<<(std::ostream &os, Tower tower) {
+inline std::ostream &operator<<(std::ostream &os, Tower tower) {
     using std::endl;
     os << "Tower(id: " << tower.id << ") {" << endl;
     os << "   hp: " << tower.hp << endl;
@@ -218,7 +214,7 @@ struct State {
           score(0) {}
 };
 
-std::ostream &operator<<(std::ostream &os, State state) {
+inline std::ostream &operator<<(std::ostream &os, State state) {
     using std::endl;
 
     os << "Map:" << endl;

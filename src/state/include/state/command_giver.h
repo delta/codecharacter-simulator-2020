@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "interfaces/i_command_giver.h"
-#include "interfaces/i_command_taker.h"
 #include "logger/interfaces/i_logger.h"
+#include "state/interfaces/i_command_giver.h"
+#include "state/interfaces/i_command_taker.h"
 #include "state/utilities.h"
 #include <memory>
 

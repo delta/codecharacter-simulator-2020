@@ -32,7 +32,7 @@ enum class ErrorType {
     NO_ALTER_ACTOR_ID,
 
     /**
-     * Trying to blast a bot in an invalid position
+     * Trying to blast an actor in an invalid position
      */
     INVALID_BLAST_POSITION,
 
