@@ -33,7 +33,7 @@ bool PathPlanner::isOffsetBlocked(const Vec2D &position) const {
 }
 
 bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
-                               bool is_tower) {
+                               ActorType actor_type) {
     if (position.x < 0 || position.y < 0 || position.x > map->getSize() ||
         position.y > map->getSize()) {
         return false;
@@ -41,7 +41,7 @@ bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
 
     // For bot, any position with 0 <= x <= MAP_SIZE and 0 <= y <= MAP_SIZE is
     // valid position
-    if (!is_tower)
+    if (actor_type == ActorType::BOT)
         return true;
 
     switch (player_id) {
@@ -61,8 +61,9 @@ bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
     }
 }
 
-Vec2D PathPlanner::getOffset(DoubleVec2D position, state::PlayerId player_id) {
-    if (!isInMapRange(position, player_id, true)) {
+Vec2D PathPlanner::getOffset(const DoubleVec2D &position,
+                             const PlayerId &player_id) {
+    if (!isInMapRange(position, player_id, ActorType::TOWER)) {
         return Vec2D::null;
     }
 
@@ -71,18 +72,16 @@ Vec2D PathPlanner::getOffset(DoubleVec2D position, state::PlayerId player_id) {
     // For player 1, the offset tile is one containing position.
     // In case of integral (x,y) the tile having position as lower left corner
     case PlayerId::PLAYER1: {
-        position.x = std::floor(position.x);
-        position.y = std::floor(position.y);
-        return {(int64_t)position.x, (int64_t)position.y};
+        return {(int64_t)std::floor(position.x),
+                (int64_t)std::floor(position.y)};
     }
 
     // For player 2, the offset tile is one containing position.
     // In case of integral (x,y) the tile having position as upper right corner
     // Return the lower left position of the offset
     case PlayerId::PLAYER2: {
-        position.x = std::ceil(position.x);
-        position.y = std::ceil(position.y);
-        return {(int64_t)position.x - 1, (int64_t)position.y - 1};
+        return {(int64_t)std::ceil(position.x) - 1,
+                (int64_t)std::ceil(position.y) - 1};
     }
 
     default:
@@ -94,14 +93,14 @@ bool PathPlanner::isValidTowerPosition(DoubleVec2D position,
                                        PlayerId player_id) {
     auto tower_base_position = getOffset(position, player_id);
 
-    if (tower_base_position == Vec2D::null) {
+    if (!tower_base_position) {
         return false;
     }
 
     return path_graph.isValidPosition(tower_base_position);
 }
 
-std::vector<Vec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
+std::vector<Vec2D> PathPlanner::getAdjoiningOffsets(DoubleVec2D position) {
     // Eg: For (1.5, 1.5), result = {(1, 1)}
     // For (1, 1), result = {(0,0), (0,1), (1,0), (1, 1)}
     // For (0.5, 1), result = {(0,0), (0,1)}
@@ -138,7 +137,7 @@ std::vector<Vec2D> PathPlanner::getAdjacentOffsets(DoubleVec2D position) {
 }
 
 bool PathPlanner::isValidBotPosition(DoubleVec2D position) {
-    auto adjacent_tiles = getAdjacentOffsets(position);
+    auto adjacent_tiles = getAdjoiningOffsets(position);
 
     // If one of the adjacent tiles is traversable, the position can be a valid
     // position for a bot
@@ -214,15 +213,13 @@ DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
         if (distance_left == 0 || current_position == destination)
             break;
 
-        if (current_position.distance(next_position) >= distance_left) {
-            // The destination can be reached in a straight line
-            current_position = getPointAlongLine(current_position,
-                                                 next_position, distance_left);
-            distance_left = 0;
-        } else {
-            distance_left -= current_position.distance(next_position);
-            current_position = next_position;
-        }
+        // Distance that can be travelled in a straight line with no turns
+        double travel_distance =
+            std::min(distance_left, current_position.distance(next_position));
+
+        current_position =
+            getPointAlongLine(current_position, next_position, travel_distance);
+        distance_left -= travel_distance;
     }
 
     return current_position;

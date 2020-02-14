@@ -19,26 +19,28 @@ class PathPlannerTest : public testing::Test {
     PathPlannerTest() {
         unique_ptr<Map> map;
         auto map_matrix = vector<vector<state::TerrainType>>{
-            {{L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L},
-             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L},
-             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L},
-             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, W, W, W},
-             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, W, W, W},
-             {L, L, L, L, L, L, L, L, W, W, W, W, W, W, W, W, W, W, W, W},
-             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, L, L, L, L, L},
-             {L, L, L, L, L, L, L, F, F, F, F, F, F, L, W, L, L, L, L, L},
-             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L},
-             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L},
-             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L},
-             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L},
-             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, L, L, L, L, L, L},
-             {L, L, L, L, L, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L},
-             {W, W, W, W, W, W, W, W, W, W, W, W, L, L, L, L, L, L, L, L},
-             {W, W, W, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L},
-             {W, W, W, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L},
-             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L},
-             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L},
-             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}}};
+            /*0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19*/
+            {{L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L}, // 0
+             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L}, // 1
+             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L}, // 2
+             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, W, W, W}, // 3
+             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, W, W, W}, // 4
+             {L, L, L, L, L, L, L, L, W, W, W, W, W, W, W, W, W, W, W, W}, // 5
+             {L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, L, L, L, L, L}, // 6
+             {L, L, L, L, L, L, L, F, F, F, F, F, F, L, W, L, L, L, L, L}, // 7
+             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L}, // 8
+             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L}, // 9
+             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L}, // 10
+             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, W, L, L, L, L, L}, // 11
+             {L, L, L, L, L, W, L, F, F, F, F, F, F, L, L, L, L, L, L, L}, // 12
+             {L, L, L, L, L, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}, // 13
+             {W, W, W, W, W, W, W, W, W, W, W, W, L, L, L, L, L, L, L, L}, // 14
+             {W, W, W, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}, // 15
+             {W, W, W, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}, // 16
+             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}, // 17
+             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}, // 18
+             {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}} // 19
+        };
 
         map = make_unique<Map>(map_matrix, MAP_SIZE);
         path_planner = make_unique<PathPlanner>(std::move(map));
@@ -165,7 +167,7 @@ TEST_F(PathPlannerTest, AddTowerPlayer1Test) {
     ASSERT_EQ(get_exception, true);
 }
 
-TEST_F(PathPlannerTest, AddTowerTest) {
+TEST_F(PathPlannerTest, AddTowerPlayer2Test) {
 
     // Build tower
     ASSERT_EQ(path_planner->buildTower({MAP_SIZE, MAP_SIZE}, PlayerId::PLAYER2),
@@ -213,6 +215,19 @@ TEST_F(PathPlannerTest, GetNextPositionTest) {
         current_position =
             path_planner->getNextPosition(current_position, end, speed);
     }
+
+    ASSERT_EQ(current_position, end);
+}
+
+TEST_F(PathPlannerTest, GetNextPositionSingleMoveTest) {
+    DoubleVec2D start = {0.5, 0.5};
+    DoubleVec2D end = {15.5, 6.5};
+    size_t speed = 100;
+
+    DoubleVec2D current_position = start;
+
+    current_position =
+        path_planner->getNextPosition(current_position, end, speed);
 
     ASSERT_EQ(current_position, end);
 }

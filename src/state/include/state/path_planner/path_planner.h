@@ -49,7 +49,8 @@ class PathPlanner : public IPathPlanner {
      * @return True, if the position is valid for the player
      *         False, otherwise
      */
-    bool isInMapRange(DoubleVec2D position, PlayerId player_id, bool is_tower);
+    bool isInMapRange(DoubleVec2D position, PlayerId player_id,
+                      ActorType actor_type);
 
     /**
      * Given a position, return the offset
@@ -57,14 +58,14 @@ class PathPlanner : public IPathPlanner {
      * @param player_id
      * @return position of base
      */
-    Vec2D getOffset(DoubleVec2D position, PlayerId player_id);
+    Vec2D getOffset(const DoubleVec2D &position, const PlayerId &player_id);
 
     /**
      * Given a position, get all offsets which the position intersects with
      * @param position
-     * @return Vector of offset positions intersecting the given position
+     * @return Vector of offsets intersecting the given position
      */
-    std::vector<Vec2D> getAdjacentOffsets(DoubleVec2D position);
+    std::vector<Vec2D> getAdjoiningOffsets(DoubleVec2D position);
 
   public:
     PathPlanner(std::unique_ptr<Map> p_map);

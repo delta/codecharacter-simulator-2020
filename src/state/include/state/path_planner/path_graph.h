@@ -110,7 +110,18 @@ class PathGraph {
                                    DoubleVec2D destination) const;
 
   public:
+    /**
+     * Default constructor
+     */
     PathGraph();
+
+    /**
+     * Constructor
+     * @param p_map_size Size of map
+     * @param p_valid_terrain (map_size x map_size) Array of boolean.
+     *        True, if offset can be traversed. False, otherwise.
+     * @param p_graph Waypoint graph
+     */
     PathGraph(size_t p_map_size, std::vector<std::vector<bool>> p_valid_terrain,
               Graph p_graph);
 
