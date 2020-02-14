@@ -17,7 +17,6 @@ class PathPlannerTest : public testing::Test {
     unique_ptr<PathPlanner> path_planner;
 
     PathPlannerTest() {
-        unique_ptr<Map> map;
         auto map_matrix = vector<vector<state::TerrainType>>{
             /*0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19*/
             {{L, L, L, L, L, L, L, L, L, L, L, L, L, L, W, W, W, L, L, L}, // 0
@@ -42,7 +41,7 @@ class PathPlannerTest : public testing::Test {
              {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}} // 19
         };
 
-        map = make_unique<Map>(map_matrix, MAP_SIZE);
+        auto map = make_unique<Map>(map_matrix, MAP_SIZE);
         path_planner = make_unique<PathPlanner>(std::move(map));
         path_planner->recomputePathGraph();
     }
