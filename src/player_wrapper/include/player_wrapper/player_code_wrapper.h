@@ -34,6 +34,6 @@ class PLAYER_WRAPPER_EXPORT PlayerCodeWrapper {
      *
      * @return     The debug logs
      */
-    std::string Update(transfer_state::State &transfer_state);
+    std::string update(transfer_state::State &transfer_state);
 };
 } // namespace player_wrapper
