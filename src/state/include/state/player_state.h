@@ -7,13 +7,13 @@
 
 #include "constants/constants.h"
 #include "physics/vector.hpp"
-#include "state/interfaces/i_updatable.h"
 #include "state/utilities.h"
 
 #include <array>
 
 namespace player_state {
-using TerrainType = state::TerrainType;
+
+enum class TerrainType { LAND, WATER, TOWER, FLAG };
 
 enum class BotState : int8_t {
     // Bot is doing  nothing
@@ -28,7 +28,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, BotState bot_state) {
+inline std::ostream &operator<<(std::ostream &os, BotState bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -59,7 +59,7 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
+inline std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -180,7 +180,7 @@ struct Tower : _Actor, _Blaster {
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
-std::ostream &operator<<(std::ostream &os, Tower tower) {
+inline std::ostream &operator<<(std::ostream &os, Tower tower) {
     using std::endl;
     os << "Tower(id: " << tower.id << ") {" << endl;
     os << "   hp: " << tower.hp << endl;
@@ -232,6 +232,7 @@ struct State {
 };
 
 inline std::ostream &operator<<(std::ostream &os, const State &state) {
+std::ostream &operator<<(std::ostream &os, const State &state) {
     using std::endl;
 
     os << "Map:" << endl;

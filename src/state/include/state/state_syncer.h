@@ -6,6 +6,8 @@
 #pragma once
 
 #include "logger/interfaces/i_logger.h"
+#include "state/interfaces/i_command_giver.h"
+#include "state/interfaces/i_command_taker.h"
 #include "state/interfaces/i_state_syncer.h"
 #include <memory>
 
@@ -54,25 +56,56 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * @see IStateSyncer #GetScores
      */
-    std::array<int64_t, 2> GetScores(bool game_over);
+    std::array<size_t, 2> getScores(bool game_over) override;
 
     /**
      *  Function to the assign player state bots their new states after
      * validation of user's actions
      */
-    void AssignBots(std::vector<player_state::Bot> player_bots, bool is_enemy);
+    void assignBots(size_t id, std::vector<player_state::Bot> player_bots,
+                    bool is_enemy);
 
     /**
      *  Function to the assign player state towers their new states after
      * validation of user's actions
      */
-    void AssignTowers(std::vector<player_state::Tower> player_towers,
+    void assignTowers(size_t id, std::vector<player_state::Tower> player_towers,
                       bool is_enemy);
 
     /**
      * Helper function to get the player id
      */
-    int64_t GetPlayerId(int id, bool is_enemy);
+    size_t getPlayerId(size_t id, bool is_enemy) const;
+     
+    /**
+     * @param position Position that needs to be flipped
+     * @return DoubleVec2D Flipped position
+     */
+    DoubleVec2D flipBotPosition(const Map *map, DoubleVec2D position);
+
+    /**
+     * Returns flipped tower position
+     *
+     * @param position Position that needs to be flipped
+     * @return Vec2D Flipped position
+     */
+    Vec2D flipTowerPosition(const Map *map, Vec2D position);
+
+    /**
+     * Returns corresponding bot position given tower position
+     *
+     * @param position Tower position
+     * @return DoubleVec2D Bot position
+     */
+    DoubleVec2D changeTowerToBotPosition(Vec2D position);
+
+    /**
+     * Returns corresponding bot position given the tower position
+     *
+     * @param position Bot position
+     * @return Vec2D Tower position
+     */
+    Vec2D changeBotToTowerPosition(DoubleVec2D position);
 };
 
 } // namespace state

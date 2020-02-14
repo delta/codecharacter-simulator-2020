@@ -8,7 +8,6 @@
 #include "logger/error_type.h"
 #include "logger/logger_export.h"
 #include "state/interfaces/i_command_taker.h"
-
 #include <array>
 #include <ostream>
 #include <string>
