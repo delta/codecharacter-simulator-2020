@@ -135,7 +135,7 @@ struct Bot : _Unit {
           has_blasted(false), has_transformed(false){};
 };
 
-size_t Bot::impact_radius = Constants::Actor::BLAST_IMPACT_RADIUS;
+size_t Bot::impact_radius = Constants::Actor::BOT_BLAST_IMPACT_RADIUS;
 
 std::ostream &operator<<(std::ostream &os, Bot bot) {
     using std::endl;
