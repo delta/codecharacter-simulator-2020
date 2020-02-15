@@ -9,6 +9,8 @@
 
 namespace state {
 
+PathGraph::PathGraph() = default;
+
 PathGraph::PathGraph(size_t p_map_size,
                      std::vector<std::vector<bool>> p_valid_terrain,
                      Graph p_graph)
@@ -50,7 +52,7 @@ boost::unordered_set<DoubleVec2D> PathGraph::getWaypoints() const {
     return graph.getNodes();
 }
 
-bool PathGraph::isValidPosition(const double_t &x, const double_t &y) const {
+bool PathGraph::isValidPosition(double_t x, double_t y) const {
     if (x < 0 || y < 0)
         return false;
 

@@ -28,28 +28,28 @@ class MapTest : public testing::Test {
     }
 };
 
-TEST_F(MapTest, GetSizeTest) { EXPECT_EQ(map->GetSize(), MAP_SIZE); }
+TEST_F(MapTest, GetSizeTest) { EXPECT_EQ(map->getSize(), MAP_SIZE); }
 
 TEST_F(MapTest, GetTerrainTypeInt64Test) {
-    EXPECT_EQ(map->GetTerrainType((int64_t)0, (int64_t)0), L);
-    EXPECT_EQ(map->GetTerrainType((int64_t)1, (int64_t)1), W);
-    EXPECT_EQ(map->GetTerrainType((int64_t)2, (int64_t)2), F);
-    EXPECT_EQ(map->GetTerrainType((int64_t)4, (int64_t)4), T);
-    EXPECT_EQ(map->GetTerrainType((int64_t)0, (int64_t)4), L);
-    EXPECT_EQ(map->GetTerrainType((int64_t)4, (int64_t)0), L);
+    EXPECT_EQ(map->getTerrainType((size_t)0, (size_t)0), L);
+    EXPECT_EQ(map->getTerrainType((size_t)1, (size_t)1), W);
+    EXPECT_EQ(map->getTerrainType((size_t)2, (size_t)2), F);
+    EXPECT_EQ(map->getTerrainType((size_t)4, (size_t)4), T);
+    EXPECT_EQ(map->getTerrainType((size_t)0, (size_t)4), L);
+    EXPECT_EQ(map->getTerrainType((size_t)4, (size_t)0), L);
 }
 
 TEST_F(MapTest, GetTerrainTypeDoubleTest) {
-    EXPECT_EQ(map->GetTerrainType(0.5, 0.18), L);
-    EXPECT_EQ(map->GetTerrainType(1.599, 1.501), W);
-    EXPECT_EQ(map->GetTerrainType(2.432, 2.411), F);
-    EXPECT_EQ(map->GetTerrainType(4.997, 4.999), T);
-    EXPECT_EQ(map->GetTerrainType(0.11, 4.921), L);
-    EXPECT_EQ(map->GetTerrainType(4.90, 0.0), L);
+    EXPECT_EQ(map->getTerrainType(0.5, 0.18), L);
+    EXPECT_EQ(map->getTerrainType(1.599, 1.501), W);
+    EXPECT_EQ(map->getTerrainType(2.432, 2.411), F);
+    EXPECT_EQ(map->getTerrainType(4.997, 4.999), T);
+    EXPECT_EQ(map->getTerrainType(0.11, 4.921), L);
+    EXPECT_EQ(map->getTerrainType(4.90, 0.0), L);
 }
 
 TEST_F(MapTest, SetTerrainTypeTest) {
-    map->SetTerrainType(0.0, 0.0, T);
-    EXPECT_EQ(map->GetTerrainType(0.0, 0.0), T);
-    map->SetTerrainType(0.0, 0.0, L);
+    map->setTerrainType(0.0, 0.0, T);
+    EXPECT_EQ(map->getTerrainType(0.0, 0.0), T);
+    map->setTerrainType(0.0, 0.0, L);
 }

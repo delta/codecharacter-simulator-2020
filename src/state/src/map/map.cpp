@@ -11,17 +11,15 @@ namespace state {
 Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size)
     : map(std::move(map)), map_size(map_size) {}
 
-size_t Map::GetSize() const { return map_size; }
+size_t Map::getSize() const { return map_size; }
 
-TerrainType Map::GetTerrainType(int64_t x, int64_t y) const {
-    return map[x][y];
+TerrainType Map::getTerrainType(size_t x, size_t y) const { return map[x][y]; }
+
+TerrainType Map::getTerrainType(double_t x, double_t y) const {
+    return map[(size_t)x][(size_t)y];
 }
 
-TerrainType Map::GetTerrainType(double x, double y) const {
-    return map[(int64_t)x][(int64_t)y];
-}
-
-void Map::SetTerrainType(int64_t x, int64_t y, TerrainType terrainType) {
+void Map::setTerrainType(size_t x, size_t y, TerrainType terrainType) {
     map[x][y] = terrainType;
 }
 

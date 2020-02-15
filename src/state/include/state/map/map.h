@@ -7,6 +7,7 @@
 
 #include "state/utilities.h"
 
+#include <cmath>
 #include <cstddef>
 #include <vector>
 
@@ -41,7 +42,7 @@ class Map {
      *
      * @return Width of the map in grid elements
      */
-    size_t GetSize() const;
+    size_t getSize() const;
 
     /**
      * Get the Terrain type of the element from any position on the map
@@ -50,9 +51,9 @@ class Map {
      * @param y
      * @return the tile's terrain type
      */
-    TerrainType GetTerrainType(int64_t x, int64_t y) const;
+    TerrainType getTerrainType(size_t x, size_t y) const;
 
-    TerrainType GetTerrainType(double x, double y) const;
+    TerrainType getTerrainType(double_t x, double_t y) const;
 
     /**
      * Set the Terrain type of the element from any position on the map
@@ -61,7 +62,7 @@ class Map {
      * @param y
      * @param terrainType the tile's terrain type
      */
-    void SetTerrainType(int64_t x, int64_t y, TerrainType terrainType);
+    void setTerrainType(size_t x, size_t y, TerrainType terrainType);
 };
 
 } // namespace state
