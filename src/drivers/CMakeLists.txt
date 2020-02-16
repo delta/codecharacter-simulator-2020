@@ -13,13 +13,6 @@ set(EXPORTS_FILE_PATH ${EXPORTS_DIR}/drivers/drivers_export.h)
 
 find_package(Boost 1.68.0)
 
-if((NOT BUILD_PROJECT STREQUAL "all") AND (NOT BUILD_PROJECT STREQUAL "no_tests"
-                                          ))
-  include(${CMAKE_INSTALL_PREFIX}/lib/physics_config.cmake)
-  include(${CMAKE_INSTALL_PREFIX}/lib/player_wrapper_config.cmake)
-  include(${CMAKE_INSTALL_PREFIX}/lib/state_config.cmake)
-endif()
-
 add_library(drivers STATIC ${SOURCE_FILES})
 
 target_link_libraries(drivers ${CMAKE_THREAD_LIBS_INIT} player_wrapper)
