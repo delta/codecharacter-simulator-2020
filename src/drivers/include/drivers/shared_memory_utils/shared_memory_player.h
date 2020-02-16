@@ -38,6 +38,6 @@ class DRIVERS_EXPORT SharedMemoryPlayer {
      *
      * @return     The pointer
      */
-    SharedBuffer *GetBuffer();
+    SharedBuffer *getBuffer();
 };
 } // namespace drivers

@@ -51,6 +51,6 @@ class DRIVERS_EXPORT SharedMemoryMain {
      *
      * @return     The pointer
      */
-    SharedBuffer *GetBuffer();
+    SharedBuffer *getBuffer();
 };
 } // namespace drivers

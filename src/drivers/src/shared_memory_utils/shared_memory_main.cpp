@@ -22,7 +22,7 @@ SharedMemoryMain::SharedMemoryMain(std::string shared_memory_name,
         is_player_running, instruction_counter, transfer_state);
 }
 
-SharedBuffer *SharedMemoryMain::GetBuffer() {
+SharedBuffer *SharedMemoryMain::getBuffer() {
     return this->shared_memory.find<SharedBuffer>(unique_instance).first;
 }
 
