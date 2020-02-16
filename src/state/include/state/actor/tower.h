@@ -18,6 +18,11 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      */
     std::unique_ptr<TowerState> state;
 
+    /**
+     * Number of turns for which the tower has been alive
+     */
+    int64_t age;
+
   public:
     /**
      *  Construct a new Tower object
@@ -69,6 +74,17 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @return The name of the tower's state
      */
     TowerStateName getState();
+
+    /**
+     * Return age of the tower
+     * @return age
+     */
+    int64_t getAge();
+
+    /**
+     * Increment age of tower by 1
+     */
+    void incrementAge();
 
     /**
      * Updates the state of the tower and all related properties
