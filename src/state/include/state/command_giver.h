@@ -66,7 +66,28 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     bool isValidBotPosition(DoubleVec2D position) const;
 
-  public:
+    /**
+     * Helper function to check if the player has changed the bot state or not
+     *
+     * @param state_name  The bot's state according to the main state
+     * @param player_state_name  The bot's state according to the player state
+     * @return true  Player has changed the bot state
+     * @return false Player has not changed the bot state
+     */
+    bool botStateChanged(BotStateName state_name,
+                         player_state::BotState player_state_name);
+
+    /**
+     * Helper function to check if the player has changed the tower state or not
+     *
+     * @param state_name The towers's state according to the main state
+     * @param player_state_name The tower's state according to the player state
+     * @return true Player has changed the tower state
+     * @return false Player has not changed the bot state
+     */
+    bool towerStateChanged(TowerStateName state_name,
+                           player_state::TowerState player_state_name);
+
     /**
      * Helper function to check if given grid position is within the map
      */
@@ -77,7 +98,6 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     Vec2D getTowerPositionFromBotPosition(DoubleVec2D position) const;
 
-  public:
     /**
      * Helper function to get the map size
      */

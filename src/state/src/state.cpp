@@ -33,20 +33,20 @@ void State::moveBot(PlayerId player_id, ActorId actor_id,
  */
 template <typename T>
 const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
-    std::array<std::vector<std::unique_ptr<T>>, 2> &actors) {
-    std::array<std::vector<T *>, 2> ret_actors;
+    std::array<std::vector<std::unique_ptr<T>>, 2> &unique_ptrs) {
+    std::array<std::vector<T *>, 2> ret_pointers;
 
     for (int id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT); ++id) {
         std::vector<T *> actor_row;
-        actor_row.resize(actors[id].size());
+        actor_row.resize(unique_ptrs[id].size());
 
-        for (int actor_index = 0; actor_index < actors[id].size();
+        for (int actor_index = 0; actor_index < unique_ptrs[id].size();
              ++actor_index) {
-            actor_row.push_back(actors[id][actor_index].get());
+            actor_row.push_back(unique_ptrs[id][actor_index].get());
         }
-        ret_actors[id] = actor_row;
+        ret_pointers[id] = actor_row;
     }
-    return ret_actors;
+    return ret_pointers;
 }
 
 void State::transformBot(PlayerId player_id, ActorId bot_id,

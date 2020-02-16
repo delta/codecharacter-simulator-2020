@@ -29,7 +29,7 @@ void CommandGiver::moveBot(PlayerId player_id, ActorId bot_id,
 
 size_t CommandGiver::getMapSize() const {
     auto map = state->getMap();
-    return map->GetSize();
+    return map->getSize();
 }
 
 DoubleVec2D CommandGiver::flipBotPosition(DoubleVec2D position) {
@@ -67,9 +67,51 @@ Vec2D CommandGiver::getTowerPositionFromBotPosition(
     return grid_element;
 }
 
+bool CommandGiver::botStateChanged(BotStateName state_name,
+                                   player_state::BotState player_state_name) {
+    if (state_name == BotStateName::IDLE &&
+        player_state_name != player_state::BotState::IDLE) {
+        return true;
+    } else if (state_name == BotStateName::TRANSFORM &&
+               player_state_name != player_state::BotState::TRANSFORM) {
+        return true;
+    } else if (state_name == BotStateName::MOVE_TO_TRANSFORM &&
+               player_state_name != player_state::BotState::TRANSFORM) {
+        return true;
+    } else if (state_name == BotStateName::BLAST &&
+               player_state_name != player_state::BotState::BLAST) {
+        return true;
+    } else if (state_name == BotStateName::MOVE_TO_BLAST &&
+               player_state_name != player_state::BotState::BLAST) {
+        return true;
+    } else if (state_name == BotStateName::MOVE &&
+               player_state_name != player_state::BotState::MOVE) {
+        return true;
+    } else if (state_name == BotStateName::DEAD &&
+               player_state_name != player_state::BotState::DEAD) {
+        return true;
+    }
+    return false;
+}
+
+bool CommandGiver::towerStateChanged(
+    TowerStateName state_name, player_state::TowerState player_state_name) {
+    if (state_name == TowerStateName::IDLE &&
+        player_state_name != player_state::TowerState::IDLE) {
+        return true;
+    } else if (state_name == TowerStateName::BLAST &&
+               player_state_name != player_state::TowerState::BLAST) {
+        return true;
+    } else if (state_name == TowerStateName::DEAD &&
+               player_state_name != player_state::TowerState::DEAD) {
+        return true;
+    }
+    return false;
+}
+
 void CommandGiver::runCommands(
     std::array<player_state::State, 2> &player_states,
-    std::array<bool, 2> skip_turns) {
+    std::array<bool, 2> skip_turn) {
 
     // Getting all the state's actors and checking for valid actions
     auto state_bots = state->getBots();
@@ -79,7 +121,7 @@ void CommandGiver::runCommands(
     for (size_t player_id = 0;
          player_id < static_cast<size_t>(PlayerId::PLAYER_COUNT); ++player_id) {
         // If a player's turn should be skipped, don't process his moves
-        if (skip_turns[player_id]) {
+        if (skip_turn[player_id]) {
             continue;
         }
 
@@ -101,11 +143,29 @@ void CommandGiver::runCommands(
                 player_bot.transform_destination != DoubleVec2D::null;
             bool is_moving = player_bot.destination != DoubleVec2D::null;
 
-            // Validating the bot id
+            // Checking if the bot's properties have been changed
             if (player_bot.id != state_bot->getActorId()) {
                 logger->LogError(Player_id,
-                                 logger::ErrorType::NO_ALTER_ACTOR_ID,
+                                 logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's actor id");
+                continue;
+            } else if (player_bot.hp != state_bot->getHp()) {
+                logger->LogError(Player_id,
+                                 logger::ErrorType::NO_ALTER_BOT_PROPERTY,
+                                 "Cannot alter bot's hp");
+                continue;
+            } else if (player_bot.position != state_bot->getPosition()) {
+                logger->LogError(Player_id,
+                                 logger::ErrorType::NO_ALTER_BOT_PROPERTY,
+                                 "Cannot alter bot's position");
+                continue;
+            }
+
+            // Checking if the user modified the bot's state directly
+            if (botStateChanged(state_bot->getState(), player_bot.state)) {
+                logger->LogError(Player_id,
+                                 logger::ErrorType::NO_ALTER_BOT_PROPERTY,
+                                 "Cannot alter bot's state");
                 continue;
             }
 
@@ -170,19 +230,30 @@ void CommandGiver::runCommands(
             // Finding which task the tower is trying to perform if any
             bool is_blasting = player_tower.blasting;
 
-            // Checking for changing the actor id
+            // Checking if the player changed the tower directly
             if (player_tower.id != state_tower->getActorId()) {
                 logger->LogError(Player_id,
-                                 logger::ErrorType::NO_ALTER_ACTOR_ID,
+                                 logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter tower's actor id");
+                continue;
+            } else if (player_tower.position != state_tower->getPosition()) {
+                logger->LogError(Player_id,
+                                 logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
+                                 "Cannot alter the tower's position");
+                continue;
+            } else if (player_tower.hp != state_tower->getHp()) {
+                logger->LogError(Player_id,
+                                 logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
+                                 "Cannot alter the tower's hp");
                 continue;
             }
 
-            // Checking if the player tries to alter the tower position
-            if (player_tower.position != state_tower->getPosition()) {
+            // Checking if the user has changed the tower state directly
+            if (towerStateChanged(state_tower->getState(),
+                                  player_tower.state)) {
                 logger->LogError(Player_id,
-                                 logger::ErrorType::NO_ALTER_TOWER_POSITION,
-                                 "Cannot alter the tower's position");
+                                 logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
+                                 "Cannot alter the tower's state");
                 continue;
             }
 
