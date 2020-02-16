@@ -10,7 +10,10 @@ set(SOURCE_FILES
     state/tower_test.cpp
     state/bot_test.cpp
     state/path_planner_test.cpp
-    )
+    state/command_giver_test.cpp
+)
+
+include_directories(.)
 
 add_executable(tests ${SOURCE_FILES})
 

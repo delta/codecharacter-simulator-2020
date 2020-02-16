@@ -96,7 +96,7 @@ struct _Blaster {
 
 struct _Unit : _Actor {
     DoubleVec2D destination;
-    static size_t speed;
+    size_t speed;
 
     virtual void reset() { destination = DoubleVec2D::null; }
     void move(DoubleVec2D p_destination) {
@@ -104,10 +104,10 @@ struct _Unit : _Actor {
         destination = p_destination;
     }
 
-    _Unit() : _Actor(), destination(DoubleVec2D::null){};
+    _Unit()
+        : _Actor(), destination(DoubleVec2D::null),
+          speed(Constants::Actor::BOT_SPEED){};
 };
-
-size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
 struct Bot : _Unit, _Blaster {
     BotState state;
@@ -131,7 +131,7 @@ struct Bot : _Unit, _Blaster {
         blast();
     }
 
-    // move to a target position and blast;
+    // move to a target position and blast
     void blast_bot(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
@@ -161,7 +161,7 @@ struct Bot : _Unit, _Blaster {
           transform_destination(DoubleVec2D::null), transforming(false){};
 };
 
-std::ostream &operator<<(std::ostream &os, const Bot &bot) {
+inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
     using std::endl;
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
@@ -189,6 +189,8 @@ std::ostream &operator<<(std::ostream &os, Tower tower) {
 
 struct MapElement {
     TerrainType type;
+    void setTerrain(TerrainType p_type) { type = p_type; }
+    TerrainType getTerrain() { return type; }
 };
 
 /**
@@ -225,7 +227,7 @@ struct State {
           score(0) {}
 };
 
-std::ostream &operator<<(std::ostream &os, const State &state) {
+inline std::ostream &operator<<(std::ostream &os, const State &state) {
     using std::endl;
 
     os << "Map:" << endl;

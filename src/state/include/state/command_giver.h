@@ -49,7 +49,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position that gets flipped
      * @return DoubleVec2D Flipped position
      */
-    DoubleVec2D flipBotPosition(DoubleVec2D position) const;
+    DoubleVec2D flipBotPosition(const Map *map, DoubleVec2D pos);
 
     /**
      * Helper function to flip a position for enemy units
@@ -57,7 +57,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Tower position to be flipped
      * @return Vec2D Flipped tower position
      */
-    Vec2D flipTowerPosition(Vec2D position) const;
+    Vec2D flipTowerPosition(const Map *map, Vec2D position) const;
 
     /**
      * Helper function to check if given position is within the map
@@ -66,7 +66,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    bool isValidBotPosition(DoubleVec2D position) const;
+    bool isValidBotPosition(const Map *map, DoubleVec2D position) const;
 
     /**
      * Helper function to check if given grid position is within the map
@@ -99,10 +99,22 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     bool hasTowerStateChanged(TowerStateName state_name,
                               player_state::TowerState player_state_name) const;
 
+  public:
+    /**
+     * Helper function to check if given grid position is within the map
+     */
+    bool isValidTowerPosition(const Map *map, Vec2D position) const;
+
+    /**
+     * Helper function to get corresponding tower position from the bot position
+     */
+    Vec2D getTowerPositionFromBotPosition(const Map *map,
+                                          DoubleVec2D position) const;
+
     /**
      * Helper function to get the map size
      */
-    size_t getMapSize() const;
+    size_t getMapSize(const Map *map) const;
 
   public:
     CommandGiver();
