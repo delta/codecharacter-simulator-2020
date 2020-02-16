@@ -21,7 +21,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
     /**
      * Number of turns for which the tower has been alive
      */
-    int64_t age;
+    uint64_t age;
 
   public:
     /**
@@ -79,7 +79,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * Return age of the tower
      * @return age
      */
-    int64_t getAge();
+    int64_t getAge() const;
 
     /**
      * Increment age of tower by 1

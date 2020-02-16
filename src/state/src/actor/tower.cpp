@@ -29,7 +29,7 @@ void Tower::damageEnemyActors() { blast_callback(player_id, position); }
 
 TowerStateName Tower::getState() { return state->getName(); }
 
-int64_t Tower::getAge() { return age; }
+int64_t Tower::getAge() const { return age; }
 
 void Tower::incrementAge() { age++; }
 
