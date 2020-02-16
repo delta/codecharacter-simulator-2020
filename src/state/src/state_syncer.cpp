@@ -52,10 +52,10 @@ void StateSyncer::updatePlayerStates(
         player_map;
 
     // Creating a map of player_state map type
-    for (int64_t i = 0; i < map->GetSize(); ++i) {
-        for (int64_t j = 0; j < map->GetSize(); ++j) {
+    for (size_t i = 0; i < map->getSize(); ++i) {
+        for (size_t j = 0; j < map->getSize(); ++j) {
             auto &map_element = player_map[i][j];
-            switch (map->GetTerrainType(i, j)) {
+            switch (map->getTerrainType(i, j)) {
             case TerrainType::LAND:
                 map_element.type = player_state::TerrainType::LAND;
                 break;
@@ -88,12 +88,12 @@ void StateSyncer::updatePlayerStates(
         // Adding the player state map
         // For player1, positions need not be flipped
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
-            for (int i = 0; i < map->GetSize(); ++i) {
+            for (int i = 0; i < map->getSize(); ++i) {
                 std::copy(player_map[i].begin(), player_map[i].end(),
                           player_states[player_id].map[i].begin());
             }
         } else {
-            size_t map_size = map->GetSize();
+            size_t map_size = map->getSize();
             for (int i = 0; i < map_size; ++i) {
                 for (int j = 0; j < map_size; ++j) {
                     player_states[player_id].map[i][j] =
@@ -109,12 +109,12 @@ void StateSyncer::updatePlayerStates(
 
 // TODO : Change these functions to use the path planner to flip positions
 DoubleVec2D StateSyncer::flipBotPosition(const Map *map, DoubleVec2D position) {
-    size_t map_size = map->GetSize();
+    size_t map_size = map->getSize();
     return DoubleVec2D(map_size - position.x, map_size - position.y);
 }
 
 Vec2D StateSyncer::flipTowerPosition(const Map *map, Vec2D position) {
-    size_t map_size = map->GetSize();
+    size_t map_size = map->getSize();
     return Vec2D(map_size - 1 - position.x, map_size - 1 - position.y);
 }
 

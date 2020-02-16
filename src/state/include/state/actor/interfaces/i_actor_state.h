@@ -4,7 +4,9 @@
  */
 
 #pragma once
+
 #include "state/state_export.h"
+
 #include <memory>
 
 namespace state {

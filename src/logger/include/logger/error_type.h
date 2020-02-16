@@ -57,5 +57,4 @@ const std::vector<std::string> ErrorTypeName = {
     "NO_MULTIPLE_BOT_TASK",       "INVALID_BLAST_POSITION",
     "INVALID_TRANSFORM_POSITION", "NO_ALTER_TOWER_PROPERTY",
     "NO_ALTER_BOT_PROPERTY",      "TOWER_LIMIT_REACHED"};
-
 } // namespace logger

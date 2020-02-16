@@ -107,13 +107,7 @@ struct _Unit : _Actor {
     _Unit() : _Actor(), destination(DoubleVec2D::null){};
 };
 
-<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
-size_t _Unit::speed = Constants::Actor::BOT_SPEED;
-
 struct Bot : _Unit, _Blaster {
-=======
-struct Bot : _Unit {
->>>>>>> Add state syncer implementation
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
@@ -121,10 +115,6 @@ struct Bot : _Unit {
     // move and transform at set destination
     DoubleVec2D transform_destination;
     bool transforming;
-<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
-=======
-    size_t impact_radius;
->>>>>>> Add state syncer implementation
 
     void reset() override {
 
@@ -170,11 +160,7 @@ struct Bot : _Unit {
           transform_destination(DoubleVec2D::null), transforming(false){};
 };
 
-<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
-std::ostream &operator<<(std::ostream &os, const Bot &bot) {
-=======
-inline std::ostream &operator<<(std::ostream &os, Bot bot) {
->>>>>>> Add state syncer implementation
+inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
     using std::endl;
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
@@ -202,6 +188,8 @@ inline std::ostream &operator<<(std::ostream &os, Tower tower) {
 
 struct MapElement {
     TerrainType type;
+    void setTerrain(TerrainType p_type) { type = p_type; }
+    TerrainType getTerrain() { return type; }
 };
 
 /**
@@ -238,11 +226,7 @@ struct State {
           score(0) {}
 };
 
-<<<<<<< ac7a5bf65e6908cbf076d4fe1947dcc148eecfdf
-std::ostream &operator<<(std::ostream &os, const State &state) {
-=======
-inline std::ostream &operator<<(std::ostream &os, State state) {
->>>>>>> Add state syncer implementation
+inline std::ostream &operator<<(std::ostream &os, const State &state) {
     using std::endl;
 
     os << "Map:" << endl;

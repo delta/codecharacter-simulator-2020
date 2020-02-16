@@ -4,6 +4,7 @@
  */
 
 #include "state/command_giver.h"
+#include "constants/actor.h"
 
 namespace state {
 CommandGiver::CommandGiver() = default;
@@ -27,24 +28,28 @@ void CommandGiver::moveBot(PlayerId player_id, ActorId bot_id,
     state->moveBot(player_id, bot_id, position);
 }
 
-size_t CommandGiver::getMapSize() const {
-    auto map = state->getMap();
+size_t CommandGiver::getMapSize(const Map *map) const { return map->getSize(); }
+
+DoubleVec2D CommandGiver::flipBotPosition(const Map *map,
+                                          DoubleVec2D position) {
+    size_t map_size = getMapSize(map);
+    return DoubleVec2D(map_size - position.x, map_size - position.y);
 }
 
-DoubleVec2D CommandGiver::flipBotPosition(DoubleVec2D position) const {
-    size_t map_size = getMapSize();
-    return {(long)map_size - position.x, (long)map_size - position.y};
-}
+Vec2D CommandGiver::flipTowerPosition(const Map *map, Vec2D position) const {
+    size_t map_size = getMapSize(map);
+    return Vec2D(map_size - 1 - position.x, map_size - 1 - position.y);
 }
 
-bool CommandGiver::isValidBotPosition(DoubleVec2D position) const {
-    size_t map_size = getMapSize();
+bool CommandGiver::isValidBotPosition(const Map *map,
+                                      DoubleVec2D position) const {
+    size_t map_size = getMapSize(map);
     return (position.x >= 0 && position.x <= map_size && position.y >= 0 &&
             position.y <= map_size);
 }
 
-bool CommandGiver::isValidTowerPosition(Vec2D position) const {
-    size_t map_size = getMapSize();
+bool CommandGiver::isValidTowerPosition(const Map *map, Vec2D position) const {
+    size_t map_size = getMapSize(map);
     return (position.x >= 0 && position.x < map_size && position.y >= 0 &&
             position.y < map_size);
 }
@@ -98,6 +103,7 @@ void CommandGiver::runCommands(
 
     auto state_bots = state->getBots();
     auto state_towers = state->getTowers();
+    auto map = state->getMap();
 
     // Validating and performing the tasks given by the player
     for (size_t player_id = 0;
@@ -108,8 +114,8 @@ void CommandGiver::runCommands(
         }
 
         // Iterating through bots and assigning tasks to command taker
-        for (size_t bot_index = 0;
-             bot_index < player_states[player_id].bots.size(); ++bot_index) {
+        for (size_t bot_index = 0; bot_index < state_bots[player_id].size();
+             ++bot_index) {
             // Getting the player state bots and the state bots
             auto player_bot = player_states[player_id].bots[bot_index];
             auto state_bot = state_bots[player_id][bot_index];
@@ -157,19 +163,29 @@ void CommandGiver::runCommands(
                 logger->LogError(
                     Player_id, logger::ErrorType::NO_MULTIPLE_BOT_TASK,
                     "Cannot perform multiple bot tasks at the same time");
+                continue;
             }
 
             if (is_blasting) {
                 blastActor(Player_id, player_bot.id, player_bot.position);
             } else if (is_transforming) {
+                size_t num_towers = state_towers[player_id].size();
+                if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
+                    logger->LogError(Player_id,
+                                     logger::ErrorType::TOWER_LIMIT_REACHED,
+                                     "Cannot build more towers than maximum "
+                                     "number of towers");
+                    continue;
+                }
                 transformBot(Player_id, player_bot.id, player_bot.position);
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
                 DoubleVec2D target_position = player_bot.final_destination;
-                if (!isValidBotPosition(target_position)) {
+                if (!isValidBotPosition(map, target_position)) {
                     logger->LogError(Player_id,
                                      logger::ErrorType::INVALID_BLAST_POSITION,
                                      "Cannot blast bot in invalid position");
+                    continue;
                 } else {
                     blastActor(Player_id, player_bot.id, target_position);
                 }
@@ -177,31 +193,40 @@ void CommandGiver::runCommands(
                 // Validating the position where the player wants to transform
                 // the bot
                 DoubleVec2D target_position = player_bot.transform_destination;
-                if (!isValidTowerPosition(target_position)) {
+                if (!isValidBotPosition(map, target_position)) {
                     logger->LogError(
-                        Player_id, logger::ErrorType::INVALID_BLAST_POSITION,
+                        Player_id,
+                        logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform bot in invalid position");
-                } else {
-                    transformBot(Player_id, player_bot.id, target_position);
+                    continue;
                 }
+                size_t num_towers = state_towers[player_id].size();
+                if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
+                    logger->LogError(Player_id,
+                                     logger::ErrorType::TOWER_LIMIT_REACHED,
+                                     "Cannot build more towers than maximum "
+                                     "number of towers");
+                    continue;
+                }
+                transformBot(Player_id, player_bot.id, target_position);
             } else if (is_moving) {
                 // Validates the position that the player has requested to move
                 // onto
                 DoubleVec2D target_position = player_bot.destination;
-                if (!isValidBotPosition(target_position)) {
+                if (!isValidBotPosition(map, target_position)) {
                     logger->LogError(Player_id,
                                      logger::ErrorType::INVALID_MOVE_POSITION,
                                      "Cannot move to invalid position");
+                    continue;
                 } else {
                     moveBot(Player_id, player_bot.id, target_position);
                 }
             }
         }
 
-        // Iterating through the towers and assigning tasks
+        // Iterating through the towers and assinging tasks
         for (size_t tower_index = 0;
-             tower_index < player_states[player_id].towers.size();
-             ++tower_index) {
+             tower_index < state_towers[player_id].size(); ++tower_index) {
             // Getting the player state towers and the state towers
             auto player_tower = player_states[player_id].towers[tower_index];
             auto state_tower = state_towers[player_id][tower_index];
