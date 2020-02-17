@@ -24,7 +24,6 @@ install(
   EXPORT player_wrapper_config
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
   RUNTIME DESTINATION bin)
 
 install(EXPORT player_wrapper_config DESTINATION lib)
