@@ -4,8 +4,10 @@
 #include "llvm/Pass.h"
 #include "llvm/Transforms/IPO/PassManagerBuilder.h"
 
+using namespace llvm;
+
 namespace {
-struct DynamicInstructionCountPass : public llvm::FunctionPass {
+struct DynamicInstructionCountPass : public FunctionPass {
     static char ID;
 
     /**
@@ -23,13 +25,13 @@ struct DynamicInstructionCountPass : public llvm::FunctionPass {
      * @param F function under inspection
      * @return true if function is modified, false otherwise
      */
-    virtual bool runOnFunction(llvm::Function &F) {
+    virtual bool runOnFunction(Function &F) {
         // Get the function to call from our runtime library.
-        llvm::LLVMContext &Ctx = F.getContext();
+        LLVMContext &Ctx = F.getContext();
 
-        llvm::FunctionCallee resultFunc = F.getParent()->getOrInsertFunction(
-            increment_function_name, llvm::Type::getVoidTy(Ctx),
-            llvm::Type::getInt32Ty(Ctx));
+        FunctionCallee resultFunc = F.getParent()->getOrInsertFunction(
+            increment_function_name, Type::getVoidTy(Ctx),
+            Type::getInt32Ty(Ctx));
 
         bool flag = false;
 
@@ -38,10 +40,10 @@ struct DynamicInstructionCountPass : public llvm::FunctionPass {
             int count = 0;
             count += B.size();
 
-            llvm::IRBuilder<> builder(&B);
+            IRBuilder<> builder(&B);
             builder.SetInsertPoint(B.getTerminator());
 
-            llvm::Value *args[] = {builder.getInt32(count)};
+            Value *args[] = {builder.getInt32(count)};
             builder.CreateCall(resultFunc, args);
             flag = true;
         }
@@ -59,12 +61,11 @@ const std::string DynamicInstructionCountPass::increment_function_name =
 char DynamicInstructionCountPass::ID = 0;
 
 // Automatically enable the pass.
-static void
-registerDynamicInstructionCountPass(const llvm::PassManagerBuilder &,
-                                    llvm::legacy::PassManagerBase &PM) {
+static void registerDynamicInstructionCountPass(const PassManagerBuilder &,
+                                                legacy::PassManagerBase &PM) {
     PM.add(new DynamicInstructionCountPass());
 }
 
-static llvm::RegisterStandardPasses
-    RegisterPass(llvm::PassManagerBuilder::EP_EarlyAsPossible,
+static RegisterStandardPasses
+    RegisterPass(PassManagerBuilder::EP_EarlyAsPossible,
                  registerDynamicInstructionCountPass);
