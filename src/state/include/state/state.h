@@ -30,7 +30,7 @@ class STATE_EXPORT State : public ICommandTaker {
     std::unique_ptr<ScoreManager> score_manager;
 
     /**
-     * A list of bots indexed bt player
+     * A list of bots indexed by player
      */
     std::array<std::vector<std::unique_ptr<Bot>>, 2> bots;
 
@@ -59,7 +59,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * Compute scores for this turn, and record them
      */
-    void UpdateScores();
+    void updateScores();
 
   public:
     /**
@@ -86,7 +86,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * Handles all build requests and builds towers given situations
      */
-    void HandleBuildRequests();
+    void handleBuildRequests();
 
     /**
      * @see ICommandTaker#transformBot

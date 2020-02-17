@@ -83,6 +83,17 @@ struct _Actor {
     _Actor() : id(0), hp(100), position(DoubleVec2D{0, 0}){};
 };
 
+struct _Blaster {
+    bool blasting;
+    int64_t impact_radius;
+
+    _Blaster() : blasting(false), impact_radius(0) {}
+
+    void blast() { blasting = true; }
+    void reset() { blasting = false; }
+    void setImpact(int64_t p_impact_radius) { impact_radius = p_impact_radius; }
+};
+
 struct _Unit : _Actor {
     DoubleVec2D destination;
     static size_t speed;
@@ -98,34 +109,33 @@ struct _Unit : _Actor {
 
 size_t _Unit::speed = Constants::Actor::BOT_SPEED;
 
-struct Bot : _Unit {
+struct Bot : _Unit, _Blaster {
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
-    bool blasting;
+
     // move and transform at set destination
     DoubleVec2D transform_destination;
     bool transforming;
-    static size_t impact_radius;
 
     void reset() override {
-        destination = DoubleVec2D::null;
         transform_destination = DoubleVec2D::null;
         final_destination = DoubleVec2D::null;
-        blasting = false;
         transforming = false;
+        _Unit::reset();
+        _Blaster::reset();
     }
 
     void blast_bot() {
         reset();
-        blasting = true;
+        blast();
     }
 
     // move to a target position and blast;
     void blast_bot(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
-            blasting = true;
+            blast();
         } else {
             final_destination = target_position;
         }
@@ -146,14 +156,12 @@ struct Bot : _Unit {
     }
 
     Bot()
-        : _Unit(), state(BotState::IDLE), final_destination(DoubleVec2D::null),
-          transform_destination(DoubleVec2D::null), transforming(false),
-          blasting(false){};
+        : _Unit(), _Blaster(), state(BotState::IDLE),
+          final_destination(DoubleVec2D::null),
+          transform_destination(DoubleVec2D::null), transforming(false){};
 };
 
-size_t Bot::impact_radius = Constants::Actor::BOT_BLAST_IMPACT_RADIUS;
-
-std::ostream &operator<<(std::ostream &os, Bot bot) {
+std::ostream &operator<<(std::ostream &os, const Bot &bot) {
     using std::endl;
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
@@ -162,13 +170,12 @@ std::ostream &operator<<(std::ostream &os, Bot bot) {
     os << "}" << endl;
 }
 
-struct Tower : _Actor {
+struct Tower : _Actor, _Blaster {
     TowerState state;
-    bool blasting;
 
-    void blast_tower() { blasting = true; }
+    void blast_tower() { blast(); }
 
-    Tower() : _Actor(), state(TowerState::IDLE), blasting(false){};
+    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
@@ -218,7 +225,7 @@ struct State {
           score(0) {}
 };
 
-std::ostream &operator<<(std::ostream &os, State state) {
+std::ostream &operator<<(std::ostream &os, const State &state) {
     using std::endl;
 
     os << "Map:" << endl;
@@ -233,6 +240,9 @@ std::ostream &operator<<(std::ostream &os, State state) {
                 break;
             case TerrainType::FLAG:
                 os << "F ";
+                break;
+            case TerrainType::TOWER:
+                os << "T ";
                 break;
             }
         }
