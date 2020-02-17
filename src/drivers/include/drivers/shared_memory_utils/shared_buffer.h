@@ -16,7 +16,7 @@ namespace drivers {
  */
 struct DRIVERS_EXPORT SharedBuffer {
     SharedBuffer(bool is_player_running, int64_t instruction_counter,
-                 const transfer_state::State &transfer_state);
+                 transfer_state::State transfer_state);
 
     /**
      * True if the player process is executing its turn, false otherwise
@@ -26,7 +26,7 @@ struct DRIVERS_EXPORT SharedBuffer {
     /**
      * Count of the number of instructions executed in the present turn
      */
-    std::atomic<int64_t> instruction_counter;
+    std::atomic<uint64_t> instruction_counter;
 
     /**
      * Player's copy of the state with limited information
