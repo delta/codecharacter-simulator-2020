@@ -6,7 +6,7 @@
 #include "state/command_giver.h"
 
 namespace state {
-CommandGiver::CommandGiver() {}
+CommandGiver::CommandGiver() = default;
 
 CommandGiver::CommandGiver(std::unique_ptr<ICommandTaker> state,
                            std::unique_ptr<logger::ILogger> logger)
@@ -32,14 +32,14 @@ size_t CommandGiver::getMapSize() const {
     return map->getSize();
 }
 
-DoubleVec2D CommandGiver::flipBotPosition(DoubleVec2D position) {
+DoubleVec2D CommandGiver::flipBotPosition(DoubleVec2D position) const {
     size_t map_size = getMapSize();
-    return DoubleVec2D(map_size - position.x, map_size - position.y);
+    return {(long)map_size - position.x, (long)map_size - position.y};
 }
 
 Vec2D CommandGiver::flipTowerPosition(Vec2D position) const {
     size_t map_size = getMapSize();
-    return Vec2D(map_size - 1 - position.x, map_size - 1 - position.y);
+    return {(long)map_size - 1 - position.x, (long)map_size - 1 - position.y};
 }
 
 bool CommandGiver::isValidBotPosition(DoubleVec2D position) const {
@@ -54,21 +54,8 @@ bool CommandGiver::isValidTowerPosition(Vec2D position) const {
             position.y < map_size);
 }
 
-Vec2D CommandGiver::getTowerPositionFromBotPosition(
-    DoubleVec2D position) const {
-    size_t map_size = getMapSize();
-    Vec2D grid_element(std::floor(position.x), std::floor(position.y));
-    if (position.x == map_size) {
-        grid_element.x = grid_element.x - 1;
-    }
-    if (position.y == map_size) {
-        grid_element.y = grid_element.y - 1;
-    }
-    return grid_element;
-}
-
-bool CommandGiver::botStateChanged(BotStateName state_name,
-                                   player_state::BotState player_state_name) {
+bool CommandGiver::hasBotStateChanged(
+    BotStateName state_name, player_state::BotState player_state_name) const {
     if (state_name == BotStateName::IDLE &&
         player_state_name != player_state::BotState::IDLE) {
         return true;
@@ -94,8 +81,9 @@ bool CommandGiver::botStateChanged(BotStateName state_name,
     return false;
 }
 
-bool CommandGiver::towerStateChanged(
-    TowerStateName state_name, player_state::TowerState player_state_name) {
+bool CommandGiver::hasTowerStateChanged(
+    TowerStateName state_name,
+    player_state::TowerState player_state_name) const {
     if (state_name == TowerStateName::IDLE &&
         player_state_name != player_state::TowerState::IDLE) {
         return true;
@@ -113,7 +101,6 @@ void CommandGiver::runCommands(
     std::array<player_state::State, 2> &player_states,
     std::array<bool, 2> skip_turn) {
 
-    // Getting all the state's actors and checking for valid actions
     auto state_bots = state->getBots();
     auto state_towers = state->getTowers();
 
@@ -132,16 +119,15 @@ void CommandGiver::runCommands(
             auto player_bot = player_states[player_id].bots[bot_index];
             auto state_bot = state_bots[player_id][bot_index];
 
-            PlayerId Player_id = static_cast<PlayerId>(player_id);
+            auto Player_id = static_cast<PlayerId>(player_id);
 
             // Finding which task the bot is trying to perform if any
             bool is_blasting = player_bot.blasting;
             bool is_transforming = player_bot.transforming;
-            bool is_moving_to_blast =
-                player_bot.final_destination != DoubleVec2D::null;
+            bool is_moving_to_blast = (bool)player_bot.final_destination;
             bool is_moving_to_transform =
-                player_bot.transform_destination != DoubleVec2D::null;
-            bool is_moving = player_bot.destination != DoubleVec2D::null;
+                (bool)player_bot.transform_destination;
+            bool is_moving = (bool)player_bot.destination;
 
             // Checking if the bot's properties have been changed
             if (player_bot.id != state_bot->getActorId()) {
@@ -162,7 +148,7 @@ void CommandGiver::runCommands(
             }
 
             // Checking if the user modified the bot's state directly
-            if (botStateChanged(state_bot->getState(), player_bot.state)) {
+            if (hasBotStateChanged(state_bot->getState(), player_bot.state)) {
                 logger->LogError(Player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's state");
@@ -196,7 +182,7 @@ void CommandGiver::runCommands(
                 // Validating the position where the player wants to transform
                 // the bot
                 DoubleVec2D target_position = player_bot.transform_destination;
-                if (!isValidBotPosition(target_position)) {
+                if (!isValidTowerPosition(target_position)) {
                     logger->LogError(
                         Player_id, logger::ErrorType::INVALID_BLAST_POSITION,
                         "Cannot transform bot in invalid position");
@@ -217,7 +203,7 @@ void CommandGiver::runCommands(
             }
         }
 
-        // Iterating through the towers and assinging tasks
+        // Iterating through the towers and assigning tasks
         for (size_t tower_index = 0;
              tower_index < player_states[player_id].towers.size();
              ++tower_index) {
@@ -225,7 +211,7 @@ void CommandGiver::runCommands(
             auto player_tower = player_states[player_id].towers[tower_index];
             auto state_tower = state_towers[player_id][tower_index];
 
-            PlayerId Player_id = static_cast<PlayerId>(player_id);
+            auto Player_id = static_cast<PlayerId>(player_id);
 
             // Finding which task the tower is trying to perform if any
             bool is_blasting = player_tower.blasting;
@@ -249,8 +235,8 @@ void CommandGiver::runCommands(
             }
 
             // Checking if the user has changed the tower state directly
-            if (towerStateChanged(state_tower->getState(),
-                                  player_tower.state)) {
+            if (hasTowerStateChanged(state_tower->getState(),
+                                     player_tower.state)) {
                 logger->LogError(Player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's state");

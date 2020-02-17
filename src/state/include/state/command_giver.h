@@ -36,11 +36,10 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * Helper function to validate transform request and make command_taker call
      * TransformBot internally
      */
-    void transformBot(PlayerId player_id, ActorId unit_id,
-                      DoubleVec2D position);
+    void transformBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
 
     /**
-     * Helper function to use make command_taker call MoveBot internally
+     * Helper function to make command_taker call MoveBot internally
      */
     void moveBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
 
@@ -50,10 +49,13 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position that gets flipped
      * @return DoubleVec2D Flipped position
      */
-    DoubleVec2D flipBotPosition(DoubleVec2D pos);
+    DoubleVec2D flipBotPosition(DoubleVec2D pos) const;
 
     /**
      * Helper function to flip a position for enemy units
+     *
+     * @param position Tower position to be flipped
+     * @return Vec2D Flipped tower position
      */
     Vec2D flipTowerPosition(Vec2D position) const;
 
@@ -67,6 +69,15 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     bool isValidBotPosition(DoubleVec2D position) const;
 
     /**
+     * Helper function to check if given grid position is within the map
+     *
+     * @param position Position to be checked
+     * @return true Valid position
+     * @return false Invalid position
+     */
+    bool isValidTowerPosition(Vec2D position) const;
+
+    /**
      * Helper function to check if the player has changed the bot state or not
      *
      * @param state_name  The bot's state according to the main state
@@ -74,8 +85,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true  Player has changed the bot state
      * @return false Player has not changed the bot state
      */
-    bool botStateChanged(BotStateName state_name,
-                         player_state::BotState player_state_name);
+    bool hasBotStateChanged(BotStateName state_name,
+                            player_state::BotState player_state_name) const;
 
     /**
      * Helper function to check if the player has changed the tower state or not
@@ -85,18 +96,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true Player has changed the tower state
      * @return false Player has not changed the bot state
      */
-    bool towerStateChanged(TowerStateName state_name,
-                           player_state::TowerState player_state_name);
-
-    /**
-     * Helper function to check if given grid position is within the map
-     */
-    bool isValidTowerPosition(Vec2D position) const;
-
-    /**
-     * Helper function to get corresponding tower position from the bot position
-     */
-    Vec2D getTowerPositionFromBotPosition(DoubleVec2D position) const;
+    bool hasTowerStateChanged(TowerStateName state_name,
+                              player_state::TowerState player_state_name) const;
 
     /**
      * Helper function to get the map size
