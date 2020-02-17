@@ -79,7 +79,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * Return age of the tower
      * @return age
      */
-    int64_t getAge() const;
+    uint64_t getAge() const;
 
     /**
      * Increment age of tower by 1
