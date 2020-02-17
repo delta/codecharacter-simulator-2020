@@ -32,4 +32,7 @@ const size_t MAX_NUM_TOWERS = 200;
 // Blast impact radius around the tower
 const size_t TOWER_BLAST_IMPACT_RADIUS = 3;
 
+// Minimum number of turns tower must be alive to be able to blast
+const size_t TOWER_MIN_BLAST_AGE = 5;
+
 } // namespace Constants::Actor

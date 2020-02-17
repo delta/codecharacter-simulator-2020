@@ -39,6 +39,15 @@ class TowerTest : public Test {
     }
 };
 
+TEST_F(TowerTest, AgeTest) {
+    ASSERT_EQ(tower->getAge(), 0);
+
+    tower->update();
+    tower->lateUpdate();
+
+    ASSERT_EQ(tower->getAge(), 1);
+}
+
 TEST_F(TowerTest, BlastTest) {
     ASSERT_EQ(tower->getState(), TowerStateName::IDLE);
 
