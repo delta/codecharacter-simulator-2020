@@ -3,3 +3,4 @@ build/*
 simulator/*
 docs/build/*
 docs/xml/*
+docs/html/*

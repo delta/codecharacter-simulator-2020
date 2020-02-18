@@ -10,19 +10,16 @@ Welcome to CodeCharacter's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-Docs
-====
+   constants
+   logger
+   physics
+   state
+   player_wrapper
+   drivers
 
-.. doxygenindex:: 
-.. doxygenstruct:: 
-.. doxygenfunction:: 
-.. doxygenenum:: 
-.. doxygentypedef:: 
-.. doxygenclass:: 
 
-Indices and tables
+
+Index
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
