@@ -178,6 +178,12 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @return DoubleVec2D
      */
     DoubleVec2D getPosition() const;
+
+    /**
+     * Set the Position of Actor
+     *
+     */
+    void setPosition(DoubleVec2D p_position);
 };
 
 } // namespace state

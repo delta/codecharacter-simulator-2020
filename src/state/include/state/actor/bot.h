@@ -8,10 +8,12 @@
 #include "state/actor/blaster.h"
 #include "state/actor/bot_states/bot_state.h"
 #include "state/actor/unit.h"
+#include "state/path_planner/path_planner.h"
 
 namespace state {
 
-using ConstructTowerCallback = std::function<void(PlayerId, DoubleVec2D)>;
+using ConstructTowerCallback =
+    std::function<void(PlayerId, DoubleVec2D, size_t)>;
 
 /**
  * Declaration of Bot class
@@ -22,6 +24,11 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Controls logic for bot's current state
      */
     std::unique_ptr<BotState> state;
+
+    /**
+     *  Path Planner to perform movement mechanics
+     */
+    PathPlanner *path_planner;
 
     /**
      *  The position at which the bot transitions to blast state
@@ -70,9 +77,10 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_callback
      * @param construct_tower_callback
      */
-    Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-        size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback,
+    Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+        DoubleVec2D position, size_t speed, size_t blast_range,
+        size_t damage_points, PathPlanner *path_planner,
+        BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
 
     /**
@@ -89,10 +97,17 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_callback
      * @param construct_tower_callback
      */
-    Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-        DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback,
+    Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
+        size_t speed, size_t blast_range, size_t damage_points,
+        PathPlanner *path_planner, BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
+
+    /**
+     * Get Bot's Path Planner pointer
+     *
+     * @return PathPlanner*
+     */
+    PathPlanner *getPathPlanner() const;
 
     /**
      *  check if final_destination is set
@@ -168,8 +183,10 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *
      * @param player_id
      * @param position
+     * @param current_hp
      */
-    void constructTower(PlayerId player_id, DoubleVec2D position);
+    void constructTower(PlayerId player_id, DoubleVec2D position,
+                        size_t current_hp);
 
     /**
      *  Get the current state of bot

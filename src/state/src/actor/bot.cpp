@@ -9,25 +9,26 @@
 
 namespace state {
 
-Bot::Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-         size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, BlastCallback blast_callback,
+Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+         DoubleVec2D position, size_t speed, size_t blast_range,
+         size_t damage_points, PathPlanner *path_planner,
+         BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(id, player_id, actor_type, hp, max_hp, speed, position),
+    : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)),
+      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
 
-Bot::Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-         DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, BlastCallback blast_callback,
+Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
+         size_t speed, size_t blast_range, size_t damage_points,
+         PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(player_id, actor_type, hp, max_hp, speed, position),
+    : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)),
+      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
@@ -75,8 +76,9 @@ void Bot::setTransforming(bool p_transforming) {
 
 BotStateName Bot::getState() const { return state->getName(); }
 
-void Bot::constructTower(PlayerId player_id, DoubleVec2D tower_position) {
-    construct_tower_callback(player_id, tower_position);
+void Bot::constructTower(PlayerId player_id, DoubleVec2D tower_position,
+                         size_t current_hp) {
+    construct_tower_callback(player_id, tower_position, current_hp);
 }
 
 bool Bot::isTransforming() const { return is_transforming; }
@@ -95,27 +97,35 @@ void Bot::transform() {
     setTransforming(true);
 }
 
+PathPlanner *Bot::getPathPlanner() const { return path_planner; }
+
 void Bot::lateUpdate() {
     // Updating the hp of the Bot
-    size_t latest_hp = getLatestHp();
-    setHp(latest_hp);
+    setHp(getLatestHp());
 
     // Resetting the damage incurred
     setDamageIncurred(0);
 
-    // get new state based on bot properties
-    auto new_state = state->update();
+    // perform a move
+    if (isNewPostitionSet()) {
+        setPosition(getNewPosition());
+        clearNewPosition();
+    }
 
-    // until no state transitions occur, in a single frame
-    while (new_state != nullptr) {
+    // construct tower
+    if (getHp() && isTransforming()) {
+        constructTower(getPlayerId(), getPosition(), getHp());
+        setTransforming(false);
+        setHp(0);
+    }
+
+    // Transition to dead state if dead
+    if (getHp() == 0 && state->getName() != BotStateName::DEAD) {
+        auto new_state = state->update();
         state->exit();
-        /*
-            Here, state.reset destroys the state it is currently managing and
-           starts managing the new state object passed to it
-        */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-        new_state = state->update();
+        state->update();
     }
 }
 

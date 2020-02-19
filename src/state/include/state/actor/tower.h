@@ -41,9 +41,9 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, DoubleVec2D position, size_t damage_points,
-          size_t blast_range, BlastCallback blast_callback);
+    Tower(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+          DoubleVec2D position, size_t damage_points, size_t blast_range,
+          BlastCallback blast_callback);
 
     /**
      *  Construct a new Tower object, with auto incrementing id
@@ -57,8 +57,8 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-          DoubleVec2D position, size_t damage_points, size_t blast_range,
+    Tower(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
+          size_t damage_points, size_t blast_range,
           BlastCallback blast_callback);
 
     /**
@@ -86,7 +86,7 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
 
     /**
      * Updates the state of the tower and all related properties
-     * 
+     *
      * @see IUpdatable#update
      */
     void update() override;

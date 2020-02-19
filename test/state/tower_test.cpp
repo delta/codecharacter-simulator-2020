@@ -29,9 +29,8 @@ class TowerTest : public Test {
 
         blast_callback = &blast_enemies;
 
-        tower = make_unique<Tower>(1, PlayerId::PLAYER1, ActorType::TOWER, hp,
-                                   max_hp, start_pos, damage_points,
-                                   blast_range, blast_callback);
+        tower = make_unique<Tower>(1, PlayerId::PLAYER1, hp, max_hp, start_pos,
+                                   damage_points, blast_range, blast_callback);
     }
 };
 
@@ -56,8 +55,6 @@ TEST_F(TowerTest, InitialValuesTest) {
 }
 
 TEST_F(TowerTest, BlastTest) {
-    ASSERT_EQ(tower->getState(), TowerStateName::IDLE);
-
     // Making the tower blast and checking for the transition to the blast state
     // and then transition to the dead state
     tower->blast();
@@ -67,7 +64,7 @@ TEST_F(TowerTest, BlastTest) {
 
     // getLatestHp returns hp - damage_incurred. If this is equal to 0, then
     // damage incurred has been set to hp
-    ASSERT_EQ(tower->getLatestHp(), 0);
+    ASSERT_EQ(tower->getLatestHp(), 100);
 
     // When the tower updates to blast state, it must call DamageEnemyActors to
     // increase all enemy actor's damage incurred
@@ -90,7 +87,6 @@ TEST_F(TowerTest, BlastTest) {
 // Tower is attacked by neighbour, hence, his damage incurred is set
 TEST_F(TowerTest, AttackTest) {
     // Setting the damage incurred of the tower
-    ASSERT_EQ(tower->getState(), TowerStateName::IDLE);
     tower->setDamageIncurred(hp);
 
     // After update, the tower must still be in the idle state
@@ -103,7 +99,6 @@ TEST_F(TowerTest, AttackTest) {
 }
 
 TEST_F(TowerTest, DeathTest) {
-    ASSERT_EQ(tower->getState(), TowerStateName::IDLE);
     ASSERT_EQ(tower->getHp(), hp);
 
     // Setting the tower hp to 0 and checking for state transition to dead state

@@ -9,7 +9,7 @@ set(SOURCE_FILES
     src/path_planner/path_graph_helper.cpp
     src/path_planner/path_graph.cpp
     src/path_planner/path_graph_helper.cpp
-    src/path_planner/path_graph.cpp
+    src/path_planner/path_planner.cpp
     src/actor/actor.cpp
     src/score_manager/score_manager.cpp
     src/actor/unit.cpp
@@ -26,13 +26,10 @@ set(SOURCE_FILES
     src/actor/bot_states/bot_dead_state.cpp
     src/actor/bot_states/bot_move_state.cpp
     src/actor/bot_states/bot_transform_state.cpp
-    src/actor/bot_states/bot_move_blast_state.cpp
-    src/actor/bot_states/bot_move_transform_state.cpp
     src/actor/bot_states/bot_move_to_blast_state.cpp
-    src/actor/bot_states/bot_move_to_transform_state.cpp)
+    src/actor/bot_states/bot_move_to_transform_state.cpp
     src/score_manager/score_manager.cpp
     src/path_planner/path_planner.cpp)
-    )
 
 set(INCLUDE_PATH include)
 
@@ -51,7 +48,8 @@ target_include_directories(
   state
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
          $<BUILD_INTERFACE:${EXPORTS_DIR}>
-         $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>
+         $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
+         $<INSTALL_INTERFACE:include>
          $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/logger/include>)
 
 install(

@@ -20,8 +20,9 @@ void BotBlastState::enter() {
 }
 
 std::unique_ptr<IActorState> BotBlastState::update() const {
-    if (bot->getHp() == 0)
+    if (bot->getHp() == 0) {
         return std::make_unique<BotDeadState>(bot);
+    }
     return nullptr;
 }
 

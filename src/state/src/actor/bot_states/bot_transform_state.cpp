@@ -14,10 +14,10 @@ BotTransformState::BotTransformState(Bot *bot)
     : BotState(BotStateName::TRANSFORM, bot) {}
 
 void BotTransformState::enter() {
-    // kill self and construct a tower
-    bot->damage(bot->getHp());
-    bot->constructTower(bot->getPlayerId(), bot->getPosition());
-    bot->setTransforming(false);
+    // do nothing
+    // if alive in late update and isTransforming set to true, call the
+    // construct tower callback
+    bot->setTransforming(true);
 }
 
 std::unique_ptr<IActorState> BotTransformState::update() const {
