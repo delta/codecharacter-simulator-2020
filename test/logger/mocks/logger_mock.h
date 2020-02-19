@@ -1,3 +1,5 @@
+#pragma once
+
 #include "logger/interfaces/i_logger.h"
 #include "gmock/gmock.h"
 

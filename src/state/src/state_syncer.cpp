@@ -85,6 +85,13 @@ void StateSyncer::updatePlayerStates(
         assignTowers(player_id, player_states[player_id].towers, false);
         assignTowers(enemy_id, player_states[player_id].enemy_towers, true);
 
+        // Assigning the number of bots and towers
+        player_states[player_id].num_bots = state_bots[player_id].size();
+        player_states[enemy_id].num_enemy_bots = state_bots[player_id].size();
+        player_states[player_id].num_towers = state_towers[player_id].size();
+        player_states[enemy_id].num_enemy_towers =
+            state_towers[player_id].size();
+
         // Adding the player state map
         // For player1, positions need not be flipped
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
@@ -119,19 +126,19 @@ Vec2D StateSyncer::flipTowerPosition(const Map *map, Vec2D position) {
 }
 
 void StateSyncer::assignBots(size_t id,
-                             std::vector<player_state::Bot> player_bots,
+                             std::vector<player_state::Bot> &player_bots,
                              bool is_enemy) {
     auto state_bots = state->getBots();
     auto map = state->getMap();
-    size_t player_id = id;
+    size_t player_id = getPlayerId(id, is_enemy);
     std::vector<player_state::Bot> new_bots;
 
-    for (int bot_index = 0; bot_index < state_bots[player_id].size();
-         ++bot_index) {
+    for (int bot_index = 0; bot_index < state_bots[id].size(); ++bot_index) {
         // Creating a new bot with all attributes reset
         player_state::Bot new_bot;
-        auto state_bot = state_bots[player_id][bot_index];
+        auto state_bot = state_bots[id][bot_index];
 
+        new_bot.id = state_bot->getActorId();
         new_bot.hp = state_bot->getHp();
         new_bot.position = DoubleVec2D::null;
 
@@ -160,15 +167,11 @@ void StateSyncer::assignBots(size_t id,
             break;
         }
 
-        // Checking if it's player 2, then flipping the position
-        player_id = getPlayerId(id, is_enemy);
-
         // For player one, the positions need not be inverted
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             new_bot.position = state_bot->getPosition();
         } else {
-            new_bot.position =
-                flipBotPosition(state->getMap(), state_bot->getPosition());
+            new_bot.position = flipBotPosition(map, state_bot->getPosition());
         }
 
         // Adding the new bot to the list of new bots
@@ -192,10 +195,11 @@ Vec2D StateSyncer::changeBotToTowerPosition(DoubleVec2D position) {
 }
 
 void StateSyncer::assignTowers(size_t id,
-                               std::vector<player_state::Tower> player_towers,
+                               std::vector<player_state::Tower> &player_towers,
                                bool is_enemy) {
     auto state_towers = state->getTowers();
-    size_t player_id = id;
+    size_t player_id = getPlayerId(id, is_enemy);
+    auto map = state->getMap();
     std::vector<player_state::Tower> new_towers;
 
     for (int tower_index = 0; tower_index < state_towers[id].size();
@@ -203,6 +207,7 @@ void StateSyncer::assignTowers(size_t id,
         player_state::Tower new_tower;
         auto state_tower = state_towers[id][tower_index];
         new_tower.id = state_tower->getActorId();
+        new_tower.hp = state_tower->getHp();
 
         // Assigning the tower's state
         switch (state_tower->getState()) {
@@ -217,15 +222,13 @@ void StateSyncer::assignTowers(size_t id,
             break;
         }
 
-        player_id = getPlayerId(id, is_enemy);
-
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             new_tower.position = state_tower->getPosition();
         } else {
             Vec2D tower_position =
                 changeBotToTowerPosition(state_tower->getPosition());
             Vec2D flipped_tower_position =
-                flipTowerPosition(state->getMap(), tower_position);
+                flipTowerPosition(map, tower_position);
             new_tower.position =
                 changeTowerToBotPosition(flipped_tower_position);
         }

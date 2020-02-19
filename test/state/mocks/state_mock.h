@@ -1,3 +1,5 @@
+#pragma once
+
 #include "state/interfaces/i_command_taker.h"
 #include "gmock/gmock.h"
 

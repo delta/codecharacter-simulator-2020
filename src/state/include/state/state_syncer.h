@@ -62,14 +62,15 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      *  Function to the assign player state bots their new states after
      * validation of user's actions
      */
-    void assignBots(size_t id, std::vector<player_state::Bot> player_bots,
+    void assignBots(size_t id, std::vector<player_state::Bot> &player_bots,
                     bool is_enemy);
 
     /**
      *  Function to the assign player state towers their new states after
      * validation of user's actions
      */
-    void assignTowers(size_t id, std::vector<player_state::Tower> player_towers,
+    void assignTowers(size_t id,
+                      std::vector<player_state::Tower> &player_towers,
                       bool is_enemy);
 
     /**

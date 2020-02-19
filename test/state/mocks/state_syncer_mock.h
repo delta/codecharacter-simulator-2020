@@ -1,3 +1,5 @@
+#pragma once
+
 #include "state/interfaces/i_state_syncer.h"
 #include "gmock/gmock.h"
 
