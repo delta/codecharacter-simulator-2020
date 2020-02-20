@@ -4,7 +4,10 @@ project(drivers)
 set(SOURCE_FILES
     src/shared_memory_utils/shared_memory_main.cpp
     src/shared_memory_utils/shared_memory_player.cpp
-    src/shared_memory_utils/shared_buffer.cpp)
+    src/shared_memory_utils/shared_buffer.cpp
+    src/timer.cpp
+    src/player_driver.cpp
+    src/main_driver.cpp)
 
 set(INCLUDE_PATH include)
 
