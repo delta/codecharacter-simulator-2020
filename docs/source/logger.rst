@@ -6,8 +6,12 @@ Logger
 Namespace
 ============
 
+Logger
+-----------
+
 .. doxygennamespace:: logger
     :project: codecharacterdocs
+    :outline:
 
 ILogger
 ============
@@ -21,8 +25,3 @@ Logger
 .. doxygenfile:: logger.h
    :project: codecharacterdocs
 
-Error Type
-============
-
-.. doxygenenum:: logger::ErrorType
-    :project: codecharacterdocs

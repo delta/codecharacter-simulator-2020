@@ -1,5 +1,5 @@
 /**
- * file error_type.h
+ * @file error_type.h
  * Defines a type of error to be logged
  */
 
