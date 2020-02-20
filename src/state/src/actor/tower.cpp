@@ -57,13 +57,18 @@ void Tower::lateUpdate() {
     // Resetting the damage incurred
     setDamageIncurred(0);
 
+    if (isBlasting()) {
+        setBlasting(false);
+        damageEnemyActors(getPlayerId(), getActorId(), getPosition());
+        setHp(0);
+    }
+
     // Allow Tower to transition to dead state
     if (getHp() == 0 && state->getName() != TowerStateName::DEAD) {
         auto new_state = state->update();
         state->exit();
         state.reset(static_cast<TowerState *>(new_state.release()));
         state->enter();
-        state->update();
     }
 }
 

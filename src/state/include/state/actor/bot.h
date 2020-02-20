@@ -67,13 +67,13 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *
      * @param id
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param path_planner
      * @param blast_callback
      * @param construct_tower_callback
      */
@@ -87,13 +87,13 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Construct a new Bot object, with auto incrementing id.
      *
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param path_planner
      * @param blast_callback
      * @param construct_tower_callback
      */

@@ -17,7 +17,8 @@ void BotTransformState::enter() {
     // do nothing
     // if alive in late update and isTransforming set to true, call the
     // construct tower callback
-    bot->setTransforming(true);
+    // bot->setTransforming(true);
+    // bot->constructTower(bot->getPlayerId(), getP);
 }
 
 std::unique_ptr<IActorState> BotTransformState::update() const {

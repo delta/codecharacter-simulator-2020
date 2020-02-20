@@ -59,13 +59,8 @@ std::unique_ptr<IActorState> BotMoveState::update() const {
     if (next_position) {
         bot->setNewPosition(next_position);
 
-        if (next_position == current_position) {
-            return make_unique<BotIdleState>(bot);
-        }
-
         // transition to idle state, with new position already set
-        if (current_position.distance(bot->getDestination()) <=
-            bot->getSpeed()) {
+        if (next_position == destination) {
             return make_unique<BotIdleState>(bot);
         }
     }

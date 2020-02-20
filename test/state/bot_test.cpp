@@ -1,7 +1,6 @@
 #include "state/actor/bot.h"
 #include "state/actor/bot_states/bot_state.h"
 #include "state/map/map.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <memory>
 
@@ -24,7 +23,8 @@ namespace test {
 
 // Mock function declaration for blasting enemy actors
 // Defined in test namespace in tower_test.cpp
-void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
+void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position,
+                   size_t blast_range);
 
 // Mock function definition for transforming bot to tower
 void construct_tower(PlayerId player_id, DoubleVec2D position, size_t Hp) {}
@@ -190,6 +190,7 @@ TEST_F(BotTest, MoveToBlastTest) {
     ASSERT_EQ(bot->getState(), BotStateName::MOVE_TO_BLAST);
     ASSERT_EQ(bot->isNewPostitionSet(), true);
     ASSERT_EQ(bot->getNewPosition(), INTERMEDIATE_POS);
+    ASSERT_EQ(bot->isBlasting(), false);
 
     bot->lateUpdate();
 
@@ -197,11 +198,13 @@ TEST_F(BotTest, MoveToBlastTest) {
     ASSERT_EQ(bot->getPosition(), INTERMEDIATE_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isBlasting(), false);
 
-    // update bot state to reach destination and transition to blast
+    // update bot state to reach destination, set isBlasting and remain in move
+    // to blast state
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::BLAST);
+    ASSERT_EQ(bot->getState(), BotStateName::MOVE_TO_BLAST);
     ASSERT_EQ(bot->isNewPostitionSet(), true);
     ASSERT_EQ(bot->getNewPosition(), BLOW_UP_POS);
 
@@ -209,8 +212,13 @@ TEST_F(BotTest, MoveToBlastTest) {
     ASSERT_EQ(bot->isFinalDestinationSet(), false);
     ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
 
+    // check if blast characteristics are turned on
+    ASSERT_EQ(bot->isBlasting(), true);
+
+    // perform blast at latest position
     bot->lateUpdate();
 
+    ASSERT_EQ(bot->isBlasting(), false);
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);
     ASSERT_EQ(bot->getPosition(), BLOW_UP_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
@@ -294,12 +302,13 @@ TEST_F(BotTest, MoveToTransformTest) {
     ASSERT_EQ(bot->getPosition(), INTERMEDIATE_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isTransforming(), false);
 
-    // update bot state to reach transform destination and transition to
-    // transform state
+    // update bot state to reach transform destination, remain in move to
+    // transform state and turn isTransforming on
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    ASSERT_EQ(bot->getState(), BotStateName::MOVE_TO_TRANSFORM);
     ASSERT_EQ(bot->isNewPostitionSet(), true);
     ASSERT_EQ(bot->getNewPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isTransforming(), true);
@@ -308,6 +317,7 @@ TEST_F(BotTest, MoveToTransformTest) {
     ASSERT_EQ(bot->isTransformDestinationSet(), false);
     ASSERT_EQ(bot->getTransformDestination(), DoubleVec2D::null);
 
+    //
     bot->lateUpdate();
 
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);

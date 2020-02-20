@@ -170,7 +170,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      *
      * @param damage_amout
      */
-    void damage(size_t damage_amout);
+    void damage(size_t damage_amount);
 
     /**
      *  Get the Position of Actor

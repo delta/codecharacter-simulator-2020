@@ -11,7 +11,8 @@ using namespace testing;
 namespace test {
 
 // Mock function for blasting enemy actors
-void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D pos) {}
+void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D pos,
+                   size_t blast_range) {}
 class TowerTest : public Test {
   protected:
     unique_ptr<Tower> tower;

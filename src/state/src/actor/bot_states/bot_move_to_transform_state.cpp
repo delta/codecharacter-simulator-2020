@@ -50,21 +50,17 @@ std::unique_ptr<IActorState> BotMoveToTransformState::update() const {
     auto path_planner = bot->getPathPlanner();
     auto current_position = bot->getPosition();
     auto speed = bot->getSpeed();
-    auto destination = bot->getTransformDestination();
-    auto next_position =
-        path_planner->getNextPosition(current_position, destination, speed);
+    auto transform_destination = bot->getTransformDestination();
+    auto next_position = path_planner->getNextPosition(
+        current_position, transform_destination, speed);
 
     if (next_position) {
         bot->setNewPosition(next_position);
 
-        if (next_position == current_position) {
-            return make_unique<BotIdleState>(bot);
-        }
-
         // transition to transform state, with new position already set
-        if (current_position.distance(bot->getTransformDestination()) <=
-            bot->getSpeed()) {
-            return make_unique<BotTransformState>(bot);
+        if (next_position == transform_destination) {
+            bot->setTransforming(true);
+            bot->clearTransformDestination();
         }
     }
 
