@@ -6,6 +6,8 @@
 #pragma once
 
 #include "physics/vector.hpp"
+#include "state/actor/bot.h"
+#include "state/actor/tower.h"
 #include "state/interfaces/i_updatable.h"
 #include "state/map/map.h"
 #include "state/state_export.h"
@@ -39,34 +41,38 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
      *
      * @param[in]  player_id     Player to act upon
      * @param[in]  bot_id    Bot to act upon
+     * @param[in] position Position on which the bot should transform into a
+     * tower
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void transformBot(PlayerId player_id, ActorId bot_id) = 0;
+    virtual void transformBot(PlayerId player_id, ActorId bot_id,
+                              DoubleVec2D position) = 0;
 
     /**
-     * Blast a bot or a tower and damage units nearby
+     * Blast a bot or a tower and destroy units nearby
      *
      * @param[in]  player_id     Player to act upon
      * @param[in]  actor_id      Actor id to act upon
+     * @param[in] position Position where the actor should blast
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void blastActor(PlayerId player_id, ActorId actor_id) = 0;
-
+    virtual void blastActor(PlayerId player_id, ActorId actor_id,
+                            DoubleVec2D position) = 0;
     /**
      * Get map from state
      *
      * @return map
      */
-    virtual const std::unique_ptr<Map> getMap() const = 0;
+    virtual const Map *getMap() const = 0;
 
     /**
      * Get game scores from state
      *
      * @return scores
      */
-    virtual const std::array<int64_t, 2> getScores(bool game_over) const = 0;
+    virtual const std::array<size_t, 2> getScores(bool game_over) const = 0;
 
     /**
      * Check if the game is over
@@ -81,5 +87,19 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
      * @return false If the game is not over
      */
     virtual bool isGameOver(PlayerId &winner) = 0;
+
+    /**
+     * Returns all the bots in the state
+     *
+     * @return bots
+     */
+    virtual const std::array<std::vector<Bot *>, 2> getBots() = 0;
+
+    /**
+     * Returns all the towers in the state
+     *
+     * @return towers
+     */
+    virtual const std::array<std::vector<Tower *>, 2> getTowers() = 0;
 };
 } // namespace state

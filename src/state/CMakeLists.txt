@@ -3,6 +3,7 @@ project(state)
 
 set(SOURCE_FILES
     src/state.cpp
+    src/command_giver.cpp
     src/map/map.cpp
     src/path_planner/graph/graph.cpp
     src/path_planner/path_graph_helper.cpp

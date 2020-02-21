@@ -6,11 +6,9 @@
 
 #pragma once
 
-#include "interfaces/i_command_giver.h"
-#include "interfaces/i_command_taker.h"
 #include "logger/interfaces/i_logger.h"
-#include "state/player_state.h"
-#include "state/state.h"
+#include "state/interfaces/i_command_giver.h"
+#include "state/interfaces/i_command_taker.h"
 #include "state/utilities.h"
 #include <memory>
 
@@ -32,16 +30,16 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * Helper function to validate blast request by an actor and make
      * command_taker call BlastActor internally
      */
-    void blastActor(PlayerId player_id, ActorId actor_id);
+    void blastActor(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
 
     /**
      * Helper function to validate transform request and make command_taker call
      * TransformBot internally
      */
-    void transformBot(PlayerId player_id, ActorId unit_id);
+    void transformBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
 
     /**
-     * Helper function to use make command_taker call BlastBot internally
+     * Helper function to make command_taker call MoveBot internally
      */
     void moveBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
 
@@ -51,7 +49,15 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position that gets flipped
      * @return DoubleVec2D Flipped position
      */
-    DoubleVec2D flipPosition(DoubleVec2D position) const;
+    DoubleVec2D flipBotPosition(DoubleVec2D position) const;
+
+    /**
+     * Helper function to flip a position for enemy units
+     *
+     * @param position Tower position to be flipped
+     * @return Vec2D Flipped tower position
+     */
+    Vec2D flipTowerPosition(Vec2D position) const;
 
     /**
      * Helper function to check if given position is within the map
@@ -60,12 +66,45 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    bool isValidPosition(DoubleVec2D position) const;
+    bool isValidBotPosition(DoubleVec2D position) const;
+
+    /**
+     * Helper function to check if given grid position is within the map
+     *
+     * @param position Position to be checked
+     * @return true Valid position
+     * @return false Invalid position
+     */
+    bool isValidTowerPosition(Vec2D position) const;
+
+    /**
+     * Helper function to check if the player has changed the bot state or not
+     *
+     * @param state_name  The bot's state according to the main state
+     * @param player_state_name  The bot's state according to the player state
+     * @return true  Player has changed the bot state
+     * @return false Player has not changed the bot state
+     */
+    bool hasBotStateChanged(BotStateName state_name,
+                            player_state::BotState player_state_name) const;
+
+    /**
+     * Helper function to check if the player has changed the tower state or not
+     *
+     * @param state_name The towers's state according to the main state
+     * @param player_state_name The tower's state according to the player state
+     * @return true Player has changed the tower state
+     * @return false Player has not changed the bot state
+     */
+    bool hasTowerStateChanged(TowerStateName state_name,
+                              player_state::TowerState player_state_name) const;
+
+    /**
+     * Helper function to get the map size
+     */
+    size_t getMapSize() const;
 
   public:
-    /**
-     * Constructors
-     */
     CommandGiver();
 
     CommandGiver(std::unique_ptr<ICommandTaker> state,
@@ -74,8 +113,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     /**
      * @see ICommandGiver#runCommands
      */
-    void runCommands(std::array<player_state::State, 2> player_states,
-                     std::array<bool, 2> skip_turn) override;
+    void runCommands(std::array<player_state::State, 2> &player_states,
+                     std::array<bool, 2> skip_turns) override;
 };
 
 } // namespace state
