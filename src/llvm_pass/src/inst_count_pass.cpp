@@ -25,7 +25,7 @@ struct DynamicInstructionCountPass : public FunctionPass {
      * @param F function under inspection
      * @return true if function is modified, false otherwise
      */
-    virtual bool runOnFunction(Function &F) {
+    bool runOnFunction(Function &F) override {
         // Get the function to call from our runtime library.
         LLVMContext &Ctx = F.getContext();
 
@@ -37,8 +37,7 @@ struct DynamicInstructionCountPass : public FunctionPass {
 
         for (auto &B : F) {
 
-            int count = 0;
-            count += B.size();
+            int count = B.size();
 
             IRBuilder<> builder(&B);
             builder.SetInsertPoint(B.getTerminator());
