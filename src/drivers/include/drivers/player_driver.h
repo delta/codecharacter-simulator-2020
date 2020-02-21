@@ -32,7 +32,7 @@ class DRIVERS_EXPORT PlayerDriver {
     std::unique_ptr<player_wrapper::PlayerCodeWrapper> player_code_wrapper;
 
     /**
-     * Shared memory of the player to write count to
+     * Shared memory client of the player
      */
     std::unique_ptr<SharedMemoryPlayer> shm_player;
 
@@ -44,10 +44,10 @@ class DRIVERS_EXPORT PlayerDriver {
     /**
      * Number of turns in the game
      */
-    uint64_t max_no_turns;
+    const uint64_t max_no_turns;
 
     /**
-     * true if the game has timed out without completing and Start has been
+     * true if the game has timed out without completing and start has been
      * called, false otherwise
      */
     std::atomic_bool is_game_timed_out;
@@ -62,7 +62,7 @@ class DRIVERS_EXPORT PlayerDriver {
      *
      * Game must be completed within this time to be considered valid.
      */
-    Timer::Interval game_duration;
+    const Timer::Interval game_duration;
 
     /**
      * File path to player's debug logs
@@ -78,17 +78,17 @@ class DRIVERS_EXPORT PlayerDriver {
     /**
      * Used as delimiter between turns in player's debug logs
      */
-    std::string debug_logs_turn_prefix;
+    const std::string debug_logs_turn_prefix;
 
     /**
      * Message to use in logs when player exceeds debug log limit per turn
      */
-    std::string debug_logs_truncate_message;
+    const std::string debug_logs_truncate_message;
 
     /**
      * Maximum number of characters allowed in player's debug logs per turn
      */
-    uint64_t max_debug_logs_turn_length;
+    const uint64_t max_debug_logs_turn_length;
 
     /**
      * Writes the count to shared memory

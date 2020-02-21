@@ -37,8 +37,8 @@ MainDriver::MainDriver(
     this->transfer_states[1] = &shared_buffers[1]->transfer_state;
 }
 
-void MainDriver::/*Avengers:*/ endGame(state::PlayerId player_id,
-                                       std::array<int64_t, 2> final_scores) {
+void MainDriver::endGame(state::PlayerId player_id,
+                         std::array<int64_t, 2> final_scores) {
     std::ofstream log_file(log_file_name, std::ios::out | std::ios::binary);
 
     logger->LogFinalGameParams(player_id, final_scores);
@@ -153,7 +153,6 @@ GameResult MainDriver::run() {
 
     // Main loop that runs every turn
     for (uint64_t i = 0; i < this->max_no_turns; ++i) {
-        // Loop over each player
         for (int cur_player_id = 0; cur_player_id < 2; ++cur_player_id) {
             auto current_player_buffer = this->shared_buffers[cur_player_id];
 
@@ -187,10 +186,10 @@ GameResult MainDriver::run() {
                 player_results[cur_player_id].status =
                     PlayerResult::Status::EXCEEDED_INSTRUCTION_LIMIT;
                 instruction_count_exceeded = true;
-            } else
-                skip_player_turn[cur_player_id] =
-                    current_player_buffer->instruction_counter >
-                    this->player_instruction_limit_turn;
+            } else if (current_player_buffer->instruction_counter >
+                       this->player_instruction_limit_turn) {
+                skip_player_turn[cur_player_id] = true;
+            }
 
             // Write the turn's instruction counts
             logger->LogInstructionCount(
@@ -219,9 +218,9 @@ GameResult MainDriver::run() {
         // they have exceeded turn instruction limit
 
         // Convert current transfer states into player states
-        for (int i = 0; i < 2; ++i) {
+        for (int player_id = 0; player_id < 2; ++player_id) {
             player_states[i] = transfer_state::ConvertToPlayerState(
-                *(this->transfer_states[i]));
+                *(this->transfer_states[player_id]));
         }
         this->state_syncer->updateMainState(this->player_states,
                                             skip_player_turn);
@@ -239,11 +238,7 @@ GameResult MainDriver::run() {
     }
 
     // Done with the game now
-
-    // Write scores and complete game
     player_results = getPlayerResults();
-
-    // Set result parameters
     winner = GetWinnerByScore(player_results);
     win_type = GameResult::WinType::SCORE;
 
