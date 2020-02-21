@@ -12,6 +12,17 @@ set(CMAKE_CXX_STANDARD 14)
 # linter modules go here
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/linter_config/")
 
+set(BUILD_PROJECT
+    "all"
+    CACHE STRING "Set the name of the project to build")
+
+# Always enable colors, since Ninja strips them
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  add_compile_options(-fdiagnostics-color=always)
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_compile_options(-fcolor-diagnostics)
+endif()
+
 if(NOT BUILD_PROJECT STREQUAL "no_tests")
   include(${CMAKE_MODULE_PATH}/clang-format.cmake)
   include(${CMAKE_MODULE_PATH}/cmake-format.cmake)
@@ -36,4 +47,5 @@ add_subdirectory(src/llvm_pass)
 add_subdirectory(src/constants)
 add_subdirectory(src/drivers)
 add_subdirectory(src/state)
+add_subdirectory(src/player_code)
 add_subdirectory(test)
