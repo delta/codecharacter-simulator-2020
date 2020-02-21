@@ -27,7 +27,7 @@ void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position,
                    size_t blast_range);
 
 // Mock function definition for transforming bot to tower
-void construct_tower(PlayerId player_id, DoubleVec2D position, size_t Hp) {}
+void construct_tower(Bot *) {}
 
 class BotTest : public Test {
   protected:
@@ -270,10 +270,10 @@ TEST_F(BotTest, TransformTest) {
     // state transition to go to dead state
     bot->lateUpdate();
 
-    // bot is dead
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
-    ASSERT_EQ(bot->getHp(), 0);
-    ASSERT_EQ(bot->isTransforming(), false);
+    // bot is not dead
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    ASSERT_NE(bot->getHp(), 0);
+    ASSERT_EQ(bot->isTransforming(), true);
 }
 
 TEST_F(BotTest, MoveToTransformTest) {
@@ -342,13 +342,13 @@ TEST_F(BotTest, MoveToTransformTest) {
     // call construct tower callback
     bot->lateUpdate();
 
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
     ASSERT_EQ(bot->getPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
     ASSERT_EQ(bot->isTransformDestinationSet(), false);
     ASSERT_EQ(bot->getTransformDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isTransforming(), false);
+    ASSERT_EQ(bot->isTransforming(), true);
 }
 
 } // namespace test

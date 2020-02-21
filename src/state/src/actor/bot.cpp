@@ -76,10 +76,7 @@ void Bot::setTransforming(bool p_transforming) {
 
 BotStateName Bot::getState() const { return state->getName(); }
 
-void Bot::constructTower(PlayerId player_id, DoubleVec2D tower_position,
-                         size_t current_hp) {
-    construct_tower_callback(player_id, tower_position, current_hp);
-}
+void Bot::constructTower() { construct_tower_callback(this); }
 
 bool Bot::isTransforming() const { return is_transforming; }
 
@@ -110,13 +107,6 @@ void Bot::lateUpdate() {
     if (isNewPostitionSet()) {
         setPosition(getNewPosition());
         clearNewPosition();
-    }
-
-    // construct tower
-    if ((getHp() > 0) && isTransforming()) {
-        constructTower(getPlayerId(), getPosition(), getHp());
-        setTransforming(false);
-        setHp(0);
     }
 
     // Transition to dead state if dead

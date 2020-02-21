@@ -12,8 +12,7 @@
 
 namespace state {
 
-using ConstructTowerCallback =
-    std::function<void(PlayerId, DoubleVec2D, size_t)>;
+using ConstructTowerCallback = std::function<void(Bot *)>;
 
 /**
  * Declaration of Bot class
@@ -185,8 +184,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param position
      * @param current_hp
      */
-    void constructTower(PlayerId player_id, DoubleVec2D position,
-                        size_t current_hp);
+    void constructTower();
 
     /**
      *  Get the current state of bot

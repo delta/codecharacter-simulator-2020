@@ -13,7 +13,7 @@ namespace state {
 BotTransformState::BotTransformState(Bot *bot)
     : BotState(BotStateName::TRANSFORM, bot) {}
 
-void BotTransformState::enter() {}
+void BotTransformState::enter() { bot->constructTower(); }
 
 std::unique_ptr<IActorState> BotTransformState::update() const {
     if (bot->getHp() == 0)
@@ -21,6 +21,6 @@ std::unique_ptr<IActorState> BotTransformState::update() const {
     return nullptr;
 }
 
-void BotTransformState::exit() {}
+void BotTransformState::exit() { bot->setTransforming(false); }
 
 } // namespace state
