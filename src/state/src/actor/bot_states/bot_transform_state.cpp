@@ -13,12 +13,14 @@ namespace state {
 BotTransformState::BotTransformState(Bot *bot)
     : BotState(BotStateName::TRANSFORM, bot) {}
 
-void BotTransformState::enter() { bot->constructTower(); }
+void BotTransformState::enter() {
+    // send build request to create tower and kill this bot in State
+    bot->constructTower();
+    bot->setTransforming(true);
+}
 
 std::unique_ptr<IActorState> BotTransformState::update() const {
-    if (bot->getHp() == 0)
-        return std::make_unique<BotDeadState>(bot);
-    return nullptr;
+    return std::make_unique<BotDeadState>(bot);
 }
 
 void BotTransformState::exit() { bot->setTransforming(false); }

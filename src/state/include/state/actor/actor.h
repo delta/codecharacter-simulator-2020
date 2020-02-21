@@ -88,7 +88,7 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      * Destructor
      */
-    virtual ~Actor() {}
+    virtual ~Actor() = default;
 
     /**
      *  Gets the new ActorId to assign to new actor.

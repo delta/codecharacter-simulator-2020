@@ -56,12 +56,6 @@ std::unique_ptr<IActorState> BotMoveToBlastState::update() const {
 
     if (next_position) {
         bot->setNewPosition(next_position);
-
-        // transition to blast state, with new position already set
-        if (next_position == final_destination) {
-            bot->setBlasting(true);
-            return make_unique<BotBlastState>(bot);
-        }
     }
     // no state change
     return nullptr;

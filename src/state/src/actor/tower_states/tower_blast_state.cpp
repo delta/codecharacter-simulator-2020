@@ -18,7 +18,7 @@ void TowerBlastState::enter() {
     // kill self and damage others by blasting
     tower->damageEnemyActors(tower->getPlayerId(), tower->getActorId(),
                              tower->getPosition());
-    tower->setHp(0);
+    tower->damage(tower->getHp());
     tower->setBlasting(false);
 }
 

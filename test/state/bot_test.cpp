@@ -204,27 +204,49 @@ TEST_F(BotTest, MoveToBlastTest) {
     // to blast state
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->getState(), BotStateName::MOVE_TO_BLAST);
     ASSERT_EQ(bot->isNewPostitionSet(), true);
     ASSERT_EQ(bot->getNewPosition(), BLOW_UP_POS);
-
-    // check if move to blast characteristics are turned off
-    ASSERT_EQ(bot->isFinalDestinationSet(), false);
-    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isFinalDestinationSet(), true);
+    ASSERT_EQ(bot->getFinalDestination(), BLOW_UP_POS);
 
     // check if blast characteristics are turned off
     ASSERT_EQ(bot->isBlasting(), false);
 
-    // perform blast at latest position
+    // perform move
     bot->lateUpdate();
 
     ASSERT_EQ(bot->isBlasting(), false);
+    ASSERT_EQ(bot->getState(), BotStateName::MOVE_TO_BLAST);
+    ASSERT_EQ(bot->getPosition(), BLOW_UP_POS);
+    ASSERT_EQ(bot->isNewPostitionSet(), false);
+    ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isFinalDestinationSet(), true);
+    ASSERT_EQ(bot->getFinalDestination(), BLOW_UP_POS);
+
+    // bot at blast position and ready to blast
+    // set isblasting to true and transition to blast state, ultimately ending
+    // in dead state
+    bot->update();
+
+    // bot blasted and is now dead
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->isBlasting(), false);
+    ASSERT_EQ(bot->getPosition(), BLOW_UP_POS);
+    ASSERT_EQ(bot->isNewPostitionSet(), false);
+    ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isFinalDestinationSet(), false);
+    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+
+    bot->lateUpdate();
+
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);
     ASSERT_EQ(bot->getPosition(), BLOW_UP_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
     ASSERT_EQ(bot->isFinalDestinationSet(), false);
     ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    ASSERT_EQ(bot->isBlasting(), false);
 }
 
 // Bot is attacked by neighbour, hence, his damage incurred is set
@@ -263,17 +285,16 @@ TEST_F(BotTest, TransformTest) {
 
     // TODO: find a way to test creation of new tower instance at bot position
 
-    // check for state transition, from idle to transform
-    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
-    ASSERT_EQ(bot->isTransforming(), true);
+    // check for state transition, from idle to transform to dead state
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->isTransforming(), false);
 
-    // state transition to go to dead state
     bot->lateUpdate();
 
-    // bot is not dead
-    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    // bot is in dead state, but hp not 0
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
     ASSERT_NE(bot->getHp(), 0);
-    ASSERT_EQ(bot->isTransforming(), true);
+    ASSERT_EQ(bot->isTransforming(), false);
 }
 
 TEST_F(BotTest, MoveToTransformTest) {
@@ -328,11 +349,11 @@ TEST_F(BotTest, MoveToTransformTest) {
     ASSERT_EQ(bot->getTransformDestination(), TRANSFORM_POS);
 
     // bot at transform position and ready to transform
-    // set istransform to true and transition to transform state
+    // set istransform to true and perform state transitions
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
-    ASSERT_EQ(bot->isTransforming(), true);
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->isTransforming(), false);
     ASSERT_EQ(bot->getPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
@@ -342,13 +363,13 @@ TEST_F(BotTest, MoveToTransformTest) {
     // call construct tower callback
     bot->lateUpdate();
 
-    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
     ASSERT_EQ(bot->getPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
     ASSERT_EQ(bot->isTransformDestinationSet(), false);
     ASSERT_EQ(bot->getTransformDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isTransforming(), true);
+    ASSERT_EQ(bot->isTransforming(), false);
 }
 
 } // namespace test

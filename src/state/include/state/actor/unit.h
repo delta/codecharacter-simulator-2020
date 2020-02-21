@@ -70,7 +70,7 @@ class STATE_EXPORT Unit : public Actor {
     /**
      * Destructor
      */
-    virtual ~Unit() {}
+    virtual ~Unit() = default;
 
     /**
      *  Get the Unit's speed.

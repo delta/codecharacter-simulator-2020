@@ -15,17 +15,14 @@ void BotBlastState::enter() {
     // kill self and damage others by blasting
     bot->damageEnemyActors(bot->getPlayerId(), bot->getActorId(),
                            bot->getPosition());
-    bot->setHp(0);
-    bot->setBlasting(false);
+    bot->damage(bot->getHp());
+    bot->setBlasting(true);
 }
 
 std::unique_ptr<IActorState> BotBlastState::update() const {
-    if (bot->getHp() == 0) {
-        return std::make_unique<BotDeadState>(bot);
-    }
-    return nullptr;
+    return std::make_unique<BotDeadState>(bot);
 }
 
-void BotBlastState::exit() {}
+void BotBlastState::exit() { bot->setBlasting(false); }
 
 } // namespace state
