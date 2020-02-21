@@ -8,6 +8,9 @@ using namespace llvm;
 
 namespace {
 struct DynamicInstructionCountPass : public FunctionPass {
+    /**
+     * Unique LLVM Pass ID
+     */
     static char ID;
 
     /**
@@ -15,6 +18,9 @@ struct DynamicInstructionCountPass : public FunctionPass {
      */
     static const std::string increment_function_name;
 
+    /**
+     * Instruction Pass constructor
+     */
     DynamicInstructionCountPass() : FunctionPass(ID) {}
 
     /**
