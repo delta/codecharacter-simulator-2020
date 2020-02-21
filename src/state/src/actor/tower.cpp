@@ -59,7 +59,6 @@ void Tower::lateUpdate() {
 
     if (isBlasting()) {
         setBlasting(false);
-        damageEnemyActors(getPlayerId(), getActorId(), getPosition());
         setHp(0);
     }
 

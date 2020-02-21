@@ -11,7 +11,13 @@ namespace state {
 
 BotBlastState::BotBlastState(Bot *bot) : BotState(BotStateName::BLAST, bot) {}
 
-void BotBlastState::enter() {}
+void BotBlastState::enter() {
+    // kill self and damage others by blasting
+    bot->damageEnemyActors(bot->getPlayerId(), bot->getActorId(),
+                           bot->getPosition());
+    bot->setHp(0);
+    bot->setBlasting(false);
+}
 
 std::unique_ptr<IActorState> BotBlastState::update() const {
     if (bot->getHp() == 0) {

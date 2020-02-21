@@ -14,7 +14,13 @@ TowerBlastState::TowerBlastState() {}
 TowerBlastState::TowerBlastState(Tower *tower)
     : TowerState(TowerStateName::BLAST, tower) {}
 
-void TowerBlastState::enter() {}
+void TowerBlastState::enter() {
+    // kill self and damage others by blasting
+    tower->damageEnemyActors(tower->getPlayerId(), tower->getActorId(),
+                             tower->getPosition());
+    tower->setHp(0);
+    tower->setBlasting(false);
+}
 
 void TowerBlastState::exit() {}
 

@@ -13,13 +13,7 @@ namespace state {
 BotTransformState::BotTransformState(Bot *bot)
     : BotState(BotStateName::TRANSFORM, bot) {}
 
-void BotTransformState::enter() {
-    // do nothing
-    // if alive in late update and isTransforming set to true, call the
-    // construct tower callback
-    // bot->setTransforming(true);
-    // bot->constructTower(bot->getPlayerId(), getP);
-}
+void BotTransformState::enter() {}
 
 std::unique_ptr<IActorState> BotTransformState::update() const {
     if (bot->getHp() == 0)

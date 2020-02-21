@@ -112,13 +112,6 @@ void Bot::lateUpdate() {
         clearNewPosition();
     }
 
-    // perform blast at this position
-    if (isBlasting()) {
-        damageEnemyActors(getPlayerId(), getActorId(), getPosition());
-        setBlasting(false);
-        setHp(0);
-    }
-
     // construct tower
     if ((getHp() > 0) && isTransforming()) {
         constructTower(getPlayerId(), getPosition(), getHp());
@@ -132,7 +125,6 @@ void Bot::lateUpdate() {
         state->exit();
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-        state->update();
     }
 }
 
@@ -150,7 +142,7 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-        state->update();
+        new_state = state->update();
     }
 }
 

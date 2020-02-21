@@ -74,7 +74,7 @@ TEST_F(TowerTest, BlastTest) {
 
     // Check if the tower is in the blast state
     tower->update();
-    ASSERT_EQ(tower->getState(), TowerStateName::BLAST);
+    ASSERT_EQ(tower->getState(), TowerStateName::DEAD);
 
     // Check if the tower is in the dead state
     tower->lateUpdate();
