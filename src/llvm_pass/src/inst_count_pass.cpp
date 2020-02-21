@@ -56,7 +56,7 @@ struct DynamicInstructionCountPass : public FunctionPass {
 // Ugly function name because of c++ function name mangling
 // TODO: Find workaround
 const std::string DynamicInstructionCountPass::increment_function_name =
-    "_ZN7drivers12PlayerDriver14IncrementCountEm";
+    "_ZN7drivers12PlayerDriver14incrementCountEm";
 
 char DynamicInstructionCountPass::ID = 0;
 
