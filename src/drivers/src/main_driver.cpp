@@ -89,7 +89,7 @@ GameResult MainDriver::start() {
 }
 
 GameResult::Winner
-GetWinnerByInstCountExceeded(std::array<PlayerResult, 2> player_results) {
+getWinnerByInstCountExceeded(std::array<PlayerResult, 2> player_results) {
     auto status1 = player_results[0].status;
     auto status2 = player_results[1].status;
     auto FAIL = PlayerResult::Status::EXCEEDED_INSTRUCTION_LIMIT;
@@ -102,7 +102,7 @@ GetWinnerByInstCountExceeded(std::array<PlayerResult, 2> player_results) {
     return GameResult::Winner::PLAYER1;
 }
 
-GameResult::Winner GetWinnerFromPlayerId(state::PlayerId player_id) {
+GameResult::Winner getWinnerFromPlayerId(state::PlayerId player_id) {
     switch (player_id) {
     case state::PlayerId::PLAYER1:
         return GameResult::Winner::PLAYER1;
@@ -116,7 +116,7 @@ GameResult::Winner GetWinnerFromPlayerId(state::PlayerId player_id) {
 }
 
 GameResult::Winner
-GetWinnerByScore(std::array<PlayerResult, 2> player_results) {
+getWinnerByScore(std::array<PlayerResult, 2> player_results) {
     auto score1 = player_results[0].score;
     auto score2 = player_results[1].score;
 
@@ -128,7 +128,7 @@ GetWinnerByScore(std::array<PlayerResult, 2> player_results) {
     return GameResult::Winner::TIE;
 }
 
-state::PlayerId GetPlayerIdFromWinner(GameResult::Winner winner) {
+state::PlayerId getPlayerIdFromWinner(GameResult::Winner winner) {
     switch (winner) {
     case GameResult::Winner::PLAYER1:
         return state::PlayerId::PLAYER1;
@@ -201,7 +201,7 @@ GameResult MainDriver::run() {
         // player, game is forfeit
         if (instruction_count_exceeded) {
             endGame();
-            winner = GetWinnerByInstCountExceeded(player_results);
+            winner = getWinnerByInstCountExceeded(player_results);
             win_type = GameResult::WinType::EXCEEDED_INSTRUCTION_LIMIT;
             return GameResult{winner, win_type, player_results};
         }
@@ -239,11 +239,11 @@ GameResult MainDriver::run() {
 
     // Done with the game now
     player_results = getPlayerResults();
-    winner = GetWinnerByScore(player_results);
+    winner = getWinnerByScore(player_results);
     win_type = GameResult::WinType::SCORE;
 
     // Log the winner
-    auto winner_player_id = GetPlayerIdFromWinner(winner);
+    auto winner_player_id = getPlayerIdFromWinner(winner);
     endGame(winner_player_id,
             {player_results[0].score, player_results[1].score});
 
