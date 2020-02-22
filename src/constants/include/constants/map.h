@@ -10,6 +10,9 @@
 #include <cstdint>
 #include <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wc++17-extensions"
+
 namespace Constants::Map {
 
 // Size of the map
@@ -27,3 +30,5 @@ const std::vector<DoubleVec2D> PLAYER_BASE_POSITIONS = {PLAYER1_BASE_POSITION,
                                                         PLAYER2_BASE_POSITION};
 
 } // namespace Constants::Map
+
+#pragma GCC diagnostic pop

@@ -9,6 +9,9 @@
 #include <cstdint>
 #include <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wc++17-extensions"
+
 namespace Constants::Actor {
 
 // Maximum number of bots per player
@@ -36,3 +39,5 @@ const size_t TOWER_BLAST_IMPACT_RADIUS = 3;
 const size_t TOWER_MIN_BLAST_AGE = 5;
 
 } // namespace Constants::Actor
+
+#pragma GCC diagnostic pop

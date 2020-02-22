@@ -15,6 +15,10 @@
 #include <cstdint>
 #include <ostream>
 
+// TODO: Remove this once logger is implemented
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-private-field"
+
 namespace logger {
 class LOGGER_EXPORT Logger : public ILogger {
   private:
@@ -110,4 +114,7 @@ class LOGGER_EXPORT Logger : public ILogger {
      */
     void WriteGame(std::ostream &write_stream = std::cout) override;
 };
+
 } // namespace logger
+
+#pragma GCC diagnostic pop

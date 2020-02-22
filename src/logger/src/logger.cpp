@@ -12,6 +12,10 @@ using namespace state;
 
 namespace logger {
 
+// TODO: Remove this once logger is implemented
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 Logger::Logger(ICommandTaker *state, size_t player_instruction_limit_turn,
                size_t player_instruction_limit_game, size_t bot_max_hp,
                size_t tower_max_hp)
@@ -43,5 +47,7 @@ void Logger::LogFinalGameParams(state::PlayerId player_id,
 void Logger::WriteGame(std::ostream &write_stream) {
     std::cout << "Write Game called \n";
 };
+
+#pragma GCC diagnostic pop
 
 } // namespace logger
