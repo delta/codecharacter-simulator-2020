@@ -4,6 +4,7 @@
 #include "state/map/map.h"
 #include "state/mocks/state_mock.h"
 #include "state/mocks/state_syncer_mock.h"
+#include "state/path_planner/path_planner.h"
 #include "state/score_manager/score_manager.h"
 #include "gtest/gtest.h"
 
@@ -15,10 +16,11 @@ using namespace player_state;
 class CommandGiverTest : public Test {
   protected:
     size_t map_size;
-    unique_ptr<Map> map;
+    Map *map;
     StateMock *state;
     LoggerMock *logger;
     StateSyncerMock *state_syncer;
+    unique_ptr<PathPlanner> path_planner;
     unique_ptr<CommandGiver> command_giver;
     array<player_state::State, 2> player_states;
     array<vector<state::Bot *>, 2> state_bots;
@@ -122,7 +124,9 @@ class CommandGiverTest : public Test {
             .map[tower_positions[1].y][tower_positions[1].x]
             .setTerrain(T);
 
-        map = make_unique<Map>(test_map, map_size);
+        auto map_u = make_unique<Map>(test_map, map_size);
+        map = map_u.get();
+        path_planner = make_unique<PathPlanner>(std::move(map_u));
 
         // Clearing player state
         for (int player_id = 0; player_id < 2; ++player_id) {
@@ -203,20 +207,20 @@ class CommandGiverTest : public Test {
         player_states[1].score = 1000;
 
         // Creating state bots and towers
-        auto state_bot1 =
-            new state::Bot(1, PlayerId::PLAYER1, ActorType::BOT, 100, 100,
-                           bot_positions[0], 1, 1, 1, BlastCallback{});
+        auto state_bot1 = new state::Bot(
+            1, PlayerId::PLAYER1, 100, 100, bot_positions[0], 1, 1, 1,
+            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
 
-        auto state_bot2 =
-            new state::Bot(2, PlayerId::PLAYER2, ActorType::BOT, 100, 100,
-                           bot_positions[1], 1, 1, 1, BlastCallback{});
+        auto state_bot2 = new state::Bot(
+            2, PlayerId::PLAYER2, 100, 100, bot_positions[1], 1, 1, 1,
+            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
 
         auto state_tower1 =
-            new state::Tower(3, PlayerId::PLAYER1, ActorType::TOWER, 100, 100,
-                             tower_positions[0], 2, 2, BlastCallback{});
+            new state::Tower(3, PlayerId::PLAYER1, 100, 100, tower_positions[0],
+                             2, 2, BlastCallback{});
         auto state_tower2 =
-            new state::Tower(4, PlayerId::PLAYER2, ActorType::TOWER, 100, 100,
-                             tower_positions[1], 2, 2, BlastCallback{});
+            new state::Tower(4, PlayerId::PLAYER2, 100, 100, tower_positions[1],
+                             2, 2, BlastCallback{});
 
         state_bots = {{{state_bot1}, {state_bot2}}};
         state_towers = {{{state_tower1}, {state_tower2}}};
@@ -228,7 +232,7 @@ TEST_F(CommandGiverTest, AlterActorProperties) {
     array<player_state::State, 2> temp_player_states = player_states;
 
     // Returning the map repeatedly
-    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // ------------- Alter bot properties -----------
     ManageActorExpectations(state_bots, state_towers);
@@ -288,7 +292,7 @@ TEST_F(CommandGiverTest, MultipleBotTasks) {
     array<player_state::State, 2> temp_player_states = player_states;
 
     // Returning the map repeatedly
-    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     ManageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
@@ -324,7 +328,7 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
     array<player_state::State, 2> temp_player_states = player_states;
 
     // Returning the map repeatedly
-    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // Trying to move bot to an invalid position
     ManageActorExpectations(state_bots, state_towers);
@@ -364,15 +368,15 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
     array<player_state::State, 2> temp_player_states = player_states;
 
     // Returning the map repeatedly
-    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // Exceed tower limit
     for (int tower_count = 0;
          tower_count < Constants::Actor::MAX_NUM_TOWERS - 1; ++tower_count) {
         size_t actor_id = Actor::getNextActorId();
         auto state_tower =
-            new state::Tower(actor_id, PlayerId::PLAYER1, ActorType::TOWER, 100,
-                             100, DoubleVec2D(0, 0), 2, 2, BlastCallback{});
+            new state::Tower(actor_id, PlayerId::PLAYER1, 100, 100,
+                             DoubleVec2D(0, 0), 2, 2, BlastCallback{});
         state_towers[0].push_back(state_tower);
 
         // Creating the player state tower
@@ -404,7 +408,7 @@ TEST_F(CommandGiverTest, AddAndRemoveActors) {
     array<player_state::State, 2> temp_player_states = player_states;
 
     // Returning the map repeatedly
-    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     auto extra_bot = player_state::Bot();
     auto extra_tower = player_state::Tower();
