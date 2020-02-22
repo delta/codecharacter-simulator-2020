@@ -78,14 +78,9 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
         std::array<player_state::State, 2> &player_states) override;
 
     /**
-     * @see IStateSyncer #IsGameOver
-     */
-    bool isGameOver(PlayerId &winner) const override;
-
-    /**
      * @see IStateSyncer #GetScores
      */
-    std::array<int64_t, 2> getScores(bool game_over) const override;
+    std::array<size_t, 2> getScores(bool game_over) override;
 
     /**
      * Function to the assign player state bots their new states after

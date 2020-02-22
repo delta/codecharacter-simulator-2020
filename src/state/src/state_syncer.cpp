@@ -26,10 +26,6 @@ void StateSyncer::updateMainState(
     updatePlayerStates(player_states);
 }
 
-bool StateSyncer::isGameOver(PlayerId &winner) const {
-    return state->isGameOver(winner);
-}
-
 size_t StateSyncer::getPlayerId(size_t player_id, bool is_enemy) const {
     if (is_enemy) {
         return (player_id + 1) % (static_cast<size_t>(PlayerId::PLAYER_COUNT));
@@ -262,6 +258,10 @@ void StateSyncer::assignTowers(int64_t id,
     for (const auto &player_tower : new_towers) {
         player_towers.push_back(player_tower);
     }
+}
+
+std::array<size_t, 2> StateSyncer::getScores(bool game_over) {
+    return state->getScores(game_over);
 }
 
 } // namespace state

@@ -22,7 +22,7 @@ void Blaster::setBlasting(bool p_blasting) { blasting = p_blasting; }
 
 void Blaster::damageEnemyActors(PlayerId player_id, ActorId actor_id,
                                 DoubleVec2D position) {
-    blast_callback(player_id, actor_id, position, getBlastRange());
+    blast_callback(player_id, actor_id, position);
 }
 
 size_t Blaster::getBlastRange() const { return blast_range; }

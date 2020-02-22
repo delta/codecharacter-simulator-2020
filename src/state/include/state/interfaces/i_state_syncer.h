@@ -35,24 +35,11 @@ class STATE_EXPORT IStateSyncer {
     updatePlayerStates(std::array<player_state::State, 2> &player_states) = 0;
 
     /**
-     * Check if the game is over
-     *
-     * @param[out] winner If the game is over, who is the winner
-     *             PLAYER1 if Player 1 wins
-     *             PLAYER2 if Player 2 wins
-     *             PLAYER_NULL if it's a draw (both teams die simultaneously)
-     *
-     * @return true If the game is over
-     * @return false If the game is not over
-     */
-    virtual bool isGameOver(PlayerId &winner) const = 0;
-
-    /**
      * Method to get both players' scores
      *
      * @param game_over Signal that the game is over
      */
-    virtual std::array<int64_t, 2> getScores(bool game_over) const = 0;
+    virtual std::array<size_t, 2> getScores(bool game_over) = 0;
 };
 
 } // namespace state

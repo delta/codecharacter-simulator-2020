@@ -28,7 +28,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-inline std::ostream &operator<<(std::ostream &os, BotState bot_state) {
+inline std::ostream &operator<<(std::ostream &os, const BotState &bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -59,7 +59,8 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-inline std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
+inline std::ostream &operator<<(std::ostream &os,
+                                const TowerState &tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -203,11 +204,8 @@ struct Tower : _Actor, _Blaster {
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
-inline std::ostream &operator<<(std::ostream &os, Tower tower) {
-    using std::endl;
-    os << "Tower(id: " << tower.id << ") {" << endl;
+inline std::ostream &operator<<(std::ostream &os, const Tower &tower) {
     os << "   hp: " << tower.hp << endl;
-    os << "   position: " << tower.position << endl;
     os << "   state: " << tower.state << endl;
     os << "}" << endl;
     return os;

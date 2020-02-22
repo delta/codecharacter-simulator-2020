@@ -19,6 +19,14 @@ TerrainType Map::getTerrainType(double_t x, double_t y) const {
     return map[(size_t) x][(size_t) y];
 }
 
+TerrainType Map::getTerrainType(DoubleVec2D position) const {
+    return map[std::floor(position.y)][std::floor(position.x)];
+}
+
+TerrainType Map::getTerrainType(Vec2D position) const {
+    return map[position.y][position.x];
+}
+
 void Map::setTerrainType(size_t x, size_t y, TerrainType terrainType) {
     map[x][y] = terrainType;
 }

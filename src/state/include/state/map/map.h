@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "physics/vector.hpp"
 #include "state/utilities.h"
 
 #include <cmath>
@@ -54,6 +55,10 @@ class Map {
     TerrainType getTerrainType(size_t x, size_t y) const;
 
     TerrainType getTerrainType(double_t x, double_t y) const;
+
+    TerrainType getTerrainType(DoubleVec2D position) const;
+
+    TerrainType getTerrainType(Vec2D position) const;
 
     /**
      * Set the Terrain type of the element from any position on the map
