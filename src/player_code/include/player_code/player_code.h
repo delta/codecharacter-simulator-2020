@@ -1,3 +1,8 @@
+/**
+ * @file player_code.h
+ * Defines an interface to player code
+ */
+
 #pragma once
 
 #include "constants/constants.h"

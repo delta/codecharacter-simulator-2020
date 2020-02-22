@@ -6,7 +6,7 @@ set(PLAYER_ID
     CACHE STRING "Specifies the player ID. Should be between 1
     and NUM_PLAYERS to build as that player, 0 to build as all players")
 
-file(GLOB SOURCE_FILES src/*.cpp)
+set(SOURCE_FILES src/player_code.cpp)
 
 set(CMAKE_CXX_FLAGS "-Werror=return-type")
 
@@ -95,7 +95,7 @@ install(FILES ${EXPORTS_FILE_PATH} DESTINATION include/player_code)
 if((NOT BUILD_PROJECT STREQUAL "player_code") AND (NOT BUILD_PROJECT STREQUAL
                                                    "no_tests"))
   set(PLAYER_CODE_TEST_COUNT 0)
-  file(GLOB TEST_FILES test/*.cpp)
+  set(TEST_FILES test/player_code_test_0.cpp)
 
   foreach(FILE ${TEST_FILES})
     add_library(player_code_test_${PLAYER_CODE_TEST_COUNT} SHARED ${FILE})
