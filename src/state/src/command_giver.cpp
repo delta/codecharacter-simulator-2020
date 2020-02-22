@@ -117,8 +117,7 @@ void CommandGiver::runCommands(
 
     auto state_bots = state->getBots();
     auto state_towers = state->getTowers();
-    auto map_pointer = state->getMap();
-    Map map = *map_pointer;
+    auto map = state->getMap();
 
     // Validating and performing the tasks given by the player
     for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
@@ -151,7 +150,8 @@ void CommandGiver::runCommands(
             auto state_bot = state_bots[id][bot_index];
             DoubleVec2D player_bot_position = player_bot.position;
             if (player_id == PlayerId::PLAYER2) {
-                player_bot_position = flipBotPosition(map, player_bot_position);
+                player_bot_position =
+                    flipBotPosition(*map, player_bot_position);
             }
 
             // Finding which task the bot is trying to perform if any
@@ -215,9 +215,10 @@ void CommandGiver::runCommands(
                 // Validate the position where the player wants the bot to blast
                 DoubleVec2D final_destination = player_bot.final_destination;
                 if (player_id == PlayerId::PLAYER2) {
-                    final_destination = flipBotPosition(map, final_destination);
+                    final_destination =
+                        flipBotPosition(*map, final_destination);
                 }
-                if (!isValidBotPosition(map, final_destination)) {
+                if (!isValidBotPosition(*map, final_destination)) {
                     logger->LogError(player_id,
                                      logger::ErrorType::INVALID_BLAST_POSITION,
                                      "Cannot blast bot in an invalid position");
@@ -231,9 +232,9 @@ void CommandGiver::runCommands(
                     player_bot.transform_destination;
                 if (player_id == PlayerId::PLAYER2) {
                     transform_destination =
-                        flipBotPosition(map, transform_destination);
+                        flipBotPosition(*map, transform_destination);
                 }
-                if (!isValidTowerPosition(map, transform_destination)) {
+                if (!isValidTowerPosition(*map, transform_destination)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
@@ -254,9 +255,9 @@ void CommandGiver::runCommands(
                 // onto
                 DoubleVec2D destination = player_bot.destination;
                 if (player_id == PlayerId::PLAYER2) {
-                    destination = flipBotPosition(map, destination);
+                    destination = flipBotPosition(*map, destination);
                 }
-                if (!isValidBotPosition(map, destination)) {
+                if (!isValidBotPosition(*map, destination)) {
                     logger->LogError(player_id,
                                      logger::ErrorType::INVALID_MOVE_POSITION,
                                      "Cannot move to invalid position");
@@ -287,7 +288,7 @@ void CommandGiver::runCommands(
 
             if (player_id == PlayerId::PLAYER2) {
                 player_tower_position =
-                    flipTowerPosition(map, player_tower_position);
+                    flipTowerPosition(*map, player_tower_position);
             }
 
             auto player_id = static_cast<PlayerId>(id);

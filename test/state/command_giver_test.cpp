@@ -75,7 +75,7 @@ class CommandGiverTest : public Test {
         const auto T = player_state::TerrainType::TOWER;
 
         // Creating the player state map
-        vector<vector<state::TerrainType>> dummy_map;
+        vector<vector<state::TerrainType>> test_map;
         for (size_t x = 0; x < map_size; ++x) {
             vector<state::TerrainType> map_row;
             MapElement map_element{};
@@ -91,7 +91,7 @@ class CommandGiverTest : public Test {
                 player_states[1].map[map_size - 1 - x][map_size - 1 - y] =
                     map_element;
             }
-            dummy_map.push_back(map_row);
+            test_map.push_back(map_row);
         }
 
         // Assinging the tower positions and bot positions for later use and
@@ -100,14 +100,14 @@ class CommandGiverTest : public Test {
         bot_positions = {{1, 1}, {4, 4}};
 
         // Assinging the flag locations
-        dummy_map[2][2] = state::TerrainType::FLAG;
+        test_map[2][2] = state::TerrainType::FLAG;
         player_states[0].map[2][2].setTerrain(F);
         player_states[1].map[2][2].setTerrain(F);
 
         // Assinging tower locations
-        dummy_map[tower_positions[0].y][tower_positions[0].x] =
+        test_map[tower_positions[0].y][tower_positions[0].x] =
             state::TerrainType::TOWER;
-        dummy_map[tower_positions[1].y][tower_positions[1].x] =
+        test_map[tower_positions[1].y][tower_positions[1].x] =
             state::TerrainType::TOWER;
         player_states[0]
             .map[tower_positions[0].y][tower_positions[0].x]
@@ -122,7 +122,7 @@ class CommandGiverTest : public Test {
             .map[tower_positions[1].y][tower_positions[1].x]
             .setTerrain(T);
 
-        map = make_unique<Map>(dummy_map, map_size);
+        map = make_unique<Map>(test_map, map_size);
 
         // Clearing player state
         for (int player_id = 0; player_id < 2; ++player_id) {
@@ -140,19 +140,16 @@ class CommandGiverTest : public Test {
         size_t actor_id = 1;
 
         // Creating bots for both players
-        for (int player_id = 0; player_id < 2; ++player_id) {
+        for (int player_id = 0;
+             player_id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
+             ++player_id) {
             int enemy_id =
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);
 
             // Assinging bot positions
-            DoubleVec2D position = bot_positions[0],
-                        flipped_position = DoubleVec2D(map_size - position.x,
-                                                       map_size - position.y);
-
-            // // Flipping the positions for player 2
-            // if (player_id == 1) {
-            //     swap(position, flipped_position);
-            // }
+            DoubleVec2D position = bot_positions[0];
+            DoubleVec2D flipped_position =
+                DoubleVec2D(map_size - position.x, map_size - position.y);
 
             player_states[player_id].num_bots = 1;
             player_states[player_id].num_enemy_bots = 1;
@@ -172,20 +169,16 @@ class CommandGiverTest : public Test {
         }
 
         // Creating towers for both players
-        for (int player_id = 0; player_id < 2; ++player_id) {
+        for (int player_id = 0;
+             player_id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
+             ++player_id) {
             player_states[player_id].num_towers = 1;
-            player_states[player_id].num_enemy_bots = 1;
+            player_states[player_id].num_enemy_towers = 1;
 
             // Assinging bot positions
-            DoubleVec2D position = tower_positions[0],
-                        flipped_position =
-                            DoubleVec2D(map_size - 1 - position.x,
-                                        map_size - 1 - position.y);
-
-            // // Flipping the positions for player 2
-            // if (player_id == 1) {
-            //     swap(position, flipped_position);
-            // }
+            DoubleVec2D position = tower_positions[0];
+            DoubleVec2D flipped_position = DoubleVec2D(
+                map_size - 1 - position.x, map_size - 1 - position.y);
 
             int enemy_id =
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);

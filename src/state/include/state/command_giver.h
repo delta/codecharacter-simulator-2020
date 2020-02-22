@@ -64,7 +64,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     /**
      * Helper function to check if given bot position is within the map
      *
-     * @param map Referece to the map
+     * @param map Reference to the map
      * @param position Position which is checked against map constraints
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
@@ -102,14 +102,6 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     bool hasTowerStateChanged(TowerStateName state_name,
                               player_state::TowerState player_state_name) const;
-
-    /**
-     * Returns a vector of neighbouring points from a given bot position
-     *
-     * @param position Bot position
-     * @return std::vector<Vec2D> Neighbouring points
-     */
-    std::vector<Vec2D> findNeighbouringPoints(DoubleVec2D position) const;
 
   public:
     CommandGiver();
