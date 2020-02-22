@@ -72,16 +72,6 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     bool isValidBotPosition(const Map &map, DoubleVec2D position) const;
 
     /**
-     * Helper function to check if given grid position is within the map
-     *
-     * @param map Referece to the map
-     * @param position Position to be checked
-     * @return true Valid position
-     * @return false Invalid position
-     */
-    bool isValidTowerPosition(const Map &map, Vec2D position) const;
-
-    /**
      * Helper function to check if the player has changed the bot state or not
      *
      * @param state_name  The bot's state according to the main state
@@ -102,6 +92,14 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     bool hasTowerStateChanged(TowerStateName state_name,
                               player_state::TowerState player_state_name) const;
+
+    /**
+     * Returns a vector of neighbouring points from a given bot position
+     *
+     * @param position Bot position
+     * @return std::vector<Vec2D> Neighbouring points
+     */
+    std::vector<Vec2D> findNeighbouringPoints(DoubleVec2D position) const;
 
   public:
     CommandGiver();

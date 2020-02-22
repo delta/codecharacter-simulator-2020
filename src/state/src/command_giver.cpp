@@ -39,17 +39,54 @@ Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) const {
     return {(long)map_size - 1 - position.x, (long)map_size - 1 - position.y};
 }
 
-bool CommandGiver::isValidBotPosition(const Map &map,
-                                      DoubleVec2D position) const {
-    size_t map_size = map.getSize();
-    return (position.x >= 0 && position.x <= map_size && position.y >= 0 &&
-            position.y <= map_size);
+// Finding neighbouring points for a given bot position
+std::vector<Vec2D>
+CommandGiver::findNeighbouringPoints(DoubleVec2D position) const {
+    std::vector<Vec2D> neighbouring_points;
+
+    int64_t start_x = std::floor(position.x), start_y = std::floor(position.y);
+    if (std::floor(position.x) == position.x) {
+        start_x = std::max(start_x - 1, (long)0);
+    }
+    if (std::floor(position.y) == position.y) {
+        start_y = std::min(start_y - 1, (long)0);
+    }
+
+    for (; start_x <= std::floor(position.x); ++start_x) {
+        for (; start_y <= std::floor(position.y); ++start_y) {
+            neighbouring_points.push_back({start_x, start_y});
+        }
+    }
+
+    return neighbouring_points;
 }
 
-bool CommandGiver::isValidTowerPosition(const Map &map, Vec2D position) const {
+bool CommandGiver::isValidBotPosition(const Map &map,
+                                      DoubleVec2D position) const {
     double_t map_size = map.getSize();
-    return (position.x >= 0 && position.x < map_size && position.y >= 0 &&
-            position.y < map_size);
+    bool within_map = (position.x >= 0 && position.x <= map_size &&
+                       position.y >= 0 && position.y <= map_size);
+
+    if (!within_map) {
+        return false;
+    }
+
+    // Finding neighbouring positions to check if bot can move to given position
+    std::vector<Vec2D> neighbouring_points = findNeighbouringPoints(position);
+
+    // If the bot can exist in any of the neighbouring blocks, it is a valid
+    // position
+    for (auto neighbour : neighbouring_points) {
+        TerrainType terrain = map.getTerrainType(std::floor(neighbour.x),
+                                                 std::floor(neighbour.x));
+        bool is_valid =
+            (terrain == TerrainType::LAND || terrain == TerrainType::FLAG);
+        if (is_valid) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool CommandGiver::hasBotStateChanged(
@@ -133,6 +170,10 @@ void CommandGiver::runCommands(
             // Getting the player state bots and the state bots
             auto player_bot = player_states[id].bots[bot_index];
             auto state_bot = state_bots[id][bot_index];
+            DoubleVec2D player_bot_position = player_bot.position;
+            if (player_id == PlayerId::PLAYER2) {
+                player_bot_position = flipBotPosition(map, player_bot_position);
+            }
 
             // Finding which task the bot is trying to perform if any
             bool is_blasting = player_bot.blasting;
@@ -153,7 +194,8 @@ void CommandGiver::runCommands(
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's hp");
                 continue;
-            } else if (player_bot.position != state_bot->getPosition()) {
+            } else if (player_bot_position != state_bot->getPosition()) {
+
                 logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's position");
@@ -179,7 +221,7 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                blastActor(player_id, player_bot.id, player_bot.position);
+                blastActor(player_id, player_bot.id, player_bot_position);
             } else if (is_transforming) {
                 size_t num_towers = state_towers[id].size();
                 if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
@@ -189,22 +231,30 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                transformBot(player_id, player_bot.id, player_bot.position);
+                transformBot(player_id, player_bot.id, player_bot_position);
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
-                DoubleVec2D target_position = player_bot.final_destination;
-                if (!isValidBotPosition(map, target_position)) {
+                DoubleVec2D final_destination = player_bot.final_destination;
+                if (player_id == PlayerId::PLAYER2) {
+                    final_destination = flipBotPosition(map, final_destination);
+                }
+                if (!isValidBotPosition(map, final_destination)) {
                     logger->LogError(player_id,
                                      logger::ErrorType::INVALID_BLAST_POSITION,
                                      "Cannot blast bot in an invalid position");
                 } else {
-                    blastActor(player_id, player_bot.id, target_position);
+                    blastActor(player_id, player_bot.id, final_destination);
                 }
             } else if (is_moving_to_transform) {
                 // Validating the position where the player wants to transform
                 // the bot
-                DoubleVec2D target_position = player_bot.transform_destination;
-                if (!isValidBotPosition(map, target_position)) {
+                DoubleVec2D transform_destination =
+                    player_bot.transform_destination;
+                if (player_id == PlayerId::PLAYER2) {
+                    transform_destination =
+                        flipBotPosition(map, transform_destination);
+                }
+                if (!isValidBotPosition(map, transform_destination)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
@@ -219,18 +269,21 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                transformBot(player_id, player_bot.id, target_position);
+                transformBot(player_id, player_bot.id, transform_destination);
             } else if (is_moving) {
                 // Validates the position that the player has requested to move
                 // onto
-                DoubleVec2D target_position = player_bot.destination;
-                if (!isValidBotPosition(map, target_position)) {
+                DoubleVec2D destination = player_bot.destination;
+                if (player_id == PlayerId::PLAYER2) {
+                    destination = flipBotPosition(map, destination);
+                }
+                if (!isValidBotPosition(map, destination)) {
                     logger->LogError(player_id,
                                      logger::ErrorType::INVALID_MOVE_POSITION,
                                      "Cannot move to invalid position");
                     continue;
                 } else {
-                    moveBot(player_id, player_bot.id, target_position);
+                    moveBot(player_id, player_bot.id, destination);
                 }
             }
         }
@@ -251,6 +304,12 @@ void CommandGiver::runCommands(
             // Getting the player state towers and the state towers
             auto player_tower = player_states[id].towers[tower_index];
             auto state_tower = state_towers[id][tower_index];
+            DoubleVec2D player_tower_position = player_tower.position;
+
+            if (player_id == PlayerId::PLAYER2) {
+                player_tower_position =
+                    flipTowerPosition(map, player_tower_position);
+            }
 
             auto player_id = static_cast<PlayerId>(id);
 
@@ -263,7 +322,7 @@ void CommandGiver::runCommands(
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter tower's id");
                 continue;
-            } else if (player_tower.position != state_tower->getPosition()) {
+            } else if (player_tower_position != state_tower->getPosition()) {
                 logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's position");
@@ -285,7 +344,7 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                blastActor(player_id, player_tower.id, player_tower.position);
+                blastActor(player_id, player_tower.id, player_tower_position);
             }
         }
     }

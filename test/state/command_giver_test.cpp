@@ -23,6 +23,7 @@ class CommandGiverTest : public Test {
     array<player_state::State, 2> player_states;
     array<vector<state::Bot *>, 2> state_bots;
     array<vector<state::Tower *>, 2> state_towers;
+    vector<Vec2D> bot_positions, tower_positions;
 
   public:
     void
@@ -93,18 +94,33 @@ class CommandGiverTest : public Test {
             dummy_map.push_back(map_row);
         }
 
+        // Assinging the tower positions and bot positions for later use and
+        // reference
+        tower_positions = {{0, 0}, {4, 4}};
+        bot_positions = {{1, 1}, {4, 4}};
+
         // Assinging the flag locations
         dummy_map[2][2] = state::TerrainType::FLAG;
         player_states[0].map[2][2].setTerrain(F);
         player_states[1].map[2][2].setTerrain(F);
 
         // Assinging tower locations
-        dummy_map[0][0] = state::TerrainType::TOWER;
-        dummy_map[4][4] = state::TerrainType::TOWER;
-        player_states[0].map[4][4].setTerrain(T);
-        player_states[0].map[0][0].setTerrain(T);
-        player_states[1].map[4][4].setTerrain(T);
-        player_states[1].map[0][0].setTerrain(T);
+        dummy_map[tower_positions[0].y][tower_positions[0].x] =
+            state::TerrainType::TOWER;
+        dummy_map[tower_positions[1].y][tower_positions[1].x] =
+            state::TerrainType::TOWER;
+        player_states[0]
+            .map[tower_positions[0].y][tower_positions[0].x]
+            .setTerrain(T);
+        player_states[0]
+            .map[tower_positions[1].y][tower_positions[1].x]
+            .setTerrain(T);
+        player_states[1]
+            .map[tower_positions[0].y][tower_positions[0].x]
+            .setTerrain(T);
+        player_states[1]
+            .map[tower_positions[1].y][tower_positions[1].x]
+            .setTerrain(T);
 
         map = make_unique<Map>(dummy_map, map_size);
 
@@ -129,14 +145,14 @@ class CommandGiverTest : public Test {
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);
 
             // Assinging bot positions
-            DoubleVec2D position = DoubleVec2D(1, 1),
-                        flipped_position =
-                            DoubleVec2D(map_size - 1, map_size - 1);
+            DoubleVec2D position = bot_positions[0],
+                        flipped_position = DoubleVec2D(map_size - position.x,
+                                                       map_size - position.y);
 
-            // Flipping the positions for player 2
-            if (player_id == 1) {
-                swap(position, flipped_position);
-            }
+            // // Flipping the positions for player 2
+            // if (player_id == 1) {
+            //     swap(position, flipped_position);
+            // }
 
             player_states[player_id].num_bots = 1;
             player_states[player_id].num_enemy_bots = 1;
@@ -161,14 +177,15 @@ class CommandGiverTest : public Test {
             player_states[player_id].num_enemy_bots = 1;
 
             // Assinging bot positions
-            DoubleVec2D position = DoubleVec2D(0, 0),
+            DoubleVec2D position = tower_positions[0],
                         flipped_position =
-                            DoubleVec2D(map_size - 1, map_size - 1);
+                            DoubleVec2D(map_size - 1 - position.x,
+                                        map_size - 1 - position.y);
 
-            // Flipping the positions for player 2
-            if (player_id == 1) {
-                swap(position, flipped_position);
-            }
+            // // Flipping the positions for player 2
+            // if (player_id == 1) {
+            //     swap(position, flipped_position);
+            // }
 
             int enemy_id =
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);
@@ -195,37 +212,34 @@ class CommandGiverTest : public Test {
         // Creating state bots and towers
         auto state_bot1 =
             new state::Bot(1, PlayerId::PLAYER1, ActorType::BOT, 100, 100,
-                           DoubleVec2D(1, 1), 1, 1, 1, BlastCallback{});
+                           bot_positions[0], 1, 1, 1, BlastCallback{});
 
-        auto state_bot2 = new state::Bot(
-            2, PlayerId::PLAYER2, ActorType::BOT, 100, 100,
-            DoubleVec2D(map_size - 1, map_size - 1), 1, 1, 1, BlastCallback{});
+        auto state_bot2 =
+            new state::Bot(2, PlayerId::PLAYER2, ActorType::BOT, 100, 100,
+                           bot_positions[1], 1, 1, 1, BlastCallback{});
 
         auto state_tower1 =
             new state::Tower(3, PlayerId::PLAYER1, ActorType::TOWER, 100, 100,
-                             DoubleVec2D(0, 0), 2, 2, BlastCallback{});
-        auto state_tower2 = new state::Tower(
-            4, PlayerId::PLAYER2, ActorType::TOWER, 100, 100,
-            DoubleVec2D(map_size - 1, map_size - 1), 2, 2, BlastCallback{});
+                             tower_positions[0], 2, 2, BlastCallback{});
+        auto state_tower2 =
+            new state::Tower(4, PlayerId::PLAYER2, ActorType::TOWER, 100, 100,
+                             tower_positions[1], 2, 2, BlastCallback{});
 
         state_bots = {{{state_bot1}, {state_bot2}}};
         state_towers = {{{state_tower1}, {state_tower2}}};
-
-        std::cerr << player_states[1].enemy_bots.size() << "\n";
     }
 };
+
+TEST_F(CommandGiverTest, Test) {
+    ASSERT_EQ(bot_positions[0], player_states[0].bots[0].position);
+    ASSERT_EQ(bot_positions[1], player_states[1].enemy_bots[0].position);
+    ASSERT_EQ(bot_positions[0], player_states[1].bots[0].position);
+    ASSERT_EQ(bot_positions[1], player_states[0].enemy_bots[0].position);
+}
 
 TEST_F(CommandGiverTest, AlterActorProperties) {
     // Creating a temporary player state to modify
     array<player_state::State, 2> temp_player_states = player_states;
-    ASSERT_EQ(temp_player_states[0].bots.size(), 1);
-    ASSERT_EQ(temp_player_states[0].enemy_bots.size(), 1);
-    ASSERT_EQ(temp_player_states[1].bots.size(), 1);
-    ASSERT_EQ(temp_player_states[1].enemy_bots.size(), 1);
-    ASSERT_EQ(temp_player_states[0].towers.size(), 1);
-    ASSERT_EQ(temp_player_states[0].enemy_towers.size(), 1);
-    ASSERT_EQ(temp_player_states[1].towers.size(), 1);
-    ASSERT_EQ(temp_player_states[1].enemy_towers.size(), 1);
 
     // Returning the map repeatedly
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map.get()));
@@ -273,7 +287,7 @@ TEST_F(CommandGiverTest, AlterActorProperties) {
     ManageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
                                   ErrorType::NO_ALTER_TOWER_PROPERTY, _));
-    temp_player_states[1].towers[0].position = DoubleVec2D(0, 0);
+    temp_player_states[1].towers[0].position = DoubleVec2D(12, 25);
     RunCommands(temp_player_states);
 
     ManageActorExpectations(state_bots, state_towers);
@@ -345,6 +359,17 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_TRANSFORM_POSITION, _));
     temp_player_states[0].bots[0].transform_destination = DoubleVec2D(-10, -5);
+    RunCommands(temp_player_states);
+
+    // Trying to move into the location of a tower
+    ManageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
+                                  ErrorType::INVALID_MOVE_POSITION, _));
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
+                                  ErrorType::INVALID_BLAST_POSITION, _));
+
+    temp_player_states[0].bots[0].destination = DoubleVec2D(5, 5);
+    temp_player_states[1].bots[0].final_destination = DoubleVec2D(0, 0);
     RunCommands(temp_player_states);
 }
 
