@@ -50,11 +50,22 @@ enum class ErrorType {
      * Trying to build more towers than the maximum tower limit
      */
     TOWER_LIMIT_REACHED,
+
+    /**
+     * Mismatch in number of bots in state and player code
+     */
+    NUMBER_OF_BOTS_MISMATCH,
+
+    /**
+     * Mismatch in number of towers in state and player code
+     */
+    NUMBER_OF_TOWERS_MISMATCH,
 };
 
 const std::vector<std::string> ErrorTypeName = {
     "INVALID_MOVE_POSITION",      "POSITION_OCCUPIED",
     "NO_MULTIPLE_BOT_TASK",       "INVALID_BLAST_POSITION",
     "INVALID_TRANSFORM_POSITION", "NO_ALTER_TOWER_PROPERTY",
-    "NO_ALTER_BOT_PROPERTY",      "TOWER_LIMIT_REACHED"};
+    "NO_ALTER_BOT_PROPERTY",      "TOWER_LIMIT_REACHED",
+    "NUMBER_OF_BOTS_MISMATCH",    "NUMBER_OF_TOWERS_MISMATCH"};
 } // namespace logger

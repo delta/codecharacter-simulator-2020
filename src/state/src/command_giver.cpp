@@ -28,28 +28,26 @@ void CommandGiver::moveBot(PlayerId player_id, ActorId bot_id,
     state->moveBot(player_id, bot_id, position);
 }
 
-size_t CommandGiver::getMapSize(const Map *map) const { return map->getSize(); }
-
-DoubleVec2D CommandGiver::flipBotPosition(const Map *map,
+DoubleVec2D CommandGiver::flipBotPosition(const Map &map,
                                           DoubleVec2D position) {
-    size_t map_size = getMapSize(map);
+    size_t map_size = map.getSize();
     return {map_size - position.x, map_size - position.y};
 }
 
-Vec2D CommandGiver::flipTowerPosition(const Map *map, Vec2D position) const {
-    size_t map_size = getMapSize(map);
+Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) const {
+    size_t map_size = map.getSize();
     return {(long)map_size - 1 - position.x, (long)map_size - 1 - position.y};
 }
 
-bool CommandGiver::isValidBotPosition(const Map *map,
+bool CommandGiver::isValidBotPosition(const Map &map,
                                       DoubleVec2D position) const {
-    size_t map_size = getMapSize(map);
+    size_t map_size = map.getSize();
     return (position.x >= 0 && position.x <= map_size && position.y >= 0 &&
             position.y <= map_size);
 }
 
-bool CommandGiver::isValidTowerPosition(const Map *map, Vec2D position) const {
-    double_t map_size = getMapSize(map);
+bool CommandGiver::isValidTowerPosition(const Map &map, Vec2D position) const {
+    double_t map_size = map.getSize();
     return (position.x >= 0 && position.x < map_size && position.y >= 0 &&
             position.y < map_size);
 }
@@ -103,24 +101,38 @@ void CommandGiver::runCommands(
 
     auto state_bots = state->getBots();
     auto state_towers = state->getTowers();
-    auto map = state->getMap();
+    auto map_pointer = state->getMap();
+    Map map = *map_pointer;
 
     // Validating and performing the tasks given by the player
-    for (size_t player_id = 0;
-         player_id < static_cast<size_t>(PlayerId::PLAYER_COUNT); ++player_id) {
+    for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
+         ++id) {
         // If a player's turn should be skipped, don't process his moves
-        if (skip_turn[player_id]) {
+        if (skip_turn[id]) {
+            continue;
+        }
+
+        size_t enemy_id =
+            (id + 1) % static_cast<int64_t>(PlayerId::PLAYER_COUNT);
+
+        auto player_id = static_cast<PlayerId>(id);
+
+        // Checking player bots and state bots are of same length
+        if ((state_bots[id].size() != player_states[id].bots.size()) ||
+            (state_bots[enemy_id].size() !=
+             player_states[id].enemy_bots.size())) {
+            logger->LogError(player_id,
+                             logger::ErrorType::NUMBER_OF_BOTS_MISMATCH,
+                             "Cannot add or delete bots in state");
             continue;
         }
 
         // Iterating through bots and assigning tasks to command taker
-        for (size_t bot_index = 0; bot_index < state_bots[player_id].size();
+        for (size_t bot_index = 0; bot_index < state_bots[id].size();
              ++bot_index) {
             // Getting the player state bots and the state bots
-            auto player_bot = player_states[player_id].bots[bot_index];
-            auto state_bot = state_bots[player_id][bot_index];
-
-            auto Player_id = static_cast<PlayerId>(player_id);
+            auto player_bot = player_states[id].bots[bot_index];
+            auto state_bot = state_bots[id][bot_index];
 
             // Finding which task the bot is trying to perform if any
             bool is_blasting = player_bot.blasting;
@@ -132,17 +144,17 @@ void CommandGiver::runCommands(
 
             // Checking if the bot's properties have been changed
             if (player_bot.id != state_bot->getActorId()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's id");
                 continue;
             } else if (player_bot.hp != state_bot->getHp()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's hp");
                 continue;
             } else if (player_bot.position != state_bot->getPosition()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's position");
                 continue;
@@ -150,7 +162,7 @@ void CommandGiver::runCommands(
 
             // Checking if the user modified the bot's state directly
             if (hasBotStateChanged(state_bot->getState(), player_bot.state)) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's state");
                 continue;
@@ -161,32 +173,32 @@ void CommandGiver::runCommands(
                     is_moving_to_transform + is_moving >
                 1) {
                 logger->LogError(
-                    Player_id, logger::ErrorType::NO_MULTIPLE_BOT_TASK,
+                    player_id, logger::ErrorType::NO_MULTIPLE_BOT_TASK,
                     "Cannot perform multiple bot tasks at the same time");
                 continue;
             }
 
             if (is_blasting) {
-                blastActor(Player_id, player_bot.id, player_bot.position);
+                blastActor(player_id, player_bot.id, player_bot.position);
             } else if (is_transforming) {
-                size_t num_towers = state_towers[player_id].size();
+                size_t num_towers = state_towers[id].size();
                 if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
-                    logger->LogError(Player_id,
+                    logger->LogError(player_id,
                                      logger::ErrorType::TOWER_LIMIT_REACHED,
                                      "Cannot build more towers than maximum "
                                      "number of towers");
                     continue;
                 }
-                transformBot(Player_id, player_bot.id, player_bot.position);
+                transformBot(player_id, player_bot.id, player_bot.position);
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
                 DoubleVec2D target_position = player_bot.final_destination;
                 if (!isValidBotPosition(map, target_position)) {
-                    logger->LogError(Player_id,
+                    logger->LogError(player_id,
                                      logger::ErrorType::INVALID_BLAST_POSITION,
                                      "Cannot blast bot in an invalid position");
                 } else {
-                    blastActor(Player_id, player_bot.id, target_position);
+                    blastActor(player_id, player_bot.id, target_position);
                 }
             } else if (is_moving_to_transform) {
                 // Validating the position where the player wants to transform
@@ -194,60 +206,70 @@ void CommandGiver::runCommands(
                 DoubleVec2D target_position = player_bot.transform_destination;
                 if (!isValidBotPosition(map, target_position)) {
                     logger->LogError(
-                        Player_id,
+                        player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform bot in invalid position");
                     continue;
                 }
-                size_t num_towers = state_towers[player_id].size();
+                size_t num_towers = state_towers[id].size();
                 if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
-                    logger->LogError(Player_id,
+                    logger->LogError(player_id,
                                      logger::ErrorType::TOWER_LIMIT_REACHED,
                                      "Cannot build more towers than maximum "
                                      "number of towers");
                     continue;
                 }
-                transformBot(Player_id, player_bot.id, target_position);
+                transformBot(player_id, player_bot.id, target_position);
             } else if (is_moving) {
                 // Validates the position that the player has requested to move
                 // onto
                 DoubleVec2D target_position = player_bot.destination;
                 if (!isValidBotPosition(map, target_position)) {
-                    logger->LogError(Player_id,
+                    logger->LogError(player_id,
                                      logger::ErrorType::INVALID_MOVE_POSITION,
                                      "Cannot move to invalid position");
                     continue;
                 } else {
-                    moveBot(Player_id, player_bot.id, target_position);
+                    moveBot(player_id, player_bot.id, target_position);
                 }
             }
         }
 
-        // Iterating through the towers and assinging tasks
-        for (size_t tower_index = 0;
-             tower_index < state_towers[player_id].size(); ++tower_index) {
-            // Getting the player state towers and the state towers
-            auto player_tower = player_states[player_id].towers[tower_index];
-            auto state_tower = state_towers[player_id][tower_index];
+        // Checking if number of towers has been changed by towers
+        if ((state_towers[id].size() != player_states[id].towers.size()) ||
+            (state_towers[enemy_id].size() !=
+             player_states[id].enemy_towers.size())) {
+            logger->LogError(player_id,
+                             logger::ErrorType::NUMBER_OF_TOWERS_MISMATCH,
+                             "Cannot add or erase towers in state");
+            continue;
+        }
 
-            auto Player_id = static_cast<PlayerId>(player_id);
+        // Iterating through the towers and assinging tasks
+        for (size_t tower_index = 0; tower_index < state_towers[id].size();
+             ++tower_index) {
+            // Getting the player state towers and the state towers
+            auto player_tower = player_states[id].towers[tower_index];
+            auto state_tower = state_towers[id][tower_index];
+
+            auto player_id = static_cast<PlayerId>(id);
 
             // Finding which task the tower is trying to perform if any
             bool is_blasting = player_tower.blasting;
 
             // Checking if the player changed the tower directly
             if (player_tower.id != state_tower->getActorId()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter tower's id");
                 continue;
             } else if (player_tower.position != state_tower->getPosition()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's position");
                 continue;
             } else if (player_tower.hp != state_tower->getHp()) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's hp");
                 continue;
@@ -256,14 +278,14 @@ void CommandGiver::runCommands(
             // Checking if the user has changed the tower state directly
             if (hasTowerStateChanged(state_tower->getState(),
                                      player_tower.state)) {
-                logger->LogError(Player_id,
+                logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's state");
                 continue;
             }
 
             if (is_blasting) {
-                blastActor(Player_id, player_tower.id, player_tower.position);
+                blastActor(player_id, player_tower.id, player_tower.position);
             }
         }
     }
