@@ -263,4 +263,8 @@ void StateSyncer::assignTowers(int64_t id,
     }
 }
 
+std::array<size_t, 2> StateSyncer::getScores(bool game_over) {
+    return state->getScores(game_over);
+}
+
 } // namespace state
