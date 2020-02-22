@@ -2,7 +2,7 @@
 
 namespace player_code {
 
-player_state::State PlayerCode0::Update(player_state::State state) {
+player_state::State PlayerCode0::update(player_state::State state) {
     int a = 0;
     for (unsigned i = 0; i < 10E5; ++i) {
         a = a + i;
