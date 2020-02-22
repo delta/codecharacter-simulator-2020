@@ -109,6 +109,10 @@ void Bot::lateUpdate() {
         clearNewPosition();
     }
 
+    if (getHp() > 0 && isTransforming()) {
+        constructTower();
+    }
+
     // Transition to dead state if dead
     if (getHp() == 0 && state->getName() != BotStateName::DEAD) {
         auto new_state = state->update();

@@ -285,16 +285,16 @@ TEST_F(BotTest, TransformTest) {
 
     // TODO: find a way to test creation of new tower instance at bot position
 
-    // check for state transition, from idle to transform to dead state
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
-    ASSERT_EQ(bot->isTransforming(), false);
+    // check for state transition, from idle to transform state
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    ASSERT_EQ(bot->isTransforming(), true);
 
     bot->lateUpdate();
 
-    // bot is in dead state, but hp not 0
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    // bot remains in Transform state
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
     ASSERT_NE(bot->getHp(), 0);
-    ASSERT_EQ(bot->isTransforming(), false);
+    ASSERT_EQ(bot->isTransforming(), true);
 }
 
 TEST_F(BotTest, MoveToTransformTest) {
@@ -352,8 +352,8 @@ TEST_F(BotTest, MoveToTransformTest) {
     // set istransform to true and perform state transitions
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
-    ASSERT_EQ(bot->isTransforming(), false);
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
+    ASSERT_EQ(bot->isTransforming(), true);
     ASSERT_EQ(bot->getPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
@@ -363,13 +363,13 @@ TEST_F(BotTest, MoveToTransformTest) {
     // call construct tower callback
     bot->lateUpdate();
 
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
     ASSERT_EQ(bot->getPosition(), TRANSFORM_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
     ASSERT_EQ(bot->isTransformDestinationSet(), false);
     ASSERT_EQ(bot->getTransformDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isTransforming(), false);
+    ASSERT_EQ(bot->isTransforming(), true);
 }
 
 } // namespace test

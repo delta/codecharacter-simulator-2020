@@ -58,6 +58,9 @@ std::unique_ptr<IActorState> BotMoveToTransformState::update() const {
 
     if (next_position) {
         bot->setNewPosition(next_position);
+
+        if (next_position == transform_destination) {
+        }
     }
 
     // no state change
