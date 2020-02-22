@@ -44,38 +44,42 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     void moveBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
 
     /**
-     * Helper function to flip a position for enemy units
+     * Helper function to flip a bot position
      *
-     * @param position Position that gets flipped
+     * @param map Refernce to map
+     * @param position Position to be flipped
      * @return DoubleVec2D Flipped position
      */
-    DoubleVec2D flipBotPosition(DoubleVec2D position) const;
+    DoubleVec2D flipBotPosition(const Map &map, DoubleVec2D position);
 
     /**
-     * Helper function to flip a position for enemy units
+     * Helper function to flip a tower position
      *
-     * @param position Tower position to be flipped
-     * @return Vec2D Flipped tower position
+     * @param map Reference to a map
+     * @param position Position to be flipped
+     * @return Vec2D Flipped position
      */
-    Vec2D flipTowerPosition(Vec2D position) const;
+    Vec2D flipTowerPosition(const Map &map, Vec2D position) const;
 
     /**
-     * Helper function to check if given position is within the map
+     * Helper function to check if given bot position is within the map
      *
+     * @param map Reference to the map
      * @param position Position which is checked against map constraints
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    bool isValidBotPosition(DoubleVec2D position) const;
+    bool isValidBotPosition(const Map &map, DoubleVec2D position) const;
 
     /**
-     * Helper function to check if given grid position is within the map
+     * Helper function to check if given tower position is within the map
      *
-     * @param position Position to be checked
-     * @return true Valid position
-     * @return false Invalid position
+     * @param map Referece to the map
+     * @param position Position which is checked against map constraints
+     * @return true    Position is a valid position inside the map
+     * @return false   Position is not a valid position in the map
      */
-    bool isValidTowerPosition(Vec2D position) const;
+    bool isValidTowerPosition(const Map &map, DoubleVec2D position) const;
 
     /**
      * Helper function to check if the player has changed the bot state or not
@@ -98,11 +102,6 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     bool hasTowerStateChanged(TowerStateName state_name,
                               player_state::TowerState player_state_name) const;
-
-    /**
-     * Helper function to get the map size
-     */
-    size_t getMapSize() const;
 
   public:
     CommandGiver();

@@ -31,12 +31,12 @@ class MapTest : public testing::Test {
 TEST_F(MapTest, GetSizeTest) { EXPECT_EQ(map->getSize(), MAP_SIZE); }
 
 TEST_F(MapTest, GetTerrainTypeInt64Test) {
-    EXPECT_EQ(map->getTerrainType((size_t)0, (size_t)0), L);
-    EXPECT_EQ(map->getTerrainType((size_t)1, (size_t)1), W);
-    EXPECT_EQ(map->getTerrainType((size_t)2, (size_t)2), F);
-    EXPECT_EQ(map->getTerrainType((size_t)4, (size_t)4), T);
-    EXPECT_EQ(map->getTerrainType((size_t)0, (size_t)4), L);
-    EXPECT_EQ(map->getTerrainType((size_t)4, (size_t)0), L);
+    EXPECT_EQ(map->getTerrainType((size_t) 0, (size_t) 0), L);
+    EXPECT_EQ(map->getTerrainType((size_t) 1, (size_t) 1), W);
+    EXPECT_EQ(map->getTerrainType((size_t) 2, (size_t) 2), F);
+    EXPECT_EQ(map->getTerrainType((size_t) 4, (size_t) 4), T);
+    EXPECT_EQ(map->getTerrainType((size_t) 0, (size_t) 4), L);
+    EXPECT_EQ(map->getTerrainType((size_t) 4, (size_t) 0), L);
 }
 
 TEST_F(MapTest, GetTerrainTypeDoubleTest) {

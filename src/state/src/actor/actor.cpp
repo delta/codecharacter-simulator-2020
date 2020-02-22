@@ -44,7 +44,7 @@ void Actor::setDamageIncurred(int64_t p_damage_incurred) {
     if (p_damage_incurred < 0) {
         throw std::out_of_range("`damage_incurred` must be a positive value");
     }
-    damage_incurred = std::min(p_damage_incurred, (int64_t)hp);
+    damage_incurred = std::min(p_damage_incurred, (int64_t) hp);
 }
 
 size_t Actor::getDamageIncurred() const { return damage_incurred; }

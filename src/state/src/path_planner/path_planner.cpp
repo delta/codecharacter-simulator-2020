@@ -16,7 +16,7 @@ PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
     for (size_t row = 0; row < map_size; row++) {
         for (size_t col = 0; col < map_size; col++) {
             auto position_terrain =
-                map->getTerrainType((size_t)row, (size_t)col);
+                map->getTerrainType((size_t) row, (size_t) col);
 
             // The square from (row, col) to (row+1,col+1) is of this terrain
             valid_terrain[row][col] = (position_terrain == TerrainType::LAND ||
@@ -72,16 +72,16 @@ Vec2D PathPlanner::getOffset(const DoubleVec2D &position,
     // For player 1, the offset tile is one containing position.
     // In case of integral (x,y) the tile having position as lower left corner
     case PlayerId::PLAYER1: {
-        return {(int64_t)std::floor(position.x),
-                (int64_t)std::floor(position.y)};
+        return {(int64_t) std::floor(position.x),
+                (int64_t) std::floor(position.y)};
     }
 
     // For player 2, the offset tile is one containing position.
     // In case of integral (x,y) the tile having position as upper right corner
     // Return the lower left position of the offset
     case PlayerId::PLAYER2: {
-        return {(int64_t)std::ceil(position.x) - 1,
-                (int64_t)std::ceil(position.y) - 1};
+        return {(int64_t) std::ceil(position.x) - 1,
+                (int64_t) std::ceil(position.y) - 1};
     }
 
     default:
@@ -171,7 +171,7 @@ bool PathPlanner::destroyTower(Vec2D tower_offset) {
     }
 
     auto position_terrain =
-        map->getTerrainType((size_t)tower_offset.x, (size_t)tower_offset.y);
+        map->getTerrainType((size_t) tower_offset.x, (size_t) tower_offset.y);
     if (position_terrain == TerrainType::WATER ||
         !isOffsetBlocked(tower_offset)) {
         return false;
