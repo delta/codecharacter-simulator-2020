@@ -23,11 +23,6 @@ const std::array<size_t, 2> State::getScores(bool game_over) const {
     return score_manager->getScores();
 }
 
-bool State::isGameOver(PlayerId &winner) {}
-
-void State::moveBot(PlayerId player_id, ActorId actor_id,
-                    DoubleVec2D position) {}
-
 /**
  * Get the Raw Ptrs From Unique Ptrs object
  *
@@ -53,11 +48,37 @@ const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     return ret_actors;
 }
 
+bool State::isGameOver(PlayerId &winner) {}
+
+void State::moveBot(PlayerId player_id, ActorId actor_id,
+                    DoubleVec2D position) {
+                        // Setting the bot's destination
+                        auto bot = getActorById(player_id, actor_id);
+                        // bot->setDestination(position);
+                    }
+
 void State::transformBot(PlayerId player_id, ActorId bot_id,
-                         DoubleVec2D position) {}
+                         DoubleVec2D position) {
+                             // Creating a transform request
+                             
+                         }
 
 void State::blastActor(PlayerId player_id, ActorId actor_id,
-                       DoubleVec2D position) {}
+                       DoubleVec2D position) {
+    Blaster* blaster = getBlasterById(player_id, actor_id);
+    Actor *actor = getActorById(player_id, actor_id);
+
+    int64_t impact_radius = blaster->getBlastRange();
+    int64_t damage_points = blaster->getBlastDamage();
+
+    // Getting actors around position of size impact radius
+    std::vector<Actor *> affected_actors = getAffectedActors(player_id, position, impact_radius);
+
+    // Adding to the actor's damange incurred
+    for(auto actor : affected_actors){
+        actor->damage(damage_points);
+    }
+}
 
 const std::array<std::vector<Tower *>, 2> State::getTowers() {
     return getRawPtrsFromUniquePtrs(towers);

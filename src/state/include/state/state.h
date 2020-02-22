@@ -61,6 +61,77 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     void updateScores();
 
+    /**
+     * Returns the Actor By Id of the actor
+     *
+     * @param player_id
+     * @param actor_id
+     * @return Pointer to the actor
+     * @return Nullptr
+     */
+    Actor *getActorById(PlayerId player_id, ActorId actor_id);
+
+    /**
+     * Returns the actor at given position if an actor exists at given point
+     *
+     * @param position
+     * @return Actor* if actor exists in given positiin
+     * @return Nullptr If no actor is at position
+     */
+    Actor *getActorByPosition(DoubleVec2D position);
+
+    /**
+     * Get the Blaster By Id 
+     * 
+     * @param id Actor id of the blaster
+     * @return Blaster pointer 
+     */
+    Blaster *getBlasterById(ActorId id);
+
+    /**
+     * Get the Tower By Id object
+     * 
+     * @param player_id 
+     * @param actor_id 
+     * @return Tower* 
+     */
+    Tower * getTowerById(PlayerId player_id, ActorId actor_id);
+
+    /**
+     * Get the Bot By Id object
+     * 
+     * @param player_id 
+     * @param actor_id 
+     * @return Bot* 
+     */
+    Bot * getBotById(PlayerId player_id, ActorId actor_id);
+
+    /**
+     * Get the Blaster by id
+     * 
+     * @param player_id 
+     * @param actor_id 
+     * @return Blaster* 
+     */
+    Blaster *getBlasterById(PlayerId player_id, ActorId actor_id);
+
+    /**
+     * Get the Impact Points when an actor blasts in a position
+     * 
+     * @param position Position where blaster is blasting
+     * @param impact_range Impact range where bot blast is affected
+     * @return std::vector<Vec2D> Impact points
+     */
+    std::vector<Vec2D> getImpactPoints(DoubleVec2D position, int64_t impact_range);
+
+    /**
+     * Get the actors who get damage from position
+     * 
+     * @param position 
+     * @param impact_range 
+     * @return std::vector<Actor *> 
+     */
+    std::vector<Actor *> getAffectedActors(PlayerId player_id, DoubleVec2D position, int64_t impact_range);
   public:
     /**
      * Constructors
