@@ -1,6 +1,6 @@
 /**
- * @file bot_idle_state.h
- *  Declares the Bot Idle State class
+ * @file bot_blast_state.h
+ * Declares the Bot Blast State class
  */
 
 #pragma once
@@ -11,26 +11,29 @@
 namespace state {
 
 /**
- *  Declaration of Idle state of Bot
+ *  Declaration of Blast state class.
  */
-class STATE_EXPORT BotIdleState : public BotState {
+class STATE_EXPORT BotBlastState : public BotState {
   public:
     /**
-     *  Construct a new Bot Idle State object
+     * Construct a new Bot Blast State object
      *
-     * @param bot
+     * @param bot instance
      */
-    BotIdleState(Bot *bot);
+    BotBlastState(Bot *bot);
 
     /**
      * @see IActorState#enter
+     *
+     * Damages enemy actors, sets its own hp to 0, resets isBlasting
+     *
      */
     void enter() override;
 
     /**
-     * Updates the bot state according to the characteristics
+     * Returns dead state
      *
-     * @return std::unique_ptr<IActorState> a new state or nullptr
+     * @return std::unique_ptr<IActorState>
      */
     std::unique_ptr<IActorState> update() const override;
 

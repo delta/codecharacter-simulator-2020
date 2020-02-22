@@ -52,7 +52,7 @@ size_t Actor::getDamageIncurred() const { return damage_incurred; }
 size_t Actor::getMaxHp() const { return max_hp; }
 
 size_t Actor::getLatestHp() const {
-    return std::min<size_t>(0, hp - damage_incurred);
+    return std::max<size_t>(0, hp - damage_incurred);
 }
 
 void Actor::damage(size_t damage_amout) {
@@ -60,5 +60,12 @@ void Actor::damage(size_t damage_amout) {
 }
 
 DoubleVec2D Actor::getPosition() const { return position; }
+
+void Actor::setPosition(DoubleVec2D p_position) {
+    if (!p_position) {
+        throw std::domain_error("Position not inside the range of map");
+    }
+    position = p_position;
+}
 
 } // namespace state

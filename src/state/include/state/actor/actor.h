@@ -85,7 +85,10 @@ class STATE_EXPORT Actor : public IUpdatable {
     Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
           DoubleVec2D position);
 
-    virtual ~Actor() {}
+    /**
+     * Destructor
+     */
+    virtual ~Actor() = default;
 
     /**
      *  Gets the new ActorId to assign to new actor.
@@ -167,7 +170,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      *
      * @param damage_amout
      */
-    void damage(size_t damage_amout);
+    void damage(size_t damage_amount);
 
     /**
      *  Get the Position of Actor
@@ -175,6 +178,12 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @return DoubleVec2D
      */
     DoubleVec2D getPosition() const;
+
+    /**
+     * Set the Position of Actor
+     *
+     */
+    void setPosition(DoubleVec2D p_position);
 };
 
 } // namespace state

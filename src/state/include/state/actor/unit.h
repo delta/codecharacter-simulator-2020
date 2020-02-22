@@ -15,7 +15,6 @@
 namespace state {
 /**
  *  Unit base class
- *
  */
 class STATE_EXPORT Unit : public Actor {
   protected:
@@ -67,6 +66,11 @@ class STATE_EXPORT Unit : public Actor {
      */
     Unit(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
          size_t speed, DoubleVec2D position);
+
+    /**
+     * Destructor
+     */
+    virtual ~Unit() = default;
 
     /**
      *  Get the Unit's speed.
@@ -135,16 +139,6 @@ class STATE_EXPORT Unit : public Actor {
      * @param destination The destination to move to.
      */
     void move(DoubleVec2D destination);
-
-    /**
-     *  Update function of Unit
-     */
-    virtual void update() = 0;
-
-    /**
-     *  Late Update function of unit. After the end of every turn.
-     */
-    virtual void lateUpdate() = 0;
 };
 
 } // namespace state

@@ -11,6 +11,10 @@
 #include <memory>
 
 namespace state {
+
+/**
+ *  Declaration of Tower class
+ */
 class STATE_EXPORT Tower : public Actor, public Blaster {
   private:
     /**
@@ -37,9 +41,9 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, DoubleVec2D position, size_t damage_points,
-          size_t blast_range, BlastCallback blast_callback);
+    Tower(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+          DoubleVec2D position, size_t damage_points, size_t blast_range,
+          BlastCallback blast_callback);
 
     /**
      *  Construct a new Tower object, with auto incrementing id
@@ -53,20 +57,14 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-          DoubleVec2D position, size_t damage_points, size_t blast_range,
+    Tower(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
+          size_t damage_points, size_t blast_range,
           BlastCallback blast_callback);
 
     /**
      * @see Blaster#Blast
      */
     void blast() override;
-
-    /**
-     * Function that uses callback function to damage enemy units due to
-    blasting
-     */
-    void damageEnemyActors();
 
     /**
      * Returns the name of the state that the tower is currently in
@@ -88,11 +86,13 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
 
     /**
      * Updates the state of the tower and all related properties
+     *
+     * @see IUpdatable#update
      */
     void update() override;
 
     /**
-     * Performs late updates for the tower
+     * @see IUpdatable#lateUpdate
      */
     void lateUpdate() override;
 };

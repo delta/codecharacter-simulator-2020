@@ -1,6 +1,6 @@
 /**
- * @file bot_idle_state.h
- *  Declares the Bot Idle State class
+ * @file bot_move_state.h
+ * Declares the Bot Move State class
  */
 
 #pragma once
@@ -11,16 +11,16 @@
 namespace state {
 
 /**
- *  Declaration of Idle state of Bot
+ *  Declaration of Move state of Bot
  */
-class STATE_EXPORT BotIdleState : public BotState {
+class STATE_EXPORT BotMoveState : public BotState {
   public:
     /**
-     *  Construct a new Bot Idle State object
+     * Construct a new Bot Move State object
      *
-     * @param bot
+     * @param bot instance
      */
-    BotIdleState(Bot *bot);
+    BotMoveState(Bot *bot);
 
     /**
      * @see IActorState#enter
@@ -28,7 +28,8 @@ class STATE_EXPORT BotIdleState : public BotState {
     void enter() override;
 
     /**
-     * Updates the bot state according to the characteristics
+     * Updates the bot position if destination is set
+     * else returns a new state based on state characteristics
      *
      * @return std::unique_ptr<IActorState> a new state or nullptr
      */

@@ -8,9 +8,15 @@
 #include "state/actor/blaster.h"
 #include "state/actor/bot_states/bot_state.h"
 #include "state/actor/unit.h"
+#include "state/path_planner/path_planner.h"
 
 namespace state {
 
+using ConstructTowerCallback = std::function<void(Bot *)>;
+
+/**
+ * Declaration of Bot class
+ */
 class STATE_EXPORT Bot : public Unit, public Blaster {
   private:
     /**
@@ -19,7 +25,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     std::unique_ptr<BotState> state;
 
     /**
-     *  The destination after which the bot transitions to blast state
+     *  Path Planner to perform movement mechanics
+     */
+    PathPlanner *path_planner;
+
+    /**
+     *  The position at which the bot transitions to blast state
      */
     DoubleVec2D final_destination;
 
@@ -27,6 +38,11 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Tracks final_destination
      */
     bool is_final_destination_set;
+
+    /**
+     * Callback to implement effect of bot transformation to tower through state
+     */
+    ConstructTowerCallback construct_tower_callback;
 
     /**
      *  The destination after which the bot becomes a tower
@@ -50,35 +66,47 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *
      * @param id
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param path_planner
      * @param blast_callback
+     * @param construct_tower_callback
      */
-    Bot(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-        size_t max_hp, DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+    Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+        DoubleVec2D position, size_t speed, size_t blast_range,
+        size_t damage_points, PathPlanner *path_planner,
+        BlastCallback blast_callback,
+        ConstructTowerCallback construct_tower_callback);
 
     /**
      *  Construct a new Bot object, with auto incrementing id.
      *
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param path_planner
      * @param blast_callback
+     * @param construct_tower_callback
      */
-    Bot(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-        DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, BlastCallback blast_callback);
+    Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
+        size_t speed, size_t blast_range, size_t damage_points,
+        PathPlanner *path_planner, BlastCallback blast_callback,
+        ConstructTowerCallback construct_tower_callback);
+
+    /**
+     * Get Bot's Path Planner pointer
+     *
+     * @return PathPlanner*
+     */
+    PathPlanner *getPathPlanner() const;
 
     /**
      *  check if final_destination is set
@@ -150,6 +178,15 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void clearTransformDestination();
 
     /**
+     *  Method to execute construct_tower_callback
+     *
+     * @param player_id
+     * @param position
+     * @param current_hp
+     */
+    void constructTower();
+
+    /**
      *  Get the current state of bot
      *
      * @return BotStateName
@@ -167,13 +204,12 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void transform();
 
     /**
-     *  Updates the state of the bot and all related properties
-     *
+     * @see IUpdatable#update
      */
     void update() override;
 
     /**
-     * Performs late updates for the bot
+     * @see IUpdatable#lateUpdate
      */
     void lateUpdate() override;
 };

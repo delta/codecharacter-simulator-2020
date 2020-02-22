@@ -175,7 +175,7 @@ struct Tower : _Actor, _Blaster {
 
     void blast_tower() { blast(); }
 
-    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
+    Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
 std::ostream &operator<<(std::ostream &os, Tower tower) {
