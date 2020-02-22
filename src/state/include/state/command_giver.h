@@ -62,7 +62,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     Vec2D flipTowerPosition(const Map &map, Vec2D position) const;
 
     /**
-     * Helper function to check if given position is within the map
+     * Helper function to check if given bot position is within the map
      *
      * @param map Referece to the map
      * @param position Position which is checked against map constraints
@@ -70,6 +70,16 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return false   Position is not a valid position in the map
      */
     bool isValidBotPosition(const Map &map, DoubleVec2D position) const;
+
+        /**
+     * Helper function to check if given tower position is within the map
+     *
+     * @param map Referece to the map
+     * @param position Position which is checked against map constraints
+     * @return true    Position is a valid position inside the map
+     * @return false   Position is not a valid position in the map
+     */
+    bool isValidTowerPosition(const Map &map, DoubleVec2D position) const;
 
     /**
      * Helper function to check if the player has changed the bot state or not

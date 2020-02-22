@@ -36,29 +36,7 @@ DoubleVec2D CommandGiver::flipBotPosition(const Map &map,
 
 Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) const {
     size_t map_size = map.getSize();
-    return {(long)map_size - 1 - position.x, (long)map_size - 1 - position.y};
-}
-
-// Finding neighbouring points for a given bot position
-std::vector<Vec2D>
-CommandGiver::findNeighbouringPoints(DoubleVec2D position) const {
-    std::vector<Vec2D> neighbouring_points;
-
-    int64_t start_x = std::floor(position.x), start_y = std::floor(position.y);
-    if (std::floor(position.x) == position.x) {
-        start_x = std::max(start_x - 1, (long)0);
-    }
-    if (std::floor(position.y) == position.y) {
-        start_y = std::min(start_y - 1, (long)0);
-    }
-
-    for (; start_x <= std::floor(position.x); ++start_x) {
-        for (; start_y <= std::floor(position.y); ++start_y) {
-            neighbouring_points.push_back({start_x, start_y});
-        }
-    }
-
-    return neighbouring_points;
+    return {(long) map_size - 1 - position.x, (long) map_size - 1 - position.y};
 }
 
 bool CommandGiver::isValidBotPosition(const Map &map,
@@ -71,22 +49,22 @@ bool CommandGiver::isValidBotPosition(const Map &map,
         return false;
     }
 
-    // Finding neighbouring positions to check if bot can move to given position
-    std::vector<Vec2D> neighbouring_points = findNeighbouringPoints(position);
+    size_t x = position.x, y = position.y;
+    if(x == map_size)
+        --x;
+    if(y == map_size)
+        --y;
 
     // If the bot can exist in any of the neighbouring blocks, it is a valid
     // position
-    for (auto neighbour : neighbouring_points) {
-        TerrainType terrain = map.getTerrainType(std::floor(neighbour.x),
-                                                 std::floor(neighbour.x));
-        bool is_valid =
-            (terrain == TerrainType::LAND || terrain == TerrainType::FLAG);
-        if (is_valid) {
-            return true;
-        }
-    }
+    TerrainType type = map.getTerrainType(x, y);
+    return (type == TerrainType::FLAG || type == TerrainType::LAND);
+}
 
-    return false;
+bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position) const{
+    int64_t x = std::floor(position.x), y = std::floor(position.y);
+    size_t map_size = map.getSize();
+    return (x < map_size && x >= 0 && y < map_size && y >= 0);
 }
 
 bool CommandGiver::hasBotStateChanged(
@@ -178,10 +156,10 @@ void CommandGiver::runCommands(
             // Finding which task the bot is trying to perform if any
             bool is_blasting = player_bot.blasting;
             bool is_transforming = player_bot.transforming;
-            bool is_moving_to_blast = (bool)player_bot.final_destination;
+            bool is_moving_to_blast = (bool) player_bot.final_destination;
             bool is_moving_to_transform =
-                (bool)player_bot.transform_destination;
-            bool is_moving = (bool)player_bot.destination;
+                (bool) player_bot.transform_destination;
+            bool is_moving = (bool) player_bot.destination;
 
             // Checking if the bot's properties have been changed
             if (player_bot.id != state_bot->getActorId()) {
@@ -254,7 +232,7 @@ void CommandGiver::runCommands(
                     transform_destination =
                         flipBotPosition(map, transform_destination);
                 }
-                if (!isValidBotPosition(map, transform_destination)) {
+                if (!isValidTowerPosition(map, transform_destination)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,

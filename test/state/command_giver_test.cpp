@@ -230,13 +230,6 @@ class CommandGiverTest : public Test {
     }
 };
 
-TEST_F(CommandGiverTest, Test) {
-    ASSERT_EQ(bot_positions[0], player_states[0].bots[0].position);
-    ASSERT_EQ(bot_positions[1], player_states[1].enemy_bots[0].position);
-    ASSERT_EQ(bot_positions[0], player_states[1].bots[0].position);
-    ASSERT_EQ(bot_positions[1], player_states[0].enemy_bots[0].position);
-}
-
 TEST_F(CommandGiverTest, AlterActorProperties) {
     // Creating a temporary player state to modify
     array<player_state::State, 2> temp_player_states = player_states;
@@ -347,7 +340,7 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
     temp_player_states[0].bots[0].destination = DoubleVec2D(-10, -5);
     RunCommands(temp_player_states);
 
-    // // Trying to blast a bot in an invalid position
+    // Trying to blast a bot in an invalid position
     ManageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_BLAST_POSITION, _));
@@ -361,7 +354,7 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
     temp_player_states[0].bots[0].transform_destination = DoubleVec2D(-10, -5);
     RunCommands(temp_player_states);
 
-    // Trying to move into the location of a tower
+    // // Trying to build tower at invalid position
     ManageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_MOVE_POSITION, _));

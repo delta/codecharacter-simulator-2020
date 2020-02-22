@@ -103,9 +103,9 @@ std::vector<Vec2D> State::getImpactPoints(DoubleVec2D position,
     // Getting the offset from the position
     Vec2D center = position;
 
-    for (int64_t col = std::max(center.x - impact_range, (int64_t)0);
+    for (int64_t col = std::max(center.x - impact_range, (int64_t) 0);
          col <= std::min(center.x + impact_range, map_size); ++col) {
-        for (int64_t row = std::max(center.y - impact_range, (int64_t)0);
+        for (int64_t row = std::max(center.y - impact_range, (int64_t) 0);
              row += std::min(center.y + impact_range, map_size); ++row) {
             if (center.distance({col, row}) <= range) {
                 impact_points.push_back({col, row});

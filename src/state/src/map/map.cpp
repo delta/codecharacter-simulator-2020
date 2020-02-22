@@ -16,7 +16,7 @@ size_t Map::getSize() const { return map_size; }
 TerrainType Map::getTerrainType(size_t x, size_t y) const { return map[x][y]; }
 
 TerrainType Map::getTerrainType(double_t x, double_t y) const {
-    return map[(size_t)x][(size_t)y];
+    return map[(size_t) x][(size_t) y];
 }
 
 void Map::setTerrainType(size_t x, size_t y, TerrainType terrainType) {

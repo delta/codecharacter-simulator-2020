@@ -13,7 +13,8 @@ std::vector<double_t> PathGraph::generateIntersections(double_t a,
         std::swap(a, b);
 
     auto result = std::vector<double_t>();
-    result.reserve((std::size_t)std::floor(b) - (std::size_t)std::ceil(a) + 3);
+    result.reserve((std::size_t) std::floor(b) - (std::size_t) std::ceil(a) +
+                   3);
 
     if (std::ceil(a) != a) {
         result.insert(result.begin(), a);

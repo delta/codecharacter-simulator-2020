@@ -103,7 +103,7 @@ bool PathGraph::isStraightLineTraversable(DoubleVec2D start,
 
         for (int64_t x = std::floor(start.x); x < std::floor(destination.x);
              x++) {
-            if (destination.x == (double_t)x)
+            if (destination.x == (double_t) x)
                 break;
 
             if (isIntegralY) {
@@ -154,7 +154,7 @@ bool PathGraph::arePointsDirectlyReachable(DoubleVec2D point_a,
             // Check if position being traversed is valid
             // If y is next_y, ending at next_y so needn't check that
             // position
-            if (!isValidPosition(current_x, y) && (double_t)y != next_y) {
+            if (!isValidPosition(current_x, y) && (double_t) y != next_y) {
                 return false;
             }
         }

@@ -16,7 +16,7 @@ Logger::Logger(ICommandTaker *state, size_t player_instruction_limit_turn,
                size_t player_instruction_limit_game, size_t bot_max_hp,
                size_t tower_max_hp)
     : state(state), turn_count(0), instruction_counts(std::vector<size_t>(
-                                       (int)state::PlayerId::PLAYER_COUNT, 0)),
+                                       (int) state::PlayerId::PLAYER_COUNT, 0)),
       logs(std::unique_ptr<proto::Game>()),
       error_map(std::unordered_map<std::string, size_t>()),
       current_error_code(0), errors(std::array<std::vector<size_t>, 2>()),
