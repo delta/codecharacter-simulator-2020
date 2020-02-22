@@ -50,9 +50,9 @@ bool CommandGiver::isValidBotPosition(const Map &map,
     }
 
     size_t x = position.x, y = position.y;
-    if(x == map_size)
+    if (x == map_size)
         --x;
-    if(y == map_size)
+    if (y == map_size)
         --y;
 
     // If the bot can exist in any of the neighbouring blocks, it is a valid
@@ -61,7 +61,8 @@ bool CommandGiver::isValidBotPosition(const Map &map,
     return (type == TerrainType::FLAG || type == TerrainType::LAND);
 }
 
-bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position) const{
+bool CommandGiver::isValidTowerPosition(const Map &map,
+                                        DoubleVec2D position) const {
     int64_t x = std::floor(position.x), y = std::floor(position.y);
     size_t map_size = map.getSize();
     return (x < map_size && x >= 0 && y < map_size && y >= 0);

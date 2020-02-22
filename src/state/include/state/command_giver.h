@@ -71,7 +71,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      */
     bool isValidBotPosition(const Map &map, DoubleVec2D position) const;
 
-        /**
+    /**
      * Helper function to check if given tower position is within the map
      *
      * @param map Referece to the map
