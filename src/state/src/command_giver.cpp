@@ -326,7 +326,17 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                blastActor(player_id, player_tower.id, player_tower_position);
+                int64_t tower_age = state_tower->getAge();
+                if (tower_age >= Constants::Actor::TOWER_MIN_BLAST_AGE) {
+                    blastActor(player_id, player_tower.id,
+                               player_tower_position);
+                } else {
+                    logger->LogError(player_id,
+                                     logger::ErrorType::NO_EARLY_BLAST_TOWER,
+                                     "Cannot blast a tower before minimum "
+                                     "blast age is reached");
+                    continue;
+                }
             }
         }
     }

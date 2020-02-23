@@ -402,7 +402,7 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
 }
 
 // Additional actors are added into the player state and checks are done to
-// see if erros are triggered
+// see if errors are triggered
 TEST_F(CommandGiverTest, AddAndRemoveActors) {
     // Creating a temporary player state to modify
     array<player_state::State, 2> temp_player_states = player_states;
@@ -420,5 +420,21 @@ TEST_F(CommandGiverTest, AddAndRemoveActors) {
                                   ErrorType::NUMBER_OF_TOWERS_MISMATCH, _));
     temp_player_states[0].bots.push_back(extra_bot);
     temp_player_states[1].enemy_towers.push_back(extra_tower);
+    RunCommands(temp_player_states);
+}
+
+TEST_F(CommandGiverTest, EarlyBlastTower) {
+    // Creating a temporary player state to modify
+    array<player_state::State, 2> temp_player_states = player_states;
+
+    // Returning the map repeatedly
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
+
+    ManageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
+                                  ErrorType::NO_EARLY_BLAST_TOWER, _));
+
+    // Trying to make tower blast prematurely
+    temp_player_states[0].towers[0].blasting = true;
     RunCommands(temp_player_states);
 }
