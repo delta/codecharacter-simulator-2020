@@ -76,7 +76,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      * Helper function to get the player id
      */
     size_t getPlayerId(size_t id, bool is_enemy) const;
-     
+
     /**
      * @param position Position that needs to be flipped
      * @return DoubleVec2D Flipped position
