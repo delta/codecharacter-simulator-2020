@@ -326,7 +326,7 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                int64_t tower_age = state_tower->getAge();
+                uint64_t tower_age = state_tower->getAge();
                 if (tower_age >= Constants::Actor::TOWER_MIN_BLAST_AGE) {
                     blastActor(player_id, player_tower.id,
                                player_tower_position);
