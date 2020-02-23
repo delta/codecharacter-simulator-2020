@@ -120,20 +120,6 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     size_t getPlayerId(size_t id, bool is_enemy) const;
 
     /**
-     * @param position Position that needs to be flipped
-     * @return DoubleVec2D Flipped position
-     */
-    DoubleVec2D flipBotPosition(const Map *map, DoubleVec2D position);
-
-    /**
-     * Returns flipped tower position
-     *
-     * @param position Position that needs to be flipped
-     * @return Vec2D Flipped position
-     */
-    Vec2D flipTowerPosition(const Map *map, Vec2D position);
-
-    /**
      * Returns corresponding bot position given tower position
      *
      * @param position Tower position
