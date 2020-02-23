@@ -49,7 +49,7 @@ void StateSyncer::updatePlayerStates(
     auto map = state->getMap();
     std::array<std::array<player_state::MapElement, Constants::Map::MAP_SIZE>,
                Constants::Map::MAP_SIZE>
-        player_map;
+        player_map{};
 
     // Creating a map of player_state map type
     for (size_t i = 0; i < map->getSize(); ++i) {
@@ -79,7 +79,7 @@ void StateSyncer::updatePlayerStates(
         // Getting the enemy id
         int64_t enemy_id = getPlayerId(player_id, true);
 
-        // Assinging the attributes of the state bots and towers
+        // Assigning the attributes of the state bots and towers
         assignBots(player_id, player_states[player_id].bots, false);
         assignBots(enemy_id, player_states[player_id].enemy_bots, true);
         assignTowers(player_id, player_states[player_id].towers, false);
@@ -87,17 +87,21 @@ void StateSyncer::updatePlayerStates(
 
         // Adding the player state map
         // For player1, positions need not be flipped
+        size_t map_size = map->getSize();
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
-            for (int i = 0; i < map->getSize(); ++i) {
+            for (size_t i = 0; i < map_size; ++i) {
                 std::copy(player_map[i].begin(), player_map[i].end(),
                           player_states[player_id].map[i].begin());
             }
         } else {
-            size_t map_size = map->getSize();
-            for (int i = 0; i < map_size; ++i) {
-                for (int j = 0; j < map_size; ++j) {
+            for (size_t i = 0; i < map_size; ++i) {
+                for (size_t j = 0; j < map_size; ++j) {
+                    // Flipping the position and assigning the map on the basis
+                    // of the flipped position
+                    Vec2D position = Vec2D(i, j);
+                    Vec2D flipped_position = flipTowerPosition(*map, position);
                     player_states[player_id].map[i][j] =
-                        player_map[map_size - 1 - i][map_size - 1 - j];
+                        player_map[flipped_position.y][flipped_position.x];
                 }
             }
         }
@@ -107,35 +111,40 @@ void StateSyncer::updatePlayerStates(
     logger->LogState();
 }
 
-// TODO : Change these functions to use the path planner to flip positions
-DoubleVec2D StateSyncer::flipBotPosition(const Map *map, DoubleVec2D position) {
-    size_t map_size = map->getSize();
+DoubleVec2D StateSyncer::flipBotPosition(const Map &map, DoubleVec2D position) {
+    size_t map_size = map.getSize();
     return DoubleVec2D(map_size - position.x, map_size - position.y);
 }
 
-Vec2D StateSyncer::flipTowerPosition(const Map *map, Vec2D position) {
-    size_t map_size = map->getSize();
+Vec2D StateSyncer::flipTowerPosition(const Map &map, Vec2D position) {
+    size_t map_size = map.getSize();
     return Vec2D(map_size - 1 - position.x, map_size - 1 - position.y);
 }
 
-void StateSyncer::assignBots(size_t id,
-                             std::vector<player_state::Bot> player_bots,
+void StateSyncer::assignBots(int64_t id,
+                             std::vector<player_state::Bot> &player_bots,
                              bool is_enemy) {
     auto state_bots = state->getBots();
     auto map = state->getMap();
     size_t player_id = id;
     std::vector<player_state::Bot> new_bots;
+    size_t num_state_bots = state_bots[player_id].size(),
+           num_player_bots = player_bots.size();
 
-    for (int bot_index = 0; bot_index < state_bots[player_id].size();
+    for (size_t bot_index = 0; bot_index < state_bots[player_id].size();
          ++bot_index) {
-        // Creating a new bot with all attributes reset
+        // Creating a new bot with select properties of the player state bot if
+        // they exist
         player_state::Bot new_bot;
+        if (bot_index < num_player_bots) {
+            new_bot.copy(player_bots[bot_index]);
+        }
         auto state_bot = state_bots[player_id][bot_index];
 
         new_bot.hp = state_bot->getHp();
         new_bot.position = DoubleVec2D::null;
 
-        // Assinging the bot's state
+        // Assigning the bot's state
         switch (state_bot->getState()) {
         case BotStateName::IDLE:
             new_bot.state = player_state::BotState::IDLE;
@@ -167,8 +176,7 @@ void StateSyncer::assignBots(size_t id,
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             new_bot.position = state_bot->getPosition();
         } else {
-            new_bot.position =
-                flipBotPosition(state->getMap(), state_bot->getPosition());
+            new_bot.position = flipBotPosition(*map, state_bot->getPosition());
         }
 
         // Adding the new bot to the list of new bots
@@ -178,7 +186,7 @@ void StateSyncer::assignBots(size_t id,
     // Moving the new player soldiers into their player state
     player_bots.clear();
 
-    for (auto player_bot : new_bots) {
+    for (const auto &player_bot : new_bots) {
         player_bots.push_back(player_bot);
     }
 }
@@ -191,16 +199,25 @@ Vec2D StateSyncer::changeBotToTowerPosition(DoubleVec2D position) {
     return Vec2D(std::floor(position.x), std::floor(position.y));
 }
 
-void StateSyncer::assignTowers(size_t id,
-                               std::vector<player_state::Tower> player_towers,
+void StateSyncer::assignTowers(int64_t id,
+                               std::vector<player_state::Tower> &player_towers,
                                bool is_enemy) {
     auto state_towers = state->getTowers();
     size_t player_id = id;
     std::vector<player_state::Tower> new_towers;
+    size_t num_state_towers = state_towers[id].size(),
+           num_player_towers = player_towers.size();
+    auto map = state->getMap();
 
-    for (int tower_index = 0; tower_index < state_towers[id].size();
+    for (size_t tower_index = 0; tower_index < num_state_towers;
          ++tower_index) {
         player_state::Tower new_tower;
+        // Copying select properties of the player state tower into the new
+        // player state tower
+        if (tower_index < num_player_towers) {
+            new_tower.copy(player_towers[tower_index]);
+        }
+
         auto state_tower = state_towers[id][tower_index];
         new_tower.id = state_tower->getActorId();
 
@@ -225,7 +242,7 @@ void StateSyncer::assignTowers(size_t id,
             Vec2D tower_position =
                 changeBotToTowerPosition(state_tower->getPosition());
             Vec2D flipped_tower_position =
-                flipTowerPosition(state->getMap(), tower_position);
+                flipTowerPosition(*map, tower_position);
             new_tower.position =
                 changeTowerToBotPosition(flipped_tower_position);
         }
@@ -235,7 +252,7 @@ void StateSyncer::assignTowers(size_t id,
 
     player_towers.clear();
 
-    for (auto player_tower : new_towers) {
+    for (const auto &player_tower : new_towers) {
         player_towers.push_back(player_tower);
     }
 }

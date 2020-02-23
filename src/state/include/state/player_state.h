@@ -155,6 +155,14 @@ struct Bot : _Unit, _Blaster {
         }
     }
 
+    void copy(const Bot &reference_bot) {
+        this->destination = reference_bot.destination;
+        this->transform_destination = reference_bot.transform_destination;
+        this->final_destination = reference_bot.final_destination;
+        this->transforming = reference_bot.transforming;
+        this->blasting = reference_bot.blasting;
+    }
+
     Bot()
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
@@ -176,6 +184,10 @@ struct Tower : _Actor, _Blaster {
     TowerState state;
 
     void blast_tower() { blast(); }
+
+    void copy(const Tower &reference_tower) {
+        this->blasting = reference_tower.blasting;
+    }
 
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
