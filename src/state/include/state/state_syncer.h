@@ -32,12 +32,22 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
 
     /**
      * Flips a given bots position
+     * (Internally calls flip tower position)
      *
      * @param map Reference to the map
      * @param position Position to be flipped
      * @return DoubleVec2D Flipped position
      */
     static DoubleVec2D flipBotPosition(const Map &map, DoubleVec2D position);
+
+    /**
+     * Flips an offset position
+     *
+     * @param map Reference to the map
+     * @param position Offset to be flipped
+     * @return Vec2D Flipped offset
+     */
+    static Vec2D flipOffset(const Map &map, Vec2D position);
 
     /**
      * Flips a given tower position

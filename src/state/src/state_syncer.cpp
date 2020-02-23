@@ -41,6 +41,10 @@ std::array<int64_t, 2> StateSyncer::getScores(bool game_over) {
     return state->getScores(game_over);
 }
 
+Vec2D StateSyncer::flipOffset(const Map &map, Vec2D position) {
+    return flipTowerPosition(map, position);
+}
+
 void StateSyncer::updatePlayerStates(
     std::array<player_state::State, 2> &player_states) {
     // Getting all the state information
@@ -99,7 +103,7 @@ void StateSyncer::updatePlayerStates(
                     // Flipping the position and assigning the map on the basis
                     // of the flipped position
                     Vec2D position = Vec2D(i, j);
-                    Vec2D flipped_position = flipTowerPosition(*map, position);
+                    Vec2D flipped_position = flipOffset(*map, position);
                     player_states[player_id].map[i][j] =
                         player_map[flipped_position.y][flipped_position.x];
                 }
