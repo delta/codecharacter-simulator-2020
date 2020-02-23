@@ -28,7 +28,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, BotState bot_state) {
+inline std::ostream &operator<<(std::ostream &os, BotState bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -59,7 +59,7 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
+inline std::ostream &operator<<(std::ostream &os, TowerState tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -99,6 +99,7 @@ struct _Unit : _Actor {
     size_t speed;
 
     virtual void reset() { destination = DoubleVec2D::null; }
+
     void move(DoubleVec2D p_destination) {
         reset();
         destination = p_destination;
@@ -159,6 +160,8 @@ struct Bot : _Unit, _Blaster {
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
           transform_destination(DoubleVec2D::null), transforming(false){};
+
+    virtual ~Bot() {}
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
@@ -168,7 +171,6 @@ inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
     os << "   position: " << bot.position << endl;
     os << "   state: " << bot.state << endl;
     os << "}" << endl;
-
     return os;
 }
 
@@ -180,14 +182,13 @@ struct Tower : _Actor, _Blaster {
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
-std::ostream &operator<<(std::ostream &os, Tower tower) {
+inline std::ostream &operator<<(std::ostream &os, Tower tower) {
     using std::endl;
     os << "Tower(id: " << tower.id << ") {" << endl;
     os << "   hp: " << tower.hp << endl;
     os << "   position: " << tower.position << endl;
     os << "   state: " << tower.state << endl;
     os << "}" << endl;
-
     return os;
 }
 

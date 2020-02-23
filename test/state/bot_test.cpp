@@ -10,8 +10,6 @@ using namespace testing;
 
 const size_t MAP_SIZE = 5;
 const auto L = state::TerrainType::LAND;
-const auto W = state::TerrainType::WATER;
-const auto F = state::TerrainType::FLAG;
 
 const size_t BOT_HP = 150;
 const size_t BOT_BLAST_RANGE = 5;

@@ -371,7 +371,7 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // Exceed tower limit
-    for (int tower_count = 0;
+    for (size_t tower_count = 0;
          tower_count < Constants::Actor::MAX_NUM_TOWERS - 1; ++tower_count) {
         size_t actor_id = Actor::getNextActorId();
         auto state_tower =

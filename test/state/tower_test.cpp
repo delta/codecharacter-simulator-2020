@@ -10,9 +10,13 @@ using namespace testing;
 
 namespace test {
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // Mock function for blasting enemy actors
 void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D pos,
                    size_t blast_range) {}
+
+#pragma GCC diagnostic pop
 class TowerTest : public Test {
   protected:
     unique_ptr<Tower> tower;
