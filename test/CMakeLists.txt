@@ -13,7 +13,10 @@ set(SOURCE_FILES
     state/command_giver_test.cpp
     state/score_manager_test.cpp
     state/state_syncer_test.cpp
-    logger/logger_test.cpp)
+    logger/logger_test.cpp
+    llvm_pass/llvm_pass_test.cpp
+    drivers/timer_test.cpp
+    drivers/main_driver_test.cpp)
 
 if(NOT BUILD_PROJECT STREQUAL "all")
   include(${CMAKE_INSTALL_PREFIX}/lib/physics_config.cmake)
@@ -25,6 +28,20 @@ endif()
 include_directories(.)
 
 add_executable(tests ${SOURCE_FILES})
+add_executable(main_driver_test_player drivers/main_driver_test_player.cpp)
+
+target_link_libraries(
+  tests
+  physics
+  constants
+  state
+  drivers
+  logger
+  player_wrapper
+  gtest
+  gmock)
+target_link_libraries(tests player_code_test_0 player_code_test_1
+                      player_code_test_2)
 
 target_link_libraries(
   tests
@@ -35,5 +52,6 @@ target_link_libraries(
   player_wrapper
   gtest
   gmock)
+target_link_libraries(main_driver_test_player drivers)
 
-install(TARGETS tests DESTINATION bin)
+install(TARGETS tests main_driver_test_player DESTINATION bin)

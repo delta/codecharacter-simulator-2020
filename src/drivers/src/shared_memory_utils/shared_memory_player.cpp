@@ -10,7 +10,7 @@ namespace drivers {
 
 using namespace boost::interprocess;
 
-SharedMemoryPlayer::SharedMemoryPlayer(std::string shared_memory_name)
+SharedMemoryPlayer::SharedMemoryPlayer(const std::string &shared_memory_name)
     : shared_memory(open_only, shared_memory_name.c_str()) {}
 
 SharedBuffer *SharedMemoryPlayer::getBuffer() {

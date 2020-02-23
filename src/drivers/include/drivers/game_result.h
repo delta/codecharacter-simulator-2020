@@ -22,6 +22,11 @@ namespace drivers {
 struct DRIVERS_EXPORT GameResult {
     enum class Winner {
         /**
+         * Undefined
+         */
+        NONE,
+
+        /**
          * Player 1 wins
          */
         PLAYER1,
@@ -34,15 +39,15 @@ struct DRIVERS_EXPORT GameResult {
         /**
          * The game is a draw
          */
-        TIE,
-
-        /**
-         * Undefined
-         */
-        NONE
+        TIE
     };
 
     enum class WinType {
+        /**
+         * Undefined
+         */
+        NONE,
+
         /**
          * A player wins by having a higher score than the opponent
          */
@@ -62,12 +67,7 @@ struct DRIVERS_EXPORT GameResult {
         /**
          * One of the players timed out
          */
-        TIMEOUT,
-
-        /**
-         * Undefined
-         */
-        NONE
+        TIMEOUT
     };
 
     /**

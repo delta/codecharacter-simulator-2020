@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15.0)
 project(simulator)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wc++2a-extensions")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pthread -Wc++2a-extensions")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 

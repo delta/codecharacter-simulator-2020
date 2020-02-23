@@ -245,11 +245,10 @@ struct State {
           enemy_bots(Constants::Actor::MAX_NUM_BOTS),
           num_bots(Constants::Actor::MAX_NUM_BOTS),
           num_enemy_bots(Constants::Actor::MAX_NUM_BOTS),
-          towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
-          enemy_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
-          num_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
-          num_enemy_towers(Constants::Map::MAP_SIZE * Constants::Map::MAP_SIZE),
-          score(0) {}
+          towers(Constants::Actor::MAX_NUM_TOWERS),
+          enemy_towers(Constants::Actor::MAX_NUM_TOWERS),
+          num_towers(Constants::Actor::MAX_NUM_TOWERS),
+          num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), score(0) {}
 };
 
 inline ostream &operator<<(ostream &os, const State &state) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "state/interfaces/i_command_giver.h"
-#include "state/player_state.h"
 #include "gmock/gmock.h"
 
 using namespace testing;

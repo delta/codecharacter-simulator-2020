@@ -1,3 +1,4 @@
+#include "iostream"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LegacyPassManager.h"
@@ -72,5 +73,5 @@ static void registerDynamicInstructionCountPass(const PassManagerBuilder &,
 }
 
 static RegisterStandardPasses
-    RegisterPass(PassManagerBuilder::EP_EarlyAsPossible,
-                 registerDynamicInstructionCountPass);
+    RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,
+                   registerDynamicInstructionCountPass);

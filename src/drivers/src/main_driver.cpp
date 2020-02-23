@@ -74,8 +74,8 @@ GameResult MainDriver::start() {
 
     // Convert current player states to transfer states
     for (int i = 0; i < 2; ++i) {
-        *(this->transfer_states[i]) =
-            transfer_state::ConvertToTransferState(this->player_states[i]);
+        *(transfer_states[i]) =
+            transfer_state::ConvertToTransferState(player_states[i]);
     }
 
     // Start a timer. Game is invalid if it does not complete within the timer
@@ -141,6 +141,8 @@ state::PlayerId getPlayerIdFromWinner(GameResult::Winner winner) {
     case GameResult::Winner::NONE:
         break;
     }
+
+    return state::PlayerId::PLAYER_NULL;
 }
 
 GameResult MainDriver::run() {
@@ -177,9 +179,11 @@ GameResult MainDriver::run() {
 
             // If the game timed out
             if (this->is_game_timed_out) {
-
                 // THIS IS AN UGLY HACK! PLEASE CHANGE THIS. TODO.
-                kill(process_pids[cur_player_id], SIGTERM);
+                // Check if process pid is set
+                if (process_pids[cur_player_id] != 0) {
+                    kill(process_pids[cur_player_id], SIGTERM);
+                }
                 return GameResult{GameResult::Winner::NONE,
                                   GameResult::WinType::TIMEOUT, player_results};
             }
@@ -226,9 +230,10 @@ GameResult MainDriver::run() {
 
         // Convert current transfer states into player states
         for (int player_id = 0; player_id < 2; ++player_id) {
-            player_states[i] = transfer_state::ConvertToPlayerState(
+            player_states[player_id] = transfer_state::ConvertToPlayerState(
                 *(this->transfer_states[player_id]));
         }
+
         this->state_syncer->updateMainState(this->player_states,
                                             skip_player_turn);
 
