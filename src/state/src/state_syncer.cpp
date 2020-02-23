@@ -137,7 +137,7 @@ void StateSyncer::assignBots(int64_t id,
         // they exist
         player_state::Bot new_bot;
         if (bot_index < num_player_bots) {
-            new_bot.copy(player_bots[bot_index]);
+            new_bot = player_bots[bot_index];
         }
         auto state_bot = state_bots[player_id][bot_index];
 
@@ -215,7 +215,7 @@ void StateSyncer::assignTowers(int64_t id,
         // Copying select properties of the player state tower into the new
         // player state tower
         if (tower_index < num_player_towers) {
-            new_tower.copy(player_towers[tower_index]);
+            new_tower = player_towers[tower_index];
         }
 
         auto state_tower = state_towers[id][tower_index];

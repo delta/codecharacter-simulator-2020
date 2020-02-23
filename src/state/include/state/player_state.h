@@ -155,12 +155,17 @@ struct Bot : _Unit, _Blaster {
         }
     }
 
-    void copy(const Bot &reference_bot) {
+    Bot(const Bot &reference_bot) {
         this->destination = reference_bot.destination;
         this->transform_destination = reference_bot.transform_destination;
         this->final_destination = reference_bot.final_destination;
         this->transforming = reference_bot.transforming;
         this->blasting = reference_bot.blasting;
+        this->position = reference_bot.position;
+        this->hp = reference_bot.hp;
+        this->id = reference_bot.id;
+        this->impact_radius = reference_bot.impact_radius;
+        this->state = reference_bot.state;
     }
 
     Bot()
@@ -185,7 +190,11 @@ struct Tower : _Actor, _Blaster {
 
     void blast_tower() { blast(); }
 
-    void copy(const Tower &reference_tower) {
+    Tower(const Tower &reference_tower) {
+        this->id = reference_tower.id;
+        this->hp = reference_tower.hp;
+        this->position = reference_tower.position;
+        this->state = reference_tower.state;
         this->blasting = reference_tower.blasting;
     }
 
