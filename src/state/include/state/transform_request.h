@@ -3,6 +3,7 @@
  * Declares a struct which represents all the transform requests in one turn
  */
 
+#pragma once
 #include "state/utilities.h"
 
 namespace state {

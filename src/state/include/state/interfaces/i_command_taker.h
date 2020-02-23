@@ -10,7 +10,6 @@
 #include "state/actor/tower.h"
 #include "state/interfaces/i_updatable.h"
 #include "state/map/map.h"
-#include "state/state_export.h"
 #include "state/utilities.h"
 
 #include <memory>
@@ -22,7 +21,7 @@ namespace state {
  */
 class STATE_EXPORT ICommandTaker : public IUpdatable {
   public:
-    virtual ~ICommandTaker() {}
+    virtual ~ICommandTaker(){};
 
     /**
      * Handles bot movement
@@ -72,7 +71,7 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
      *
      * @return scores
      */
-    virtual const std::array<size_t, 2> getScores(bool game_over) const = 0;
+    virtual const std::array<int64_t, 2> getScores(bool game_over) const = 0;
 
     /**
      * Check if the game is over

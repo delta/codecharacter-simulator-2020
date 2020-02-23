@@ -7,13 +7,13 @@
 
 #include "constants/constants.h"
 #include "physics/vector.hpp"
-#include "state/interfaces/i_updatable.h"
 #include "state/utilities.h"
 
 #include <array>
 
 namespace player_state {
-using TerrainType = state::TerrainType;
+
+enum class TerrainType { LAND, WATER, TOWER, FLAG };
 
 enum class BotState : int8_t {
     // Bot is doing  nothing
@@ -156,6 +156,19 @@ struct Bot : _Unit, _Blaster {
         }
     }
 
+    Bot(const Bot &reference_bot) {
+        this->destination = reference_bot.destination;
+        this->transform_destination = reference_bot.transform_destination;
+        this->final_destination = reference_bot.final_destination;
+        this->transforming = reference_bot.transforming;
+        this->blasting = reference_bot.blasting;
+        this->position = reference_bot.position;
+        this->hp = reference_bot.hp;
+        this->id = reference_bot.id;
+        this->impact_radius = reference_bot.impact_radius;
+        this->state = reference_bot.state;
+    }
+
     Bot()
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
@@ -178,6 +191,14 @@ struct Tower : _Actor, _Blaster {
     TowerState state;
 
     void blast_tower() { blast(); }
+
+    Tower(const Tower &reference_tower) {
+        this->id = reference_tower.id;
+        this->hp = reference_tower.hp;
+        this->position = reference_tower.position;
+        this->state = reference_tower.state;
+        this->blasting = reference_tower.blasting;
+    }
 
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };

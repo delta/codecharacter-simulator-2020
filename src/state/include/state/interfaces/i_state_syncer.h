@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "state/interfaces/i_command_giver.h"
-#include "state/interfaces/i_command_taker.h"
 #include "state/player_state.h"
 #include "state/utilities.h"
 

@@ -6,6 +6,8 @@
 #pragma once
 
 #include "logger/interfaces/i_logger.h"
+#include "state/interfaces/i_command_giver.h"
+#include "state/interfaces/i_command_taker.h"
 #include "state/interfaces/i_state_syncer.h"
 #include <memory>
 
@@ -27,6 +29,34 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      * Instance of logger to log every turn and to log errors
      */
     std::unique_ptr<logger::ILogger> logger;
+
+    /**
+     * Flips a given bots position
+     * (Internally calls flip tower position)
+     *
+     * @param map Reference to the map
+     * @param position Position to be flipped
+     * @return DoubleVec2D Flipped position
+     */
+    static DoubleVec2D flipBotPosition(const Map &map, DoubleVec2D position);
+
+    /**
+     * Flips an offset position
+     *
+     * @param map Reference to the map
+     * @param position Offset to be flipped
+     * @return Vec2D Flipped offset
+     */
+    static Vec2D flipOffset(const Map &map, Vec2D position);
+
+    /**
+     * Flips a given tower position
+     *
+     * @param map Reference to the map
+     * @param position Position to be flipped
+     * @return Vec2D Flipped tower position
+     */
+    static Vec2D flipTowerPosition(const Map &map, Vec2D position);
 
   public:
     StateSyncer();
@@ -54,25 +84,56 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * @see IStateSyncer #GetScores
      */
-    std::array<int64_t, 2> GetScores(bool game_over);
+    std::array<int64_t, 2> getScores(bool game_over) override;
 
     /**
-     *  Function to the assign player state bots their new states after
+     * Function to the assign player state bots their new states after
      * validation of user's actions
+     *
+     * @param player_id Player id in state
+     * @param player_bots Given player's player state bots
+     * @param is_enemy Whether the bots are enemy bots or that player's bots
      */
-    void AssignBots(std::vector<player_state::Bot> player_bots, bool is_enemy);
+    void assignBots(int64_t player_id,
+                    std::vector<player_state::Bot> &player_bots, bool is_enemy);
 
     /**
      *  Function to the assign player state towers their new states after
      * validation of user's actions
+     *
+     * @param player_id Player id in state
+     * @param player_towers Given player's player state towers
+     * @param is_enemy Whether the towers are enemy towers or that player's
+     * towers
      */
-    void AssignTowers(std::vector<player_state::Tower> player_towers,
+    void assignTowers(int64_t player_id,
+                      std::vector<player_state::Tower> &player_towers,
                       bool is_enemy);
 
     /**
      * Helper function to get the player id
+     *
+     * @param player_id Id struct
+     * @param is_enemy Whether this is the id of the enemy
+     * @return int64_t Player id
      */
-    int64_t GetPlayerId(int id, bool is_enemy);
+    size_t getPlayerId(size_t id, bool is_enemy) const;
+
+    /**
+     * Returns corresponding bot position given tower position
+     *
+     * @param position Tower position
+     * @return DoubleVec2D Bot position
+     */
+    DoubleVec2D changeTowerToBotPosition(Vec2D position);
+
+    /**
+     * Returns corresponding bot position given the tower position
+     *
+     * @param position Bot position
+     * @return Vec2D Tower position
+     */
+    Vec2D changeBotToTowerPosition(DoubleVec2D position);
 };
 
 } // namespace state
