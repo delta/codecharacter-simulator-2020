@@ -13,7 +13,7 @@ class StateMock : public ICommandTaker {
                                     DoubleVec2D position));
     MOCK_METHOD3(blastActor, void(PlayerId player_id, ActorId bot_id,
                                   DoubleVec2D position));
-    MOCK_CONST_METHOD1(getScores, const array<size_t, 2>(bool is_game_over));
+    MOCK_CONST_METHOD1(getScores, const array<int64_t, 2>(bool is_game_over));
     MOCK_METHOD1(isGameOver, bool(PlayerId &winner));
     MOCK_METHOD0(getBots, const array<vector<state::Bot *>, 2>());
     MOCK_METHOD0(getTowers, const array<vector<state::Tower *>, 2>());

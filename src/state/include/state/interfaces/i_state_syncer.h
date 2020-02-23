@@ -52,7 +52,7 @@ class STATE_EXPORT IStateSyncer {
      *
      * @param game_over Signal that the game is over
      */
-    virtual std::array<size_t, 2> getScores(bool game_over) = 0;
+    virtual std::array<int64_t, 2> getScores(bool game_over) = 0;
 };
 
 } // namespace state

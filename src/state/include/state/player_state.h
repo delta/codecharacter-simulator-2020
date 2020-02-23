@@ -232,7 +232,6 @@ struct State {
 };
 
 inline std::ostream &operator<<(std::ostream &os, const State &state) {
-std::ostream &operator<<(std::ostream &os, const State &state) {
     using std::endl;
 
     os << "Map:" << endl;
