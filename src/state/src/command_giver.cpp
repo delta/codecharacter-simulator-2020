@@ -63,7 +63,7 @@ bool CommandGiver::isValidBotPosition(const Map &map,
 
 bool CommandGiver::isValidTowerPosition(const Map &map,
                                         DoubleVec2D position) const {
-    int64_t x = std::floor(position.x), y = std::floor(position.y);
+    size_t x = std::floor(position.x), y = std::floor(position.y);
     size_t map_size = map.getSize();
     return (x < map_size && x >= 0 && y < map_size && y >= 0);
 }
@@ -168,7 +168,8 @@ void CommandGiver::runCommands(
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's id");
                 continue;
-            } else if (player_bot.hp != state_bot->getHp()) {
+            } else if (player_bot.hp !=
+                       static_cast<int64_t>(state_bot->getHp())) {
                 logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's hp");
@@ -307,7 +308,8 @@ void CommandGiver::runCommands(
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's position");
                 continue;
-            } else if (player_tower.hp != state_tower->getHp()) {
+            } else if (player_tower.hp !=
+                       static_cast<int64_t>(state_tower->getHp())) {
                 logger->LogError(player_id,
                                  logger::ErrorType::NO_ALTER_TOWER_PROPERTY,
                                  "Cannot alter the tower's hp");
