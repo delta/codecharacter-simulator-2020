@@ -168,6 +168,8 @@ inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
     os << "   position: " << bot.position << endl;
     os << "   state: " << bot.state << endl;
     os << "}" << endl;
+
+    return os;
 }
 
 struct Tower : _Actor, _Blaster {
@@ -185,6 +187,8 @@ std::ostream &operator<<(std::ostream &os, Tower tower) {
     os << "   position: " << tower.position << endl;
     os << "   state: " << tower.state << endl;
     os << "}" << endl;
+
+    return os;
 }
 
 struct MapElement {
