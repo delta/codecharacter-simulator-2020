@@ -22,6 +22,6 @@ std::unique_ptr<IActorState> BotTransformState::update() const {
     return nullptr;
 }
 
-void BotTransformState::exit() { bot->setTransforming(false); }
+void BotTransformState::exit() {}
 
 } // namespace state

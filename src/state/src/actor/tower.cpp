@@ -57,11 +57,6 @@ void Tower::lateUpdate() {
     // Resetting the damage incurred
     setDamageIncurred(0);
 
-    if (isBlasting()) {
-        setBlasting(false);
-        setHp(0);
-    }
-
     // Allow Tower to transition to dead state
     if (getHp() == 0 && state->getName() != TowerStateName::DEAD) {
         auto new_state = state->update();

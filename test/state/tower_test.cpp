@@ -87,6 +87,7 @@ TEST_F(TowerTest, BlastTest) {
 
     // Checking if the tower's damage incurred is reset to 0
     ASSERT_EQ(tower->getDamageIncurred(), 0);
+    ASSERT_EQ(tower->isBlasting(), true);
 }
 
 // Tower is attacked by neighbour, hence, his damage incurred is set
@@ -101,6 +102,7 @@ TEST_F(TowerTest, AttackTest) {
     // After late update, the tower transitions into the dead state
     tower->lateUpdate();
     ASSERT_EQ(tower->getState(), TowerStateName::DEAD);
+    ASSERT_EQ(tower->isBlasting(), false);
 }
 
 TEST_F(TowerTest, DeathTest) {
