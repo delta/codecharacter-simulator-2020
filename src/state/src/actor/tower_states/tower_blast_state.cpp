@@ -19,7 +19,6 @@ void TowerBlastState::enter() {
     tower->damageEnemyActors(tower->getPlayerId(), tower->getActorId(),
                              tower->getPosition());
     tower->damage(tower->getHp());
-    tower->setBlasting(false);
 }
 
 void TowerBlastState::exit() {}

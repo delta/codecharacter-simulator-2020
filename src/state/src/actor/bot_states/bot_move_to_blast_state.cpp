@@ -43,8 +43,10 @@ std::unique_ptr<IActorState> BotMoveToBlastState::update() const {
     }
 
     // bot ready to blast
-    if (bot->getPosition() == bot->getFinalDestination())
+    if (bot->getPosition() == bot->getFinalDestination()) {
+        bot->setBlasting(true);
         return make_unique<BotBlastState>(bot);
+    }
 
     // bot is still moving
     auto path_planner = bot->getPathPlanner();

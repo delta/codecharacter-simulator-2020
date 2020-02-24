@@ -270,6 +270,8 @@ TEST_F(BotTest, DeathTest) {
 
     bot->update();
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bot->isTransforming(), false);
+    ASSERT_EQ(bot->isBlasting(), false);
 }
 
 TEST_F(BotTest, TransformTest) {
@@ -293,7 +295,6 @@ TEST_F(BotTest, TransformTest) {
     // bot remains in Transform state
     ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
     ASSERT_NE(bot->getHp(), 0);
-    ASSERT_EQ(bot->isTransforming(), true);
     ASSERT_EQ(bot->isTransforming(), true);
 }
 

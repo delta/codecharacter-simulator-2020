@@ -16,7 +16,6 @@ void BotBlastState::enter() {
     bot->damageEnemyActors(bot->getPlayerId(), bot->getActorId(),
                            bot->getPosition());
     bot->damage(bot->getHp());
-    bot->setBlasting(true);
 }
 
 std::unique_ptr<IActorState> BotBlastState::update() const {

@@ -128,7 +128,7 @@ void Bot::update() {
 
     // until no state transitions occur, in a single frame
     while (new_state != nullptr) {
-        // state transition occured
+        // state transition occurred
         state->exit();
         /*
             Here, state.reset destroys the state it is currently managing and
