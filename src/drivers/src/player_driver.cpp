@@ -33,7 +33,8 @@ void PlayerDriver::incrementCount(uint64_t count) {
 uint64_t PlayerDriver::getCount() { return instruction_count; }
 
 void PlayerDriver::writeCountToShm() {
-    this->shared_buffer->instruction_counter = instruction_count.load();
+    this->shared_buffer->turn_instruction_counter = instruction_count.load();
+    this->shared_buffer->game_instruction_counter += instruction_count.load();
 }
 
 void PlayerDriver::start() {

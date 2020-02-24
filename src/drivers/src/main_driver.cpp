@@ -66,7 +66,7 @@ GameResult MainDriver::start() {
     // Initialize contents of shared memory
     for (auto buffer : shared_buffers) {
         buffer->is_player_running = false;
-        buffer->instruction_counter = 0;
+        buffer->turn_instruction_counter = 0;
     }
 
     // Initialize player states with contents of main state
@@ -186,12 +186,12 @@ GameResult MainDriver::run() {
 
             // Check for instruction counter to see if player has
             // exceeded some limit
-            if (current_player_buffer->instruction_counter >
+            if (current_player_buffer->game_instruction_counter >
                 this->player_instruction_limit_game) {
                 player_results[cur_player_id].status =
                     PlayerResult::Status::EXCEEDED_INSTRUCTION_LIMIT;
                 instruction_count_exceeded = true;
-            } else if (current_player_buffer->instruction_counter >
+            } else if (current_player_buffer->turn_instruction_counter >
                        this->player_instruction_limit_turn) {
                 skip_player_turn[cur_player_id] = true;
             }
@@ -199,7 +199,7 @@ GameResult MainDriver::run() {
             // Write the turn's instruction counts
             logger->LogInstructionCount(
                 static_cast<state::PlayerId>(cur_player_id),
-                current_player_buffer->instruction_counter);
+                current_player_buffer->turn_instruction_counter);
         }
 
         // If the game instruction count has been exceeded by some

@@ -10,16 +10,17 @@ namespace drivers {
 
 using namespace boost::interprocess;
 
-SharedMemoryMain::SharedMemoryMain(std::string shared_memory_name,
+SharedMemoryMain::SharedMemoryMain(const std::string &shared_memory_name,
                                    bool is_player_running,
-                                   int64_t instruction_counter,
+                                   int64_t instruction_count,
                                    const transfer_state::State &transfer_state)
     : shared_memory_name(shared_memory_name),
       // Creating shared memory
       shared_memory(create_only, shared_memory_name.c_str(), 65536) {
     // Constructing unique instance of SharedBuffer in shared memory
     this->shared_memory.construct<SharedBuffer>(unique_instance)(
-        is_player_running, instruction_counter, transfer_state);
+        is_player_running, instruction_count, instruction_count,
+        transfer_state);
 }
 
 SharedBuffer *SharedMemoryMain::getBuffer() {
