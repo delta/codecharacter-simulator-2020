@@ -1,7 +1,7 @@
-#include "state/path_planner/path_planner.h"
-#include "state/mocks/command_giver_mock.h"
 #include "logger/mocks/logger_mock.h"
+#include "state/mocks/command_giver_mock.h"
 #include "state/mocks/state_mock.h"
+#include "state/path_planner/path_planner.h"
 #include "state/state_syncer.h"
 #include "gtest/gtest.h"
 
@@ -34,9 +34,7 @@ class StateSyncerTest : public Test {
         EXPECT_CALL(*this->state, getTowers)
             .Times(5)
             .WillRepeatedly(Return(towers));
-        EXPECT_CALL(*this->state, getMap)
-            .Times(9)
-            .WillRepeatedly(Return(map));
+        EXPECT_CALL(*this->state, getMap).Times(9).WillRepeatedly(Return(map));
         EXPECT_CALL(*this->logger, LogState);
     }
 
@@ -139,9 +137,9 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     // Adding new bots to player state to check if they are added to the player
     // state
     auto new_bots2 = state_bots;
-    auto bot2 = new state::Bot(
-            4, PlayerId::PLAYER1, 100, 100, DoubleVec2D(3, 3), 1, 1, 1,
-            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+    auto bot2 = new state::Bot(4, PlayerId::PLAYER1, 100, 100,
+                               DoubleVec2D(3, 3), 1, 1, 1, path_planner.get(),
+                               BlastCallback{}, ConstructTowerCallback{});
     new_bots2[0].push_back(bot2);
 
     // Expecting command taker calls
@@ -174,8 +172,9 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
 
     // Adding a new tower
     auto new_towers2 = state_towers;
-    auto state_tower2 = new state::Tower(5, PlayerId::PLAYER2, 100, 100, DoubleVec2D(4, 3),
-                             2, 2, BlastCallback{});
+    auto state_tower2 =
+        new state::Tower(5, PlayerId::PLAYER2, 100, 100, DoubleVec2D(4, 3), 2,
+                         2, BlastCallback{});
     new_towers2[1].push_back(state_tower2);
 
     // Checking for bots and tower's new states

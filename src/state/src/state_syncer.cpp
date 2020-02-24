@@ -142,8 +142,7 @@ void StateSyncer::assignBots(int64_t id,
     size_t num_state_bots = state_bots[id].size(),
            num_player_bots = player_bots.size();
 
-    for (size_t bot_index = 0; bot_index < num_state_bots;
-         ++bot_index) {
+    for (size_t bot_index = 0; bot_index < num_state_bots; ++bot_index) {
         // Creating a new bot with select properties of the player state bot if
         // they exist
         player_state::Bot new_bot;
@@ -217,7 +216,7 @@ void StateSyncer::assignTowers(int64_t id,
     std::vector<player_state::Tower> new_towers;
     size_t num_state_towers = state_towers[id].size(),
            num_player_towers = player_towers.size();
-    
+
     for (size_t tower_index = 0; tower_index < num_state_towers;
          ++tower_index) {
         player_state::Tower new_tower;
