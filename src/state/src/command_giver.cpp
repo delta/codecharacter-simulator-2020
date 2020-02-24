@@ -231,7 +231,7 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                if (isSpawnPosition(*map, player_bot_position)) {
+                if (isSpawnOffset(*map, player_bot_position)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
@@ -277,7 +277,7 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                if (isSpawnPosition(*map, transform_destination)) {
+                if (isSpawnOffset(*map, transform_destination)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
