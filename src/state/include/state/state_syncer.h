@@ -74,7 +74,8 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * @see IStateSyncer #UpdatePlayerStates
      */
-    void updatePlayerStates(std::array<player_state::State, 2> &player_states) override;
+    void updatePlayerStates(
+        std::array<player_state::State, 2> &player_states) override;
 
     /**
      * @see IStateSyncer #IsGameOver

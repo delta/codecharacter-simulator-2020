@@ -10,7 +10,7 @@ StateSyncer::StateSyncer() {}
 StateSyncer::StateSyncer(std::unique_ptr<ICommandTaker> state,
                          std::unique_ptr<ICommandGiver> command_giver,
                          std::unique_ptr<logger::ILogger> logger)
-    : command_giver(std::move(command_giver)), state(std::move(state)), 
+    : command_giver(std::move(command_giver)), state(std::move(state)),
       logger(std::move(logger)) {}
 
 void StateSyncer::updateMainState(
@@ -135,8 +135,7 @@ void StateSyncer::assignBots(int64_t id,
     size_t num_state_bots = state_bots[player_id].size(),
            num_player_bots = player_bots.size();
 
-    for (size_t bot_index = 0; bot_index < num_state_bots;
-         ++bot_index) {
+    for (size_t bot_index = 0; bot_index < num_state_bots; ++bot_index) {
         // Creating a new bot with select properties of the player state bot if
         // they exist
         player_state::Bot new_bot;

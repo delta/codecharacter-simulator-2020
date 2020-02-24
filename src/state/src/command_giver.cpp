@@ -34,13 +34,12 @@ DoubleVec2D CommandGiver::flipBotPosition(const Map &map,
     return {map_size - position.x, map_size - position.y};
 }
 
-Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) const {
+Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) {
     size_t map_size = map.getSize();
     return {(long) map_size - 1 - position.x, (long) map_size - 1 - position.y};
 }
 
-bool CommandGiver::isValidBotPosition(const Map &map,
-                                      DoubleVec2D position) const {
+bool CommandGiver::isValidBotPosition(const Map &map, DoubleVec2D position) {
     double_t map_size = map.getSize();
     bool within_map = (position.x >= 0 && position.x <= map_size &&
                        position.y >= 0 && position.y <= map_size);
@@ -61,15 +60,14 @@ bool CommandGiver::isValidBotPosition(const Map &map,
     return (type == TerrainType::FLAG || type == TerrainType::LAND);
 }
 
-bool CommandGiver::isValidTowerPosition(const Map &map,
-                                        DoubleVec2D position) const {
+bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position) {
     size_t x = std::floor(position.x), y = std::floor(position.y);
     size_t map_size = map.getSize();
     return (x < map_size && x >= 0 && y < map_size && y >= 0);
 }
 
 bool CommandGiver::hasBotStateChanged(
-    BotStateName state_name, player_state::BotState player_state_name) const {
+    BotStateName state_name, player_state::BotState player_state_name) {
     if (state_name == BotStateName::IDLE &&
         player_state_name != player_state::BotState::IDLE) {
         return true;
@@ -96,8 +94,7 @@ bool CommandGiver::hasBotStateChanged(
 }
 
 bool CommandGiver::hasTowerStateChanged(
-    TowerStateName state_name,
-    player_state::TowerState player_state_name) const {
+    TowerStateName state_name, player_state::TowerState player_state_name) {
     if (state_name == TowerStateName::IDLE &&
         player_state_name != player_state::TowerState::IDLE) {
         return true;
@@ -109,6 +106,11 @@ bool CommandGiver::hasTowerStateChanged(
         return true;
     }
     return false;
+}
+
+bool CommandGiver::isSpawnPosition(DoubleVec2D position) {
+    return (position == Constants::Map::PLAYER1_BASE_POSITION ||
+            position == Constants::Map::PLAYER2_BASE_POSITION);
 }
 
 void CommandGiver::runCommands(
@@ -209,6 +211,13 @@ void CommandGiver::runCommands(
                                      logger::ErrorType::TOWER_LIMIT_REACHED,
                                      "Cannot build more towers than maximum "
                                      "number of towers");
+                    continue;
+                }
+                if (isSpawnPosition(player_bot_position)) {
+                    logger->LogError(
+                        player_id,
+                        logger::ErrorType::INVALID_TRANSFORM_POSITION,
+                        "Cannot transform in a spawn position");
                     continue;
                 }
                 transformBot(player_id, player_bot.id, player_bot_position);
