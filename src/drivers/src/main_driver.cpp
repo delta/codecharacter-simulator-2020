@@ -214,6 +214,8 @@ GameResult MainDriver::run() {
         // If the game timer has expired, the game has to stop
         if (this->is_game_timed_out) {
             endGame();
+            winner = GameResult::Winner::NONE;
+            win_type = GameResult::WinType::NONE;
             return GameResult{winner, win_type, player_results};
         }
 
