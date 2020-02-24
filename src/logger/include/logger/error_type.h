@@ -60,6 +60,16 @@ enum class ErrorType {
      * Mismatch in number of towers in state and player code
      */
     NUMBER_OF_TOWERS_MISMATCH,
+
+    /**
+     * Trying to blast a tower before minimum blast age
+     */
+    NO_EARLY_BLAST_TOWER,
+
+    /**
+     * Exceding instruction count per turn
+     */
+    EXCEED_TURN_INSTRUCTION_COUNT,
 };
 
 const std::vector<std::string> ErrorTypeName = {
@@ -67,5 +77,6 @@ const std::vector<std::string> ErrorTypeName = {
     "NO_MULTIPLE_BOT_TASK",       "INVALID_BLAST_POSITION",
     "INVALID_TRANSFORM_POSITION", "NO_ALTER_TOWER_PROPERTY",
     "NO_ALTER_BOT_PROPERTY",      "TOWER_LIMIT_REACHED",
-    "NUMBER_OF_BOTS_MISMATCH",    "NUMBER_OF_TOWERS_MISMATCH"};
+    "NUMBER_OF_BOTS_MISMATCH",    "NUMBER_OF_TOWERS_MISMATCH",
+    "NO_EARLY_BLAST_TOWER",       "EXCEED_TURN_INSTRUCTION_COUNT"};
 } // namespace logger

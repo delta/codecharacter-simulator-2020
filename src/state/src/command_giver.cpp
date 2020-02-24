@@ -34,13 +34,12 @@ DoubleVec2D CommandGiver::flipBotPosition(const Map &map,
     return {map_size - position.x, map_size - position.y};
 }
 
-Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) const {
+Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) {
     size_t map_size = map.getSize();
     return {(long) map_size - 1 - position.x, (long) map_size - 1 - position.y};
 }
 
-bool CommandGiver::isValidBotPosition(const Map &map,
-                                      DoubleVec2D position) const {
+bool CommandGiver::isValidBotPosition(const Map &map, DoubleVec2D position) {
     double_t map_size = map.getSize();
     bool within_map = (position.x >= 0 && position.x <= map_size &&
                        position.y >= 0 && position.y <= map_size);
@@ -61,15 +60,14 @@ bool CommandGiver::isValidBotPosition(const Map &map,
     return (type == TerrainType::FLAG || type == TerrainType::LAND);
 }
 
-bool CommandGiver::isValidTowerPosition(const Map &map,
-                                        DoubleVec2D position) const {
+bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position) {
     size_t x = std::floor(position.x), y = std::floor(position.y);
     size_t map_size = map.getSize();
     return (x < map_size && x >= 0 && y < map_size && y >= 0);
 }
 
 bool CommandGiver::hasBotStateChanged(
-    BotStateName state_name, player_state::BotState player_state_name) const {
+    BotStateName state_name, player_state::BotState player_state_name) {
     if (state_name == BotStateName::IDLE &&
         player_state_name != player_state::BotState::IDLE) {
         return true;
@@ -96,8 +94,7 @@ bool CommandGiver::hasBotStateChanged(
 }
 
 bool CommandGiver::hasTowerStateChanged(
-    TowerStateName state_name,
-    player_state::TowerState player_state_name) const {
+    TowerStateName state_name, player_state::TowerState player_state_name) {
     if (state_name == TowerStateName::IDLE &&
         player_state_name != player_state::TowerState::IDLE) {
         return true;
@@ -111,6 +108,26 @@ bool CommandGiver::hasTowerStateChanged(
     return false;
 }
 
+bool CommandGiver::isSpawnOffset(const Map &map, DoubleVec2D position) {
+    Vec2D position_offset = getOffset(map, position);
+    Vec2D player_1_base = getOffset(map, Constants::Map::PLAYER1_BASE_POSITION);
+    Vec2D player_2_base = getOffset(map, Constants::Map::PLAYER2_BASE_POSITION);
+    return (position_offset == player_1_base ||
+            position_offset == player_2_base);
+}
+
+Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position) {
+    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    size_t map_size = map.getSize();
+
+    if (pos_x == map_size)
+        --pos_x;
+    if (pos_y == map_size)
+        --pos_y;
+
+    return {pos_x, pos_y};
+}
+
 void CommandGiver::runCommands(
     std::array<player_state::State, 2> &player_states,
     std::array<bool, 2> skip_turn) {
@@ -122,15 +139,18 @@ void CommandGiver::runCommands(
     // Validating and performing the tasks given by the player
     for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
          ++id) {
-        // If a player's turn should be skipped, don't process his moves
-        if (skip_turn[id]) {
-            continue;
-        }
 
         size_t enemy_id =
             (id + 1) % static_cast<int64_t>(PlayerId::PLAYER_COUNT);
-
         auto player_id = static_cast<PlayerId>(id);
+
+        // If a player's turn should be skipped, don't process his moves
+        if (skip_turn[id]) {
+            logger->LogError(player_id,
+                             logger::ErrorType::EXCEED_TURN_INSTRUCTION_COUNT,
+                             "Cannot exceed instruction count for each turn");
+            continue;
+        }
 
         // Checking player bots and state bots are of same length
         if ((state_bots[id].size() != player_states[id].bots.size()) ||
@@ -211,6 +231,13 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
+                if (isSpawnOffset(*map, player_bot_position)) {
+                    logger->LogError(
+                        player_id,
+                        logger::ErrorType::INVALID_TRANSFORM_POSITION,
+                        "Cannot transform in a spawn position");
+                    continue;
+                }
                 transformBot(player_id, player_bot.id, player_bot_position);
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
@@ -248,6 +275,13 @@ void CommandGiver::runCommands(
                                      logger::ErrorType::TOWER_LIMIT_REACHED,
                                      "Cannot build more towers than maximum "
                                      "number of towers");
+                    continue;
+                }
+                if (isSpawnOffset(*map, transform_destination)) {
+                    logger->LogError(
+                        player_id,
+                        logger::ErrorType::INVALID_TRANSFORM_POSITION,
+                        "Cannot transform in a spawn position");
                     continue;
                 }
                 transformBot(player_id, player_bot.id, transform_destination);
@@ -326,7 +360,17 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                blastActor(player_id, player_tower.id, player_tower_position);
+                uint64_t tower_age = state_tower->getAge();
+                if (tower_age >= Constants::Actor::TOWER_MIN_BLAST_AGE) {
+                    blastActor(player_id, player_tower.id,
+                               player_tower_position);
+                } else {
+                    logger->LogError(player_id,
+                                     logger::ErrorType::NO_EARLY_BLAST_TOWER,
+                                     "Cannot blast a tower before minimum "
+                                     "blast age is reached");
+                    continue;
+                }
             }
         }
     }

@@ -29,13 +29,13 @@ class CommandGiverTest : public Test {
 
   public:
     void
-    ManageActorExpectations(array<vector<state::Bot *>, 2> state_bots,
+    manageActorExpectations(array<vector<state::Bot *>, 2> state_bots,
                             array<vector<state::Tower *>, 2> state_towers) {
         EXPECT_CALL(*state, getBots).WillOnce(Return(state_bots));
         EXPECT_CALL(*state, getTowers).WillOnce(Return(state_towers));
     }
 
-    void RunCommands(array<player_state::State, 2> &temp_player_states) {
+    void runCommands(array<player_state::State, 2> &temp_player_states) {
         command_giver->runCommands(temp_player_states, {false, false});
         temp_player_states = player_states;
     }
@@ -235,56 +235,56 @@ TEST_F(CommandGiverTest, AlterActorProperties) {
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // ------------- Alter bot properties -----------
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_ALTER_BOT_PROPERTY, _));
     temp_player_states[0].bots[0].id = -1;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
                                   ErrorType::NO_ALTER_BOT_PROPERTY, _));
     temp_player_states[1].bots[0].hp = -1;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_ALTER_BOT_PROPERTY, _));
     temp_player_states[0].bots[0].position = DoubleVec2D(200, 200);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_ALTER_BOT_PROPERTY, _));
     temp_player_states[0].bots[0].state = player_state::BotState::TRANSFORM;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
     // ------------- TOWER TESTS ------------------
 
     // Alter tower properties
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_ALTER_TOWER_PROPERTY, _));
     temp_player_states[0].towers[0].hp = -1;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_ALTER_TOWER_PROPERTY, _));
     temp_player_states[0].towers[0].id = -1;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
                                   ErrorType::NO_ALTER_TOWER_PROPERTY, _));
     temp_player_states[1].towers[0].position = DoubleVec2D(12, 25);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
                                   ErrorType::NO_ALTER_TOWER_PROPERTY, _));
     temp_player_states[1].towers[0].state = player_state::TowerState::BLAST;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 }
 
 TEST_F(CommandGiverTest, MultipleBotTasks) {
@@ -294,33 +294,33 @@ TEST_F(CommandGiverTest, MultipleBotTasks) {
     // Returning the map repeatedly
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_MULTIPLE_BOT_TASK, _));
     temp_player_states[0].bots[0].destination = DoubleVec2D(0, 0);
     temp_player_states[0].bots[0].blasting = true;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_MULTIPLE_BOT_TASK, _));
     temp_player_states[0].bots[0].blasting = true;
     temp_player_states[0].bots[0].transform_destination = DoubleVec2D(0, 0);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_MULTIPLE_BOT_TASK, _));
     temp_player_states[0].bots[0].transforming = true;
     temp_player_states[0].bots[0].final_destination = DoubleVec2D(0, 0);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NO_MULTIPLE_BOT_TASK, _));
     temp_player_states[0].bots[0].final_destination = DoubleVec2D(0, 0);
     temp_player_states[0].bots[0].transform_destination = DoubleVec2D(0, 0);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 }
 
 TEST_F(CommandGiverTest, InvalidPositionTests) {
@@ -331,28 +331,28 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
     // Trying to move bot to an invalid position
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_MOVE_POSITION, _));
     temp_player_states[0].bots[0].destination = DoubleVec2D(-10, -5);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
     // Trying to blast a bot in an invalid position
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_BLAST_POSITION, _));
     temp_player_states[0].bots[0].final_destination = DoubleVec2D(-10, -5);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
     // Trying to transform a bot in an invalid position
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_TRANSFORM_POSITION, _));
     temp_player_states[0].bots[0].transform_destination = DoubleVec2D(-10, -5);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 
     // // Trying to build tower at invalid position
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_MOVE_POSITION, _));
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
@@ -360,7 +360,7 @@ TEST_F(CommandGiverTest, InvalidPositionTests) {
 
     temp_player_states[0].bots[0].destination = DoubleVec2D(5, 5);
     temp_player_states[1].bots[0].final_destination = DoubleVec2D(0, 0);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 }
 
 TEST_F(CommandGiverTest, ExceedTowerLimit) {
@@ -394,15 +394,15 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
         temp_player_states[1].enemy_towers.push_back(player_tower);
     }
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger,
                 LogError(PlayerId::PLAYER1, ErrorType::TOWER_LIMIT_REACHED, _));
     temp_player_states[0].bots[0].transforming = true;
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
 }
 
 // Additional actors are added into the player state and checks are done to
-// see if erros are triggered
+// see if errors are triggered
 TEST_F(CommandGiverTest, AddAndRemoveActors) {
     // Creating a temporary player state to modify
     array<player_state::State, 2> temp_player_states = player_states;
@@ -413,12 +413,52 @@ TEST_F(CommandGiverTest, AddAndRemoveActors) {
     auto extra_bot = player_state::Bot();
     auto extra_tower = player_state::Tower();
 
-    ManageActorExpectations(state_bots, state_towers);
+    manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::NUMBER_OF_BOTS_MISMATCH, _));
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
                                   ErrorType::NUMBER_OF_TOWERS_MISMATCH, _));
     temp_player_states[0].bots.push_back(extra_bot);
     temp_player_states[1].enemy_towers.push_back(extra_tower);
-    RunCommands(temp_player_states);
+    runCommands(temp_player_states);
+}
+
+TEST_F(CommandGiverTest, EarlyBlastTower) {
+    // Creating a temporary player state to modify
+    array<player_state::State, 2> temp_player_states = player_states;
+
+    // Returning the map repeatedly
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
+
+    manageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
+                                  ErrorType::NO_EARLY_BLAST_TOWER, _));
+
+    // Trying to make tower blast prematurely
+    temp_player_states[0].towers[0].blasting = true;
+    runCommands(temp_player_states);
+}
+
+TEST_F(CommandGiverTest, TransformBasePosition) {
+    // Creating a temporary player state to modify
+    array<player_state::State, 2> temp_player_states = player_states;
+
+    // Returning the map repeatedly
+    EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
+
+    // Trying to make a bot move to transform into a spawn position
+    manageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
+                                  ErrorType::INVALID_TRANSFORM_POSITION, _));
+
+    temp_player_states[0].bots[0].transform_destination = DoubleVec2D(0.5, 0.5);
+    runCommands(temp_player_states);
+
+    // Trying to make a bot transform in a spawn position
+    manageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
+                                  ErrorType::INVALID_TRANSFORM_POSITION, _));
+
+    temp_player_states[1].bots[0].transform_destination = DoubleVec2D(4.5, 4.5);
+    runCommands(temp_player_states);
 }

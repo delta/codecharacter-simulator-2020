@@ -74,12 +74,13 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * @see IStateSyncer #UpdatePlayerStates
      */
-    void updatePlayerStates(std::array<player_state::State, 2> &player_states);
+    void updatePlayerStates(
+        std::array<player_state::State, 2> &player_states) override;
 
     /**
      * @see IStateSyncer #IsGameOver
      */
-    bool isGameOver(PlayerId &winner);
+    bool isGameOver(PlayerId &winner) override;
 
     /**
      * @see IStateSyncer #GetScores

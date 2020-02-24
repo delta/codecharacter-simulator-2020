@@ -50,7 +50,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position to be flipped
      * @return DoubleVec2D Flipped position
      */
-    DoubleVec2D flipBotPosition(const Map &map, DoubleVec2D position);
+    static DoubleVec2D flipBotPosition(const Map &map, DoubleVec2D position);
 
     /**
      * Helper function to flip a tower position
@@ -59,7 +59,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position to be flipped
      * @return Vec2D Flipped position
      */
-    Vec2D flipTowerPosition(const Map &map, Vec2D position) const;
+    static Vec2D flipTowerPosition(const Map &map, Vec2D position);
 
     /**
      * Helper function to check if given bot position is within the map
@@ -69,7 +69,16 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    bool isValidBotPosition(const Map &map, DoubleVec2D position) const;
+    static bool isValidBotPosition(const Map &map, DoubleVec2D position);
+
+    /**
+     * Returns the corresponding offset given a position
+     *
+     * @param map Reference to map
+     * @param position Position
+     * @return Vec2D Offset
+     */
+    static Vec2D getOffset(const Map &map, DoubleVec2D position);
 
     /**
      * Helper function to check if given tower position is within the map
@@ -79,7 +88,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    bool isValidTowerPosition(const Map &map, DoubleVec2D position) const;
+    static bool isValidTowerPosition(const Map &map, DoubleVec2D position);
 
     /**
      * Helper function to check if the player has changed the bot state or not
@@ -89,8 +98,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true  Player has changed the bot state
      * @return false Player has not changed the bot state
      */
-    bool hasBotStateChanged(BotStateName state_name,
-                            player_state::BotState player_state_name) const;
+    static bool hasBotStateChanged(BotStateName state_name,
+                                   player_state::BotState player_state_name);
 
     /**
      * Helper function to check if the player has changed the tower state or not
@@ -100,8 +109,19 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true Player has changed the tower state
      * @return false Player has not changed the bot state
      */
-    bool hasTowerStateChanged(TowerStateName state_name,
-                              player_state::TowerState player_state_name) const;
+    static bool
+    hasTowerStateChanged(TowerStateName state_name,
+                         player_state::TowerState player_state_name);
+
+    /**
+     * Helper function to check if given transform position is a spawn position
+     *
+     * @param map Reference to map
+     * @param position Position which is check against spawn position
+     * @return true Position is a spawn position
+     * @return false Position is not a spawn position
+     */
+    static bool isSpawnOffset(const Map &map, DoubleVec2D position);
 
   public:
     CommandGiver();
