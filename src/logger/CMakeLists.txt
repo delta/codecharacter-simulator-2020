@@ -11,6 +11,7 @@ set(EXPORTS_FILE_PATH ${EXPORTS_DIR}/logger/logger_export.h)
 find_package(Protobuf REQUIRED)
 
 file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/proto/*.proto")
+
 include_directories(${Protobuf_INCLUDE_DIRS})
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${ProtoFiles})
 

@@ -19,7 +19,7 @@ class LOGGER_EXPORT ILogger {
     /**
      * Logs all information from main state
      */
-    virtual void LogState() = 0;
+    virtual void logState() = 0;
 
     /**
      * Takes a player and corresponding instruction count, and logs it in the
@@ -28,7 +28,7 @@ class LOGGER_EXPORT ILogger {
      * @param[in]   player_id   Player identifier
      * @param[in]   count       Instruction count
      */
-    virtual void LogInstructionCount(state::PlayerId player_id,
+    virtual void logInstructionCount(state::PlayerId player_id,
                                      size_t count) = 0;
 
     /**
@@ -39,19 +39,19 @@ class LOGGER_EXPORT ILogger {
      * @param[in]   error_type   The error type
      * @param[in]   message      The error string
      */
-    virtual void LogError(state::PlayerId player_id, ErrorType error_type,
+    virtual void logError(state::PlayerId player_id, ErrorType error_type,
                           std::string message) = 0;
 
     /**
      * Logs final game parameters, should be called once, right before logging
      * state to stream (i.e before calling WriteGame)
      */
-    virtual void LogFinalGameParams(state::PlayerId player_id,
+    virtual void logFinalGameParams(state::PlayerId player_id,
                                     std::array<size_t, 2> final_scores) = 0;
 
     /**
      * Writes the complete serialized logs to stream
      */
-    virtual void WriteGame(std::ostream &write_stream) = 0;
+    virtual void writeGame(std::ostream &write_stream) = 0;
 };
 } // namespace logger
