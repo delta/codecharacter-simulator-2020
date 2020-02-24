@@ -117,7 +117,7 @@ class PathPlanner : public IPathPlanner {
      * @see IPathPlanner#GetNextPosition
      */
     DoubleVec2D getNextPosition(DoubleVec2D source, DoubleVec2D destination,
-                                size_t speed) override;
+                                uint64_t speed) override;
 };
 
 } // namespace state

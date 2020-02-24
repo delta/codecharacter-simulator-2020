@@ -30,11 +30,12 @@ bool StateSyncer::isGameOver(PlayerId &winner) {
     return state->isGameOver(winner);
 }
 
-size_t StateSyncer::getPlayerId(size_t player_id, bool is_enemy) const {
+uint64_t StateSyncer::getPlayerId(uint64_t player_id, bool is_enemy) const {
     if (is_enemy) {
-        return (player_id + 1) % (static_cast<size_t>(PlayerId::PLAYER_COUNT));
+        return (player_id + 1) %
+               (static_cast<uint64_t>(PlayerId::PLAYER_COUNT));
     }
-    return static_cast<size_t>(player_id);
+    return static_cast<uint64_t>(player_id);
 }
 
 std::array<int64_t, 2> StateSyncer::getScores(bool game_over) {
@@ -130,7 +131,7 @@ void StateSyncer::assignBots(int64_t id,
                              bool is_enemy) {
     auto state_bots = state->getBots();
     auto map = state->getMap();
-    size_t player_id = id;
+    uint64_t player_id = id;
     std::vector<player_state::Bot> new_bots;
     size_t num_state_bots = state_bots[player_id].size(),
            num_player_bots = player_bots.size();
@@ -207,7 +208,7 @@ void StateSyncer::assignTowers(int64_t id,
                                std::vector<player_state::Tower> &player_towers,
                                bool is_enemy) {
     auto state_towers = state->getTowers();
-    size_t player_id = id;
+    uint64_t player_id = id;
     std::vector<player_state::Tower> new_towers;
     size_t num_state_towers = state_towers[id].size(),
            num_player_towers = player_towers.size();

@@ -206,7 +206,7 @@ TEST_F(PathPlannerTest, RemoveTowerInvalidTest) {
 TEST_F(PathPlannerTest, GetNextPositionTest) {
     DoubleVec2D start = {0.5, 0.5};
     DoubleVec2D end = {15.5, 6.5};
-    size_t speed = 1;
+    uint64_t speed = 1;
 
     DoubleVec2D current_position = start;
 
@@ -221,7 +221,7 @@ TEST_F(PathPlannerTest, GetNextPositionTest) {
 TEST_F(PathPlannerTest, GetNextPositionSingleMoveTest) {
     DoubleVec2D start = {0.5, 0.5};
     DoubleVec2D end = {15.5, 6.5};
-    size_t speed = 100;
+    uint64_t speed = 100;
 
     DoubleVec2D current_position = start;
 

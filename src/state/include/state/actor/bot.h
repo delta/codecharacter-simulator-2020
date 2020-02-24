@@ -76,9 +76,9 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_callback
      * @param construct_tower_callback
      */
-    Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
-        DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, PathPlanner *path_planner,
+    Bot(ActorId id, PlayerId player_id, uint64_t hp, uint64_t max_hp,
+        DoubleVec2D position, uint64_t speed, uint64_t blast_range,
+        uint64_t damage_points, PathPlanner *path_planner,
         BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
 
@@ -96,8 +96,8 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param blast_callback
      * @param construct_tower_callback
      */
-    Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
-        size_t speed, size_t blast_range, size_t damage_points,
+    Bot(PlayerId player_id, uint64_t hp, uint64_t max_hp, DoubleVec2D position,
+        uint64_t speed, uint64_t blast_range, uint64_t damage_points,
         PathPlanner *path_planner, BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
 

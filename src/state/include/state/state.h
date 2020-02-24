@@ -54,7 +54,7 @@ class STATE_EXPORT State : public ICommandTaker {
      * @param[in] enemy_id		id of the enemy
      *
      */
-    bool isPositionOccupied(Vec2D position, size_t enemy_id);
+    bool isPositionOccupied(Vec2D position, uint64_t enemy_id);
 
     /**
      * Compute scores for this turn, and record them

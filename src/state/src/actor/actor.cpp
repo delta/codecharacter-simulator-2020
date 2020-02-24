@@ -10,13 +10,13 @@ namespace state {
 
 ActorId Actor::next_actor_id = 0;
 
-Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             size_t max_hp, DoubleVec2D position)
+Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, uint64_t hp,
+             uint64_t max_hp, DoubleVec2D position)
     : id(id), player_id(player_id), actor_type(actor_type), hp(hp),
       max_hp(max_hp), damage_incurred(0), position(position) {}
 
-Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-             DoubleVec2D position)
+Actor::Actor(PlayerId player_id, ActorType actor_type, uint64_t hp,
+             uint64_t max_hp, DoubleVec2D position)
     : id(Actor::getNextActorId()), player_id(player_id), actor_type(actor_type),
       hp(hp), max_hp(max_hp), damage_incurred(0), position(position) {}
 
@@ -28,9 +28,9 @@ PlayerId Actor::getPlayerId() const { return player_id; }
 
 ActorType Actor::getActorType() const { return actor_type; }
 
-size_t Actor::getHp() const { return hp; }
+uint64_t Actor::getHp() const { return hp; }
 
-void Actor::setHp(size_t hp) {
+void Actor::setHp(uint64_t hp) {
     if (hp < 0) {
         throw std::out_of_range("`hp` must be a positive value");
     }
@@ -47,11 +47,11 @@ void Actor::setDamageIncurred(int64_t p_damage_incurred) {
     damage_incurred = std::min(p_damage_incurred, (int64_t) hp);
 }
 
-size_t Actor::getDamageIncurred() const { return damage_incurred; }
+uint64_t Actor::getDamageIncurred() const { return damage_incurred; }
 
-size_t Actor::getMaxHp() const { return max_hp; }
+uint64_t Actor::getMaxHp() const { return max_hp; }
 
-size_t Actor::getLatestHp() const {
+uint64_t Actor::getLatestHp() const {
     return std::max<size_t>(0, hp - damage_incurred);
 }
 

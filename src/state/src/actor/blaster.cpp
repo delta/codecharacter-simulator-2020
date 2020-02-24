@@ -8,7 +8,7 @@
 namespace state {
 Blaster::Blaster() {}
 
-Blaster::Blaster(size_t blast_range, size_t damage_points,
+Blaster::Blaster(uint64_t blast_range, uint64_t damage_points,
                  BlastCallback blast_callback)
     : blast_range(blast_range), damage_points(damage_points), blasting(false),
       blast_callback(std::move(blast_callback)) {}
@@ -25,8 +25,8 @@ void Blaster::damageEnemyActors(PlayerId player_id, ActorId actor_id,
     blast_callback(player_id, actor_id, position, getBlastRange());
 }
 
-size_t Blaster::getBlastRange() const { return blast_range; }
+uint64_t Blaster::getBlastRange() const { return blast_range; }
 
-size_t Blaster::getBlastDamage() const { return damage_points; }
+uint64_t Blaster::getBlastDamage() const { return damage_points; }
 
 } // namespace state

@@ -117,7 +117,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      * @param is_enemy Whether this is the id of the enemy
      * @return int64_t Player id
      */
-    size_t getPlayerId(size_t id, bool is_enemy) const;
+    uint64_t getPlayerId(uint64_t id, bool is_enemy) const;
 
     /**
      * Returns corresponding bot position given tower position

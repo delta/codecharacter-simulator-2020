@@ -13,13 +13,15 @@ Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size)
 
 size_t Map::getSize() const { return map_size; }
 
-TerrainType Map::getTerrainType(size_t x, size_t y) const { return map[x][y]; }
-
-TerrainType Map::getTerrainType(double_t x, double_t y) const {
-    return map[(size_t) x][(size_t) y];
+TerrainType Map::getTerrainType(uint64_t x, uint64_t y) const {
+    return map[x][y];
 }
 
-void Map::setTerrainType(size_t x, size_t y, TerrainType terrainType) {
+TerrainType Map::getTerrainType(double_t x, double_t y) const {
+    return map[(uint64_t) x][(uint64_t) y];
+}
+
+void Map::setTerrainType(uint64_t x, uint64_t y, TerrainType terrainType) {
     map[x][y] = terrainType;
 }
 

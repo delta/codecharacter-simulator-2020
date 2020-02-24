@@ -8,19 +8,19 @@
 
 namespace state {
 
-Unit::Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-           size_t max_hp, size_t speed, DoubleVec2D position)
+Unit::Unit(ActorId id, PlayerId player_id, ActorType actor_type, uint64_t hp,
+           uint64_t max_hp, uint64_t speed, DoubleVec2D position)
     : Actor::Actor(id, player_id, actor_type, hp, max_hp, position),
       speed(speed), destination(DoubleVec2D::null), is_destination_set(false),
       new_position(DoubleVec2D::null), is_new_position_set(false) {}
 
-Unit::Unit(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-           size_t speed, DoubleVec2D position)
+Unit::Unit(PlayerId player_id, ActorType actor_type, uint64_t hp,
+           uint64_t max_hp, uint64_t speed, DoubleVec2D position)
     : Actor::Actor(player_id, actor_type, hp, max_hp, position), speed(speed),
       destination(DoubleVec2D::null), is_destination_set(false),
       new_position(DoubleVec2D::null), is_new_position_set(false) {}
 
-size_t Unit::getSpeed() const { return speed; }
+uint64_t Unit::getSpeed() const { return speed; }
 
 DoubleVec2D Unit::getDestination() const { return destination; }
 

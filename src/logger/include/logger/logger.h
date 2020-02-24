@@ -30,7 +30,7 @@ class LOGGER_EXPORT Logger : public ILogger {
     /**
      * Number of turns since the start of the game
      */
-    size_t turn_count;
+    uint64_t turn_count;
 
     /**
      * Stores the instruction counts until they are written into the log along
@@ -51,7 +51,7 @@ class LOGGER_EXPORT Logger : public ILogger {
     /**
      * Holds an incrementing value to assign each error a unique code
      */
-    size_t current_error_code;
+    uint64_t current_error_code;
 
     /**
      * Holds the error codes that occured in a particular move for each player
@@ -71,20 +71,20 @@ class LOGGER_EXPORT Logger : public ILogger {
     /**
      * Max HP of bots
      */
-    size_t bot_max_hp;
+    uint64_t bot_max_hp;
 
     /**
      * Max HP of tower
      */
-    size_t tower_max_hp;
+    uint64_t tower_max_hp;
 
   public:
     /**
      * Constructor for the Logger class
      */
     Logger(state::ICommandTaker *state, size_t player_instruction_limit_turn,
-           size_t player_instruction_limit_game, size_t bot_max_hp,
-           size_t tower_max_hp);
+           size_t player_instruction_limit_game, uint64_t bot_max_hp,
+           uint64_t tower_max_hp);
 
     /**
      * @see ILogger#LogState
@@ -94,7 +94,8 @@ class LOGGER_EXPORT Logger : public ILogger {
     /**
      * @see ILogger#LogInstructionCount
      */
-    void LogInstructionCount(state::PlayerId player_id, size_t count) override;
+    void LogInstructionCount(state::PlayerId player_id,
+                             uint64_t count) override;
 
     /**
      * @see ILogger#LogError

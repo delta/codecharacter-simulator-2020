@@ -170,8 +170,8 @@ bool PathPlanner::destroyTower(Vec2D tower_offset) {
         throw std::invalid_argument("Invalid tower build position for player");
     }
 
-    auto position_terrain =
-        map->getTerrainType((size_t) tower_offset.x, (size_t) tower_offset.y);
+    auto position_terrain = map->getTerrainType((uint64_t) tower_offset.x,
+                                                (uint64_t) tower_offset.y);
     if (position_terrain == TerrainType::WATER ||
         !isOffsetBlocked(tower_offset)) {
         return false;
@@ -199,7 +199,7 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
 
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          DoubleVec2D destination,
-                                         size_t speed) {
+                                         uint64_t speed) {
     std::vector<DoubleVec2D> path = path_graph.getPath(source, destination);
 
     if (path.empty()) {

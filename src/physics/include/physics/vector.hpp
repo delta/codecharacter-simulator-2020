@@ -270,7 +270,7 @@ template <typename T> Vector<T>::operator bool() const {
     return !(*this == Vector<T>::null);
 }
 
-template <typename T> std::size_t hash_value(const Vector<T> &val) {
+template <typename T> std::uint64_t hash_value(const Vector<T> &val) {
     return std::hash<T>{}(val.x * std::hash<T>{}(val.y));
 }
 

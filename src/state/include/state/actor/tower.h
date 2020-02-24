@@ -41,8 +41,8 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
-          DoubleVec2D position, size_t damage_points, size_t blast_range,
+    Tower(ActorId id, PlayerId player_id, uint64_t hp, uint64_t max_hp,
+          DoubleVec2D position, uint64_t damage_points, uint64_t blast_range,
           BlastCallback blast_callback);
 
     /**
@@ -57,8 +57,8 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * @param blast_range
      * @param blast_callback
      */
-    Tower(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
-          size_t damage_points, size_t blast_range,
+    Tower(PlayerId player_id, uint64_t hp, uint64_t max_hp,
+          DoubleVec2D position, uint64_t damage_points, uint64_t blast_range,
           BlastCallback blast_callback);
 
     /**

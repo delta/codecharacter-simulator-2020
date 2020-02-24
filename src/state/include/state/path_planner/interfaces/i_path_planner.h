@@ -24,7 +24,7 @@ class IPathPlanner {
      */
     virtual DoubleVec2D getNextPosition(DoubleVec2D source,
                                         DoubleVec2D destination,
-                                        size_t speed) = 0;
+                                        uint64_t speed) = 0;
 };
 
 } // namespace state

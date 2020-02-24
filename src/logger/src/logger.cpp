@@ -17,8 +17,8 @@ using namespace state;
 namespace logger {
 
 Logger::Logger(ICommandTaker *state, size_t player_instruction_limit_turn,
-               size_t player_instruction_limit_game, size_t bot_max_hp,
-               size_t tower_max_hp)
+               size_t player_instruction_limit_game, uint64_t bot_max_hp,
+               uint64_t tower_max_hp)
     : state(state), turn_count(0), instruction_counts(std::vector<size_t>(
                                        (int) state::PlayerId::PLAYER_COUNT, 0)),
       logs(std::unique_ptr<proto::Game>()),

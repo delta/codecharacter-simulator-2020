@@ -141,7 +141,7 @@ class CommandGiverTest : public Test {
         }
 
         // Creating an incrementing actor id
-        size_t actor_id = 1;
+        uint64_t actor_id = 1;
 
         // Creating bots for both players
         for (int player_id = 0;
@@ -373,7 +373,7 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
     // Exceed tower limit
     for (size_t tower_count = 0;
          tower_count < Constants::Actor::MAX_NUM_TOWERS - 1; ++tower_count) {
-        size_t actor_id = Actor::getNextActorId();
+        uint64_t actor_id = Actor::getNextActorId();
         auto state_tower =
             new state::Tower(actor_id, PlayerId::PLAYER1, 100, 100,
                              DoubleVec2D(0, 0), 2, 2, BlastCallback{});

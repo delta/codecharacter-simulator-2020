@@ -29,7 +29,7 @@ class LOGGER_EXPORT ILogger {
      * @param[in]   count       Instruction count
      */
     virtual void LogInstructionCount(state::PlayerId player_id,
-                                     size_t count) = 0;
+                                     uint64_t count) = 0;
 
     /**
      * Takes a player and the error, and logs it into the state. Every distinct

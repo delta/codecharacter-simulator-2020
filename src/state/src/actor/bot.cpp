@@ -9,9 +9,9 @@
 
 namespace state {
 
-Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
-         DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, PathPlanner *path_planner,
+Bot::Bot(ActorId id, PlayerId player_id, uint64_t hp, uint64_t max_hp,
+         DoubleVec2D position, uint64_t speed, uint64_t blast_range,
+         uint64_t damage_points, PathPlanner *path_planner,
          BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
     : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position),
@@ -22,8 +22,8 @@ Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
 
-Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
-         size_t speed, size_t blast_range, size_t damage_points,
+Bot::Bot(PlayerId player_id, uint64_t hp, uint64_t max_hp, DoubleVec2D position,
+         uint64_t speed, uint64_t blast_range, uint64_t damage_points,
          PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
     : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position),

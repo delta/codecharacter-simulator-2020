@@ -21,7 +21,7 @@ class STATE_EXPORT Unit : public Actor {
     /**
      *  Unit speed in map-units per turn.
      */
-    size_t speed;
+    uint64_t speed;
     /**
      *  Destination that the soldier needs to navigate to. Valid only if
      * is_destination_set is true
@@ -53,8 +53,8 @@ class STATE_EXPORT Unit : public Actor {
      * @param hp
      * @param position
      */
-    Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-         size_t max_hp, size_t speed, DoubleVec2D position);
+    Unit(ActorId id, PlayerId player_id, ActorType actor_type, uint64_t hp,
+         uint64_t max_hp, uint64_t speed, DoubleVec2D position);
 
     /**
      *  Construct a new Unit object, with auto incrementing id.
@@ -64,8 +64,8 @@ class STATE_EXPORT Unit : public Actor {
      * @param hp
      * @param position
      */
-    Unit(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-         size_t speed, DoubleVec2D position);
+    Unit(PlayerId player_id, ActorType actor_type, uint64_t hp, uint64_t max_hp,
+         uint64_t speed, DoubleVec2D position);
 
     /**
      * Destructor
@@ -75,9 +75,9 @@ class STATE_EXPORT Unit : public Actor {
     /**
      *  Get the Unit's speed.
      *
-     * @return size_t
+     * @return uint64_t
      */
-    size_t getSpeed() const;
+    uint64_t getSpeed() const;
 
     /**
      *  Get the Destination of Unit

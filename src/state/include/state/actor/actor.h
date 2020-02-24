@@ -40,19 +40,19 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      *  Current HitPoints of the Actor.
      */
-    size_t hp;
+    uint64_t hp;
 
     /**
      *  Maximum possible HitPoints of Actor.
      *
      */
-    size_t max_hp;
+    uint64_t max_hp;
 
     /**
      *  Amount of damage the soldier incurred in the current turn
      *  Applied to hp at the end of the turn
      */
-    size_t damage_incurred;
+    uint64_t damage_incurred;
 
     /**
      *  Actor position
@@ -70,8 +70,8 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @param max_hp
      * @param position
      */
-    Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, DoubleVec2D position);
+    Actor(ActorId id, PlayerId player_id, ActorType actor_type, uint64_t hp,
+          uint64_t max_hp, DoubleVec2D position);
 
     /**
      *  Construct a new Actor object, with auto incrementing id.
@@ -82,8 +82,8 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @param max_hp
      * @param position
      */
-    Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-          DoubleVec2D position);
+    Actor(PlayerId player_id, ActorType actor_type, uint64_t hp,
+          uint64_t max_hp, DoubleVec2D position);
 
     /**
      * Destructor
@@ -121,23 +121,23 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      *  Get the current Hp of Actor.
      *
-     * @return size_t
+     * @return uint64_t
      */
-    size_t getHp() const;
+    uint64_t getHp() const;
 
     /**
      *  Set the Hp of Actor
      *
      * @throw std::out_of_range If hp is negative, or greater than max_hp.
      */
-    void setHp(size_t hp);
+    void setHp(uint64_t hp);
 
     /**
      *  Get the Maximum Hp of Actor
      *
-     * @return size_t
+     * @return uint64_t
      */
-    size_t getMaxHp() const;
+    uint64_t getMaxHp() const;
 
     /**
      *  Gets the latest Hp of Actor after every turn.
@@ -145,17 +145,17 @@ class STATE_EXPORT Actor : public IUpdatable {
      *  At the end of the turn this accumulated damage is applied. This method
      *  returns hp at the end of the turn.
      *
-     * @return size_t
+     * @return uint64_t
      */
-    size_t getLatestHp() const;
+    uint64_t getLatestHp() const;
 
     /**
      *  Gets the damage incurred by the Actor during this turn.
      *  All damages occuring to actor is accumulated
      *
-     * @return size_t
+     * @return uint64_t
      */
-    size_t getDamageIncurred() const;
+    uint64_t getDamageIncurred() const;
 
     /**
      *  Set the damage incurred of the Actor
@@ -170,7 +170,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      *
      * @param damage_amout
      */
-    void damage(size_t damage_amount);
+    void damage(uint64_t damage_amount);
 
     /**
      *  Get the Position of Actor

@@ -49,7 +49,7 @@ bool CommandGiver::isValidBotPosition(const Map &map,
         return false;
     }
 
-    size_t x = position.x, y = position.y;
+    uint64_t x = position.x, y = position.y;
     if (x == map_size)
         --x;
     if (y == map_size)
@@ -63,7 +63,7 @@ bool CommandGiver::isValidBotPosition(const Map &map,
 
 bool CommandGiver::isValidTowerPosition(const Map &map,
                                         DoubleVec2D position) const {
-    size_t x = std::floor(position.x), y = std::floor(position.y);
+    uint64_t x = std::floor(position.x), y = std::floor(position.y);
     size_t map_size = map.getSize();
     return (x < map_size && x >= 0 && y < map_size && y >= 0);
 }
@@ -120,14 +120,14 @@ void CommandGiver::runCommands(
     auto map = state->getMap();
 
     // Validating and performing the tasks given by the player
-    for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
+    for (uint64_t id = 0; id < static_cast<uint64_t>(PlayerId::PLAYER_COUNT);
          ++id) {
         // If a player's turn should be skipped, don't process his moves
         if (skip_turn[id]) {
             continue;
         }
 
-        size_t enemy_id =
+        uint64_t enemy_id =
             (id + 1) % static_cast<int64_t>(PlayerId::PLAYER_COUNT);
 
         auto player_id = static_cast<PlayerId>(id);

@@ -11,10 +11,10 @@ using namespace testing;
 const size_t MAP_SIZE = 5;
 const auto L = state::TerrainType::LAND;
 
-const size_t BOT_HP = 150;
-const size_t BOT_BLAST_RANGE = 5;
-const size_t BOT_DAMAGE_POINTS = 0;
-const size_t BOT_SPEED = 3;
+const uint64_t BOT_HP = 150;
+const uint64_t BOT_BLAST_RANGE = 5;
+const uint64_t BOT_DAMAGE_POINTS = 0;
+const uint64_t BOT_SPEED = 3;
 const auto START_POS = DoubleVec2D(0, 0);
 
 namespace test {
@@ -22,7 +22,7 @@ namespace test {
 // Mock function declaration for blasting enemy actors
 // Defined in test namespace in tower_test.cpp
 void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position,
-                   size_t blast_range);
+                   uint64_t blast_range);
 
 // Mock function definition for transforming bot to tower
 void construct_tower(Bot *) {}
@@ -30,7 +30,7 @@ void construct_tower(Bot *) {}
 class BotTest : public Test {
   protected:
     unique_ptr<Bot> bot;
-    size_t hp, max_hp, damage_points, blast_range, speed;
+    uint64_t hp, max_hp, damage_points, blast_range, speed;
     unique_ptr<PathPlanner> path_planner;
     BlastCallback blast_callback;
     ConstructTowerCallback construct_tower_callback;

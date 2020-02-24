@@ -51,7 +51,7 @@ class Map {
      * @param y
      * @return the tile's terrain type
      */
-    TerrainType getTerrainType(size_t x, size_t y) const;
+    TerrainType getTerrainType(uint64_t x, uint64_t y) const;
 
     TerrainType getTerrainType(double_t x, double_t y) const;
 
@@ -62,7 +62,7 @@ class Map {
      * @param y
      * @param terrainType the tile's terrain type
      */
-    void setTerrainType(size_t x, size_t y, TerrainType terrainType);
+    void setTerrainType(uint64_t x, uint64_t y, TerrainType terrainType);
 };
 
 } // namespace state

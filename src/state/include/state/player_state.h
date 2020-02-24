@@ -96,7 +96,7 @@ struct _Blaster {
 
 struct _Unit : _Actor {
     DoubleVec2D destination;
-    size_t speed;
+    uint64_t speed;
 
     virtual void reset() { destination = DoubleVec2D::null; }
 
