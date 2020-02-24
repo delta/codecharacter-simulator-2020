@@ -117,7 +117,7 @@ bool CommandGiver::isSpawnOffset(const Map &map, DoubleVec2D position) {
 }
 
 Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position) {
-    uint64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
     size_t map_size = map.getSize();
 
     if (pos_x == map_size)
