@@ -139,15 +139,18 @@ void CommandGiver::runCommands(
     // Validating and performing the tasks given by the player
     for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
          ++id) {
-        // If a player's turn should be skipped, don't process his moves
-        if (skip_turn[id]) {
-            continue;
-        }
 
         size_t enemy_id =
             (id + 1) % static_cast<int64_t>(PlayerId::PLAYER_COUNT);
-
         auto player_id = static_cast<PlayerId>(id);
+
+        // If a player's turn should be skipped, don't process his moves
+        if (skip_turn[id]) {
+            logger->LogError(player_id,
+                             logger::ErrorType::EXCEED_TURN_INSTRUCTION_COUNT,
+                             "Cannot exceed instruction count for each turn");
+            continue;
+        }
 
         // Checking player bots and state bots are of same length
         if ((state_bots[id].size() != player_states[id].bots.size()) ||
