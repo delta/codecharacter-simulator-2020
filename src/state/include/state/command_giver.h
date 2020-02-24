@@ -121,7 +121,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true Position is a spawn position
      * @return false Position is not a spawn position
      */
-    static bool isSpawnPosition(const Map &map, DoubleVec2D position);
+    static bool isSpawnOffset(const Map &map, DoubleVec2D position);
 
   public:
     CommandGiver();

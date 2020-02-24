@@ -108,7 +108,7 @@ bool CommandGiver::hasTowerStateChanged(
     return false;
 }
 
-bool CommandGiver::isSpawnPosition(const Map &map, DoubleVec2D position) {
+bool CommandGiver::isSpawnOffset(const Map &map, DoubleVec2D position) {
     Vec2D position_offset = getOffset(map, position);
     Vec2D player_1_base = getOffset(map, Constants::Map::PLAYER1_BASE_POSITION);
     Vec2D player_2_base = getOffset(map, Constants::Map::PLAYER2_BASE_POSITION);
