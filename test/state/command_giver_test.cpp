@@ -446,11 +446,19 @@ TEST_F(CommandGiverTest, TransformBasePosition) {
     // Returning the map repeatedly
     EXPECT_CALL(*state, getMap).WillRepeatedly(Return(map));
 
+    // Trying to make a bot move to transform into a spawn position
     manageActorExpectations(state_bots, state_towers);
     EXPECT_CALL(*logger, LogError(PlayerId::PLAYER1,
                                   ErrorType::INVALID_TRANSFORM_POSITION, _));
 
+    temp_player_states[0].bots[0].transform_destination = DoubleVec2D(0.5, 0.5);
+    runCommands(temp_player_states);
+
     // Trying to make a bot transform in a spawn position
-    temp_player_states[0].bots[0].transforming = true;
+    manageActorExpectations(state_bots, state_towers);
+    EXPECT_CALL(*logger, LogError(PlayerId::PLAYER2,
+                                  ErrorType::INVALID_TRANSFORM_POSITION, _));
+
+    temp_player_states[1].bots[0].transform_destination = DoubleVec2D(4.5, 4.5);
     runCommands(temp_player_states);
 }

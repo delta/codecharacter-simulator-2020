@@ -72,6 +72,15 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     static bool isValidBotPosition(const Map &map, DoubleVec2D position);
 
     /**
+     * Returns the corresponding offset given a position
+     *
+     * @param map Reference to map
+     * @param position Position
+     * @return Vec2D Offset
+     */
+    static Vec2D getOffset(const Map &map, DoubleVec2D position);
+
+    /**
      * Helper function to check if given tower position is within the map
      *
      * @param map Referece to the map
@@ -107,11 +116,12 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     /**
      * Helper function to check if given transform position is a spawn position
      *
+     * @param map Reference to map
      * @param position Position which is check against spawn position
      * @return true Position is a spawn position
      * @return false Position is not a spawn position
      */
-    static bool isSpawnPosition(DoubleVec2D position);
+    static bool isSpawnPosition(const Map &map, DoubleVec2D position);
 
   public:
     CommandGiver();

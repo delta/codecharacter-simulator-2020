@@ -108,9 +108,24 @@ bool CommandGiver::hasTowerStateChanged(
     return false;
 }
 
-bool CommandGiver::isSpawnPosition(DoubleVec2D position) {
-    return (position == Constants::Map::PLAYER1_BASE_POSITION ||
-            position == Constants::Map::PLAYER2_BASE_POSITION);
+bool CommandGiver::isSpawnPosition(const Map &map, DoubleVec2D position) {
+    Vec2D position_offset = getOffset(map, position);
+    Vec2D player_1_base = getOffset(map, Constants::Map::PLAYER1_BASE_POSITION);
+    Vec2D player_2_base = getOffset(map, Constants::Map::PLAYER2_BASE_POSITION);
+    return (position_offset == player_1_base ||
+            position_offset == player_2_base);
+}
+
+Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position) {
+    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    int64_t map_size = map.getSize();
+
+    if (pos_x == map_size)
+        --pos_x;
+    if (pos_y == map_size)
+        --pos_y;
+
+    return {pos_x, pos_y};
 }
 
 void CommandGiver::runCommands(
@@ -213,7 +228,7 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                if (isSpawnPosition(player_bot_position)) {
+                if (isSpawnPosition(*map, player_bot_position)) {
                     logger->LogError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
@@ -257,6 +272,13 @@ void CommandGiver::runCommands(
                                      logger::ErrorType::TOWER_LIMIT_REACHED,
                                      "Cannot build more towers than maximum "
                                      "number of towers");
+                    continue;
+                }
+                if (isSpawnPosition(*map, transform_destination)) {
+                    logger->LogError(
+                        player_id,
+                        logger::ErrorType::INVALID_TRANSFORM_POSITION,
+                        "Cannot transform in a spawn position");
                     continue;
                 }
                 transformBot(player_id, player_bot.id, transform_destination);

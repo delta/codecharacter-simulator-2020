@@ -15,10 +15,10 @@
 namespace Constants::Actor {
 
 // Maximum number of bots per player
-const uint64_t MAX_NUM_BOTS = 500;
+const size_t MAX_NUM_BOTS = 500;
 
 // Number of bots that each player starts with
-const uint64_t NUM_BOTS_START = 20;
+const size_t NUM_BOTS_START = 20;
 
 // Blast impact radius around the bot
 const uint64_t BOT_BLAST_IMPACT_RADIUS = 3;
@@ -30,7 +30,7 @@ const uint64_t BOT_SPEED = 2;
 const uint64_t BOT_SPAWN_FREQUENCY = 1;
 
 // Maximum number of towers per player
-const uint64_t MAX_NUM_TOWERS = 200;
+const size_t MAX_NUM_TOWERS = 200;
 
 // Blast impact radius around the tower
 const uint64_t TOWER_BLAST_IMPACT_RADIUS = 3;
