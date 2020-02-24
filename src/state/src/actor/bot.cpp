@@ -11,25 +11,28 @@ namespace state {
 
 Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
          DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, PathPlanner *path_planner,
-         BlastCallback blast_callback,
+         size_t damage_points, ScoreManager *score_manager,
+         PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
     : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
-      final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      state(std::make_unique<BotIdleState>(this)), score_manager(score_manager),
+      path_planner(path_planner), final_destination(DoubleVec2D::null),
+      is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
 
 Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
          size_t speed, size_t blast_range, size_t damage_points,
-         PathPlanner *path_planner, BlastCallback blast_callback,
+         ScoreManager *score_manager, PathPlanner *path_planner,
+         BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
     : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
-      final_destination(DoubleVec2D::null), is_final_destination_set(false),
+      state(std::make_unique<BotIdleState>(this)), score_manager(score_manager),
+      path_planner(path_planner), final_destination(DoubleVec2D::null),
+      is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}

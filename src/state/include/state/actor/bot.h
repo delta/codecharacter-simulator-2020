@@ -8,6 +8,7 @@
 #include "state/actor/blaster.h"
 #include "state/actor/bot_states/bot_state.h"
 #include "state/actor/unit.h"
+#include "state/score_manager/score_manager.h"
 #include "state/path_planner/path_planner.h"
 
 namespace state {
@@ -23,6 +24,11 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      *  Controls logic for bot's current state
      */
     std::unique_ptr<BotState> state;
+
+    /**
+     * Score manager to update scores
+     */
+    ScoreManager *score_manager;
 
     /**
      *  Path Planner to perform movement mechanics
@@ -62,7 +68,7 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
 
   public:
     /**
-     *  Construct a new Bot object
+     * Construct a new Bot object
      *
      * @param id
      * @param player_id
@@ -72,18 +78,19 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param score_manager
      * @param path_planner
      * @param blast_callback
      * @param construct_tower_callback
      */
     Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
         DoubleVec2D position, size_t speed, size_t blast_range,
-        size_t damage_points, PathPlanner *path_planner,
-        BlastCallback blast_callback,
+        size_t damage_points, ScoreManager *score_manager,
+        PathPlanner *path_planner, BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
 
     /**
-     *  Construct a new Bot object, with auto incrementing id.
+     * Construct a new Bot object
      *
      * @param player_id
      * @param hp
@@ -92,13 +99,15 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @param speed
      * @param blast_range
      * @param damage_points
+     * @param score_manager
      * @param path_planner
      * @param blast_callback
      * @param construct_tower_callback
      */
     Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
         size_t speed, size_t blast_range, size_t damage_points,
-        PathPlanner *path_planner, BlastCallback blast_callback,
+        ScoreManager *score_manager, PathPlanner *path_planner,
+        BlastCallback blast_callback,
         ConstructTowerCallback construct_tower_callback);
 
     /**
