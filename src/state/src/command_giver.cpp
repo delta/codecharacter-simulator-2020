@@ -141,7 +141,7 @@ void CommandGiver::runCommands(
 
         // If a player's turn should be skipped, don't process his moves
         if (skip_turn[id]) {
-            logger->LogError(player_id,
+            logger->logError(player_id,
                              logger::ErrorType::EXCEED_TURN_INSTRUCTION_COUNT,
                              "Cannot exceed instruction count for each turn");
             continue;
@@ -227,7 +227,7 @@ void CommandGiver::runCommands(
                     continue;
                 }
                 if (isSpawnOffset(*map, player_bot_position)) {
-                    logger->LogError(
+                    logger->logError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform in a spawn position");
@@ -273,7 +273,7 @@ void CommandGiver::runCommands(
                     continue;
                 }
                 if (isSpawnOffset(*map, transform_destination)) {
-                    logger->LogError(
+                    logger->logError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform in a spawn position");
@@ -359,7 +359,7 @@ void CommandGiver::runCommands(
                 if (tower_age >= Constants::Actor::TOWER_MIN_BLAST_AGE) {
                     blastTower(player_tower.id);
                 } else {
-                    logger->LogError(player_id,
+                    logger->logError(player_id,
                                      logger::ErrorType::NO_EARLY_BLAST_TOWER,
                                      "Cannot blast a tower before minimum "
                                      "blast age is reached");

@@ -8,3 +8,4 @@
 #include "constants/actor.h"
 #include "constants/map.h"
 #include "constants/score_manager.h"
+#include "constants/simulator.h"

@@ -6,6 +6,12 @@
 #include "state/actor/bot.h"
 #include "state/actor/blaster.h"
 #include "state/actor/bot_states/bot_idle_state.h"
+#include <state/actor/bot_states/bot_blast_state.h>
+#include <state/actor/bot_states/bot_dead_state.h>
+#include <state/actor/bot_states/bot_move_state.h>
+#include <state/actor/bot_states/bot_move_to_blast_state.h>
+#include <state/actor/bot_states/bot_move_to_transform_state.h>
+#include <state/actor/bot_states/bot_transform_state.h>
 
 namespace state {
 
@@ -36,6 +42,47 @@ Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
+
+Bot::Bot(ActorId actor_id, PlayerId player_id, size_t hp, size_t max_hp,
+         BotStateName bot_state_name, DoubleVec2D position, size_t speed,
+         size_t blast_range, size_t damage_points, ScoreManager *score_manager, PathPlanner *path_planner,
+         BlastCallback blast_callback,
+         ConstructTowerCallback construct_tower_callback, bool is_blasting,
+         bool is_transforming)
+    : Unit::Unit(actor_id, player_id, ActorType::BOT, hp, max_hp, speed,
+                 position, score_manager),
+      Blaster::Blaster(blast_range, damage_points, is_blasting,
+                       std::move(blast_callback)),
+      path_planner(path_planner), final_destination(DoubleVec2D::null),
+      is_final_destination_set(false),
+      construct_tower_callback(std::move(construct_tower_callback)),
+      transform_destination(DoubleVec2D::null),
+      is_transform_destination_set(false), is_transforming(is_transforming) {
+
+    switch (bot_state_name) {
+    case BotStateName::IDLE:
+        state = std::make_unique<BotIdleState>(this);
+        break;
+    case BotStateName::MOVE:
+        state = std::make_unique<BotMoveState>(this);
+        break;
+    case BotStateName::MOVE_TO_BLAST:
+        state = std::make_unique<BotMoveToBlastState>(this);
+        break;
+    case BotStateName::BLAST:
+        state = std::make_unique<BotBlastState>(this);
+        break;
+    case BotStateName::TRANSFORM:
+        state = std::make_unique<BotTransformState>(this);
+        break;
+    case BotStateName::MOVE_TO_TRANSFORM:
+        state = std::make_unique<BotMoveToTransformState>(this);
+        break;
+    case BotStateName::DEAD:
+        state = std::make_unique<BotDeadState>(this);
+        break;
+    }
+}
 
 void Bot::clearFinalDestination() {
     final_destination = DoubleVec2D::null;

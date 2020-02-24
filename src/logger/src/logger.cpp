@@ -20,7 +20,7 @@ Logger::Logger(ICommandTaker *state, size_t player_instruction_limit_turn,
                size_t tower_max_hp)
     : state(state), turn_count(0), instruction_counts(std::vector<size_t>(
                                        (int) state::PlayerId::PLAYER_COUNT, 0)),
-      logs(std::unique_ptr<proto::Game>()),
+      logs(std::make_unique<proto::Game>()),
       error_map(std::unordered_map<std::string, size_t>()),
       current_error_code(0), errors(std::array<std::vector<size_t>, 2>()),
       player_instruction_limit_turn(player_instruction_limit_turn),
@@ -35,13 +35,13 @@ proto::BotState GetProtoBotState(BotStateName bot_state) {
         curr_bot_state = proto::BOT_MOVE;
         break;
     case BotStateName::MOVE_TO_TRANSFORM:
-        curr_bot_state = proto::BOT_MOVE;
+        curr_bot_state = proto::BOT_MOVE_TO_TRANSFORM;
         break;
     case BotStateName::TRANSFORM:
         curr_bot_state = proto::BOT_TRANSFORM;
         break;
     case BotStateName::BLAST:
-        curr_bot_state = proto::BOT_BLAST;
+        curr_bot_state = proto::BOT_MOVE_TO_TRANSFORM;
         break;
     case BotStateName::MOVE_TO_BLAST:
         curr_bot_state = proto::BOT_BLAST;
@@ -109,7 +109,6 @@ void Logger::logState() {
         auto map_size = map->getSize();
 
         logs->set_map_size(map_size);
-
         std::vector<proto::TerrainType> map_terrain;
         for (size_t i = 0; i < map_size; i++) {
             for (size_t j = 0; j < map_size; j++) {
@@ -134,10 +133,24 @@ void Logger::logState() {
             t_bot->set_hp(bot->getHp());
             t_bot->set_speed(bot->getSpeed());
             t_bot->set_blast_range(bot->getBlastRange());
+            t_bot->set_blast_bot(bot->isBlasting());
+            t_bot->set_transform_bot(bot->isTransforming());
 
             auto bot_position = bot->getPosition();
             t_bot->set_x(bot_position.x);
             t_bot->set_y(bot_position.y);
+
+            if (bot->isFinalDestinationSet()) {
+                auto final_destination = bot->getFinalDestination();
+                t_bot->set_target_x(final_destination.x);
+                t_bot->set_target_y(final_destination.y);
+            }
+
+            if (bot->isTransformDestinationSet()) {
+                auto transform_destination = bot->getTransformDestination();
+                t_bot->set_target_x(transform_destination.x);
+                t_bot->set_target_y(transform_destination.y);
+            }
 
             t_bot->set_state(GetProtoBotState(bot->getState()));
         }
