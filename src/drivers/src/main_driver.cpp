@@ -171,7 +171,8 @@ GameResult MainDriver::run() {
             if (this->cancel_flag) {
                 this->cancel_flag = false;
                 endGame();
-                return GameResult{winner, win_type, player_results};
+                return GameResult{GameResult::Winner::NONE,
+                                  GameResult::WinType::NONE, player_results};
             }
 
             // If the game timed out
@@ -179,7 +180,8 @@ GameResult MainDriver::run() {
 
                 // THIS IS AN UGLY HACK! PLEASE CHANGE THIS. TODO.
                 kill(process_pids[cur_player_id], SIGTERM);
-                return GameResult{};
+                return GameResult{GameResult::Winner::NONE,
+                                  GameResult::WinType::TIMEOUT, player_results};
             }
 
             // Check for instruction counter to see if player has
