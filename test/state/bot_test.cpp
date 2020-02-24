@@ -165,6 +165,7 @@ TEST_F(BotTest, BlastTest) {
     bot->lateUpdate();
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);
     ASSERT_EQ(bot->getHp(), 0);
+    ASSERT_EQ(bot->isBlasting(), true);
 
     // Checking if the bot's damage incurred is reset to 0
     ASSERT_EQ(bot->getDamageIncurred(), 0);
@@ -229,7 +230,7 @@ TEST_F(BotTest, MoveToBlastTest) {
 
     // bot blasted and is now dead
     ASSERT_EQ(bot->getState(), BotStateName::DEAD);
-    ASSERT_EQ(bot->isBlasting(), false);
+    ASSERT_EQ(bot->isBlasting(), true);
     ASSERT_EQ(bot->getPosition(), BLOW_UP_POS);
     ASSERT_EQ(bot->isNewPostitionSet(), false);
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
@@ -244,7 +245,7 @@ TEST_F(BotTest, MoveToBlastTest) {
     ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
     ASSERT_EQ(bot->isFinalDestinationSet(), false);
     ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isBlasting(), false);
+    ASSERT_EQ(bot->isBlasting(), true);
 }
 
 // Bot is attacked by neighbour, hence, his damage incurred is set
@@ -293,6 +294,7 @@ TEST_F(BotTest, TransformTest) {
     ASSERT_EQ(bot->getState(), BotStateName::TRANSFORM);
     ASSERT_NE(bot->getHp(), 0);
     ASSERT_EQ(bot->isTransforming(), true);
+    ASSERT_EQ(bot->isTransforming(), true);
 }
 
 TEST_F(BotTest, MoveToTransformTest) {
@@ -307,7 +309,7 @@ TEST_F(BotTest, MoveToTransformTest) {
     ASSERT_EQ(bot->isTransformDestinationSet(), true);
     ASSERT_EQ(bot->getTransformDestination(), TRANSFORM_POS);
 
-    // updating bot to transition state from idle to move to transfom
+    // updating bot to transition state from idle to move to transform
     bot->update();
 
     // state transition

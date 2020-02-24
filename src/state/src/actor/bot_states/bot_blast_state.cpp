@@ -23,6 +23,6 @@ std::unique_ptr<IActorState> BotBlastState::update() const {
     return std::make_unique<BotDeadState>(bot);
 }
 
-void BotBlastState::exit() { bot->setBlasting(false); }
+void BotBlastState::exit() {}
 
 } // namespace state
