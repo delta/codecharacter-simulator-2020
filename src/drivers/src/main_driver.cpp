@@ -23,7 +23,7 @@ MainDriver::MainDriver(
       shared_memories(std::move(shared_memories)),
       player_instruction_limit_turn(player_instruction_limit_turn),
       player_instruction_limit_game(player_instruction_limit_game),
-      max_no_turns(max_no_turns), is_game_timed_out(false), game_timer(),
+      num_game_turns(max_no_turns), is_game_timed_out(false), game_timer(),
       game_duration(game_duration), logger(std::move(logger)),
       log_file_name(std::move(log_file_name)), cancel_flag(false) {
     for (auto &shared_memory : this->shared_memories) {
@@ -70,7 +70,7 @@ GameResult MainDriver::start() {
     }
 
     // Initialize player states with contents of main state
-    this->state_syncer->updatePlayerStates(player_states);
+    this->state_syncer->updatePlayerStates(this->player_states);
 
     // Convert current player states to transfer states
     for (int i = 0; i < 2; ++i) {
@@ -113,6 +113,8 @@ GameResult::Winner getWinnerFromPlayerId(state::PlayerId player_id) {
     case state::PlayerId::PLAYER_COUNT:
         break;
     }
+
+    return GameResult::Winner::NONE;
 }
 
 GameResult::Winner
@@ -143,7 +145,6 @@ state::PlayerId getPlayerIdFromWinner(GameResult::Winner winner) {
 
 GameResult MainDriver::run() {
     // Initializing stuff...
-    auto skip_player_turn = std::array<bool, 2>{false, false};
     auto player_results = std::array<PlayerResult, 2>{
         PlayerResult{0, PlayerResult::Status::UNDEFINED},
         PlayerResult{0, PlayerResult::Status::UNDEFINED}};
@@ -152,7 +153,9 @@ GameResult MainDriver::run() {
     auto instruction_count_exceeded = false;
 
     // Main loop that runs every turn
-    for (uint64_t i = 0; i < this->max_no_turns; ++i) {
+    for (uint64_t i = 0; i < this->num_game_turns; ++i) {
+        auto skip_player_turn = std::array<bool, 2>{false, false};
+
         for (int cur_player_id = 0; cur_player_id < 2; ++cur_player_id) {
             auto current_player_buffer = this->shared_buffers[cur_player_id];
 

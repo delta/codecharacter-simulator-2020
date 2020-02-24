@@ -67,7 +67,7 @@ class DRIVERS_EXPORT MainDriver {
     /**
      * Number of turns in the game
      */
-    uint64_t max_no_turns;
+    uint64_t num_game_turns;
 
     /**
      * Process IDs of the two player processes
@@ -124,7 +124,7 @@ class DRIVERS_EXPORT MainDriver {
      * Write final game parameters and stop the timer
      *
      * @param player_id of the winner
-     * @param was_deathmatch True if this game ended by deathmatch
+     * @param final_scores Scores of players
      */
     void endGame(state::PlayerId player_id = state::PlayerId::PLAYER1,
                  std::array<int64_t, 2> final_scores = {0, 0});
@@ -141,6 +141,10 @@ class DRIVERS_EXPORT MainDriver {
                std::unique_ptr<logger::ILogger> logger,
                std::string log_file_name);
 
+    /**
+     * Set player process ids
+     * @param pids Array of PIds of 2 player processes
+     */
     void setPids(std::array<int, 2> pids);
 
     /**

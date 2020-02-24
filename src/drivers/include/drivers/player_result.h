@@ -21,14 +21,19 @@ struct DRIVERS_EXPORT PlayerResult {
      */
     enum class Status {
         /**
-         * The player's result is not valid (possible due to game timeout)
-         */
-        UNDEFINED,
-
-        /**
          * Normal result
          */
         NORMAL,
+
+        /**
+         * A player took too long to finish their turn
+         */
+        TIMEOUT,
+
+        /**
+         * The player's code had a runtime error
+         */
+        RUNTIME_ERROR,
 
         /**
          * The player has exceeded the game instruction limit and thus
@@ -37,14 +42,9 @@ struct DRIVERS_EXPORT PlayerResult {
         EXCEEDED_INSTRUCTION_LIMIT,
 
         /**
-         * The player's code had a runtime error
+         * The player's result is not valid (possible due to game timeout)
          */
-        RUNTIME_ERROR,
-
-        /**
-         * A player took too long to finish their turn
-         */
-        TIMEOUT
+        UNDEFINED
     };
 
     /**
