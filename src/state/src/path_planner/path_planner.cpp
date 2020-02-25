@@ -197,6 +197,24 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
     return (point_a + unit_vector * distance);
 }
 
+TerrainType PathPlanner::getTerrainType(DoubleVec2D position) {
+    if (!path_graph.isValidPosition(position)) {
+        throw "Position is not within the map\n";
+    }
+
+    size_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    size_t map_size = map->getSize();
+
+    if (pos_x == map_size) {
+        --pos_x;
+    }
+    if (pos_y == map_size) {
+        --pos_y;
+    }
+
+    return map->getTerrainType(pos_x, pos_y);
+}
+
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          DoubleVec2D destination,
                                          size_t speed) {

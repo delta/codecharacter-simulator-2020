@@ -43,6 +43,12 @@ class STATE_EXPORT ScoreManager {
     double getPlayerPoints(PlayerId player_id) const;
 
   public:
+    /**
+     * Constructors
+     *
+     */
+    ScoreManager();
+
     ScoreManager(std::array<size_t, 2> scores);
 
     /**
@@ -71,5 +77,19 @@ class STATE_EXPORT ScoreManager {
      * @return std::array<size_t, 2> scores
      */
     std::array<size_t, 2> getScores() const;
+
+    /**
+     * Get the Tower Counts at the end of the turn
+     *
+     * @return std::array<size_t, 2>
+     */
+    std::array<size_t, 2> getTowerCounts() const;
+
+    /**
+     * Gets the Bot Counts at the end of the turn
+     *
+     * @return std::array<size_t, 2>
+     */
+    std::array<size_t, 2> getBotCounts() const;
 };
 } // namespace state

@@ -1,7 +1,7 @@
 #include "state/actor/tower.h"
 #include "state/map/map.h"
-#include "gmock/gmock.h"
 #include "state/score_manager/score_manager.h"
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <memory>
 
@@ -34,10 +34,11 @@ class TowerTest : public Test {
         DoubleVec2D start_pos = DoubleVec2D(0, 0);
 
         blast_callback = &blast_enemies;
-        array<size_t, 2> scores = {0, 0}; 
+        array<size_t, 2> scores = {0, 0};
         auto score_manager = new ScoreManager(scores);
         tower = make_unique<Tower>(1, PlayerId::PLAYER1, hp, max_hp, start_pos,
-                                   damage_points, blast_range, score_manager, blast_callback);
+                                   damage_points, blast_range, score_manager,
+                                   blast_callback);
     }
 };
 

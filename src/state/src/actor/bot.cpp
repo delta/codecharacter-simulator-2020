@@ -99,6 +99,8 @@ void Bot::transform() {
 
 PathPlanner *Bot::getPathPlanner() const { return path_planner; }
 
+ScoreManager *Bot::getScoreManager() const { return score_manager; }
+
 void Bot::lateUpdate() {
     // Updating the hp of the Bot
     setHp(getLatestHp());
@@ -108,7 +110,26 @@ void Bot::lateUpdate() {
 
     // perform a move
     if (isNewPostitionSet()) {
+        DoubleVec2D previous_position = getPosition();
+        TerrainType previous_terrain =
+            path_planner->getTerrainType(previous_position);
+
         setPosition(getNewPosition());
+
+        // Checking if he has moved into a flag from outside a flag
+        DoubleVec2D position = getPosition();
+        TerrainType terrain = path_planner->getTerrainType(position);
+        if (previous_terrain == TerrainType::FLAG &&
+            terrain != TerrainType::FLAG) {
+            score_manager->actorExitedFlagArea(getActorType(), getPlayerId());
+        }
+
+        // Checking if he is moving out of a flag from a flag
+        if (previous_terrain != TerrainType::FLAG &&
+            terrain == TerrainType::FLAG) {
+            score_manager->actorEnteredFlagArea(getActorType(), getPlayerId());
+        }
+
         clearNewPosition();
     }
 
@@ -139,6 +160,7 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
+
         new_state = state->update();
     }
 }

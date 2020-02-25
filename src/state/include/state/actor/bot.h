@@ -8,8 +8,8 @@
 #include "state/actor/blaster.h"
 #include "state/actor/bot_states/bot_state.h"
 #include "state/actor/unit.h"
-#include "state/score_manager/score_manager.h"
 #include "state/path_planner/path_planner.h"
+#include "state/score_manager/score_manager.h"
 
 namespace state {
 
@@ -111,11 +111,18 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
         ConstructTowerCallback construct_tower_callback);
 
     /**
-     * Get Bot's Path Planner pointer
+     * Returns a pointer to path planner
      *
      * @return PathPlanner*
      */
     PathPlanner *getPathPlanner() const;
+
+    /**
+     * Returns a pointer to score manager
+     *
+     * @return ScoreManager*
+     */
+    ScoreManager *getScoreManager() const;
 
     /**
      *  check if final_destination is set

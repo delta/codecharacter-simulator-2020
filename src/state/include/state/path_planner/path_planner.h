@@ -87,12 +87,28 @@ class PathPlanner : public IPathPlanner {
     bool isValidTowerPosition(DoubleVec2D position, PlayerId player_id);
 
     /**
+     * Returns the terrain type of the position
+     *
+     * @param position Position for which terrain type is requested
+     * @return TerrainType Terrain type of position
+     */
+    TerrainType getTerrainType(DoubleVec2D position);
+
+    /**
      * Check if this position is a valid position where a bot can exist
      * @param position
      * @return True, if a bot can exist at this position
      *         False, if not
      */
     bool isValidBotPosition(DoubleVec2D position);
+
+    /**
+     * Returns the terrain type of the position
+     *
+     * @param position Position for which terrain type is requested
+     * @return TerrainType Terrain type of the position
+     */
+    TerrainType getTerrainType(DoubleVec2D position) const;
 
     /**
      * Build a new tower at given position
