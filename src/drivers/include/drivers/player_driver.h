@@ -44,7 +44,7 @@ class DRIVERS_EXPORT PlayerDriver {
     /**
      * Number of turns in the game
      */
-    const uint64_t max_no_turns;
+    const uint64_t num_game_turns;
 
     /**
      * true if the game has timed out without completing and start has been
@@ -107,7 +107,8 @@ class DRIVERS_EXPORT PlayerDriver {
      * @param[in]  player_code_wrapper          The player code wrapper
      * @param[in]  shm_player                   The player's shared memory to
      *                                          write the count to
-     * @param[in]  max_no_turns                 The number of turns in the game
+     * @param[in]  num_game_turns                 The number of turns in the
+     * game
      * @param[in]  game_duration                The time limit for the game
      * @param[in]  player_debug_log_file        The player debug log file path
      * @param[in]  debug_logs_turn_prefix       Prefix for debug log every turn
@@ -118,7 +119,7 @@ class DRIVERS_EXPORT PlayerDriver {
      */
     PlayerDriver(
         std::unique_ptr<player_wrapper::PlayerCodeWrapper> player_code_wrapper,
-        std::unique_ptr<SharedMemoryPlayer> shm_player, int64_t max_no_turns,
+        std::unique_ptr<SharedMemoryPlayer> shm_player, int64_t num_game_turns,
         Timer::Interval game_duration, std::string player_debug_log_file,
         std::string debug_logs_turn_prefix,
         std::string debug_logs_truncate_message,

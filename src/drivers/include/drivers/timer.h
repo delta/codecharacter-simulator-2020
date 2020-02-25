@@ -58,6 +58,8 @@ class DRIVERS_EXPORT Timer {
      */
     Timer();
 
+    Timer(Interval timer_wake_up_duration);
+
     /**
      * Starts this timer. Works only if is_running is false.
      * Spawns a separate thread for the timer

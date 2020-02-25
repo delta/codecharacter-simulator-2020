@@ -12,6 +12,10 @@ Timer::Timer()
     : is_running(false), stop_timer(false), timer_run_duration(0),
       timer_wake_up_duration(10) {}
 
+Timer::Timer(Interval timer_wake_up_duration)
+    : is_running(false), stop_timer(false), timer_run_duration(0),
+      timer_wake_up_duration(timer_wake_up_duration) {}
+
 bool Timer::start(Interval total_timer_duration, const Callback &callback) {
     if (this->is_running) {
         return false;

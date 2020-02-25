@@ -4,7 +4,7 @@
  */
 
 #include "drivers/shared_memory_utils/shared_memory_main.h"
-#include <cstring>
+#include "constants/simulator.h"
 
 namespace drivers {
 
@@ -16,7 +16,8 @@ SharedMemoryMain::SharedMemoryMain(const std::string &shared_memory_name,
                                    const transfer_state::State &transfer_state)
     : shared_memory_name(shared_memory_name),
       // Creating shared memory
-      shared_memory(create_only, shared_memory_name.c_str(), 65536) {
+      shared_memory(create_only, shared_memory_name.c_str(),
+                    Constants::Simulator::SHARED_BUFFER_SIZE) {
     // Constructing unique instance of SharedBuffer in shared memory
     this->shared_memory.construct<SharedBuffer>(unique_instance)(
         is_player_running, instruction_count, instruction_count,

@@ -14,13 +14,14 @@ std::atomic<uint64_t> PlayerDriver::instruction_count(0);
 PlayerDriver::PlayerDriver(
     std::unique_ptr<player_wrapper::PlayerCodeWrapper> player_code_wrapper,
     std::unique_ptr<drivers::SharedMemoryPlayer> shm_player,
-    int64_t max_no_turns, Timer::Interval game_duration,
+    int64_t num_game_turns, Timer::Interval game_duration,
     std::string player_debug_log_file, std::string debug_logs_turn_prefix,
     std::string debug_logs_truncate_message, int64_t max_debug_logs_turn_length)
     : player_code_wrapper(std::move(player_code_wrapper)),
       shm_player(std::move(shm_player)),
-      shared_buffer(this->shm_player->getBuffer()), max_no_turns(max_no_turns),
-      is_game_timed_out(false), game_timer(), game_duration(game_duration),
+      shared_buffer(this->shm_player->getBuffer()),
+      num_game_turns(num_game_turns), is_game_timed_out(false), game_timer(),
+      game_duration(game_duration),
       player_debug_log_file(std::move(player_debug_log_file)),
       debug_logs_turn_prefix(std::move(debug_logs_turn_prefix)),
       debug_logs_truncate_message(std::move(debug_logs_truncate_message)),
@@ -50,7 +51,7 @@ void PlayerDriver::start() {
 
 void PlayerDriver::run() {
     // Loop to run the player's code every turn
-    for (uint64_t i = 0; i < this->max_no_turns; ++i) {
+    for (uint64_t i = 0; i < this->num_game_turns; ++i) {
 
         // Wait for the main driver to synchronize states or until the game has
         // timed out
@@ -58,7 +59,7 @@ void PlayerDriver::run() {
                !this->is_game_timed_out)
             ;
 
-        // If overall game time limit was exceeded
+        // If overall game time limit has exceeded
         if (this->is_game_timed_out)
             break;
 

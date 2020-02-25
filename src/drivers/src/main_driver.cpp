@@ -16,14 +16,14 @@ MainDriver::MainDriver(
     std::unique_ptr<state::IStateSyncer> state_syncer,
     std::vector<std::unique_ptr<SharedMemoryMain>> shared_memories,
     int64_t player_instruction_limit_turn,
-    int64_t player_instruction_limit_game, int64_t max_no_turns,
+    int64_t player_instruction_limit_game, int64_t num_game_turns,
     Timer::Interval game_duration, std::unique_ptr<logger::ILogger> logger,
     std::string log_file_name)
     : state_syncer(std::move(state_syncer)),
       shared_memories(std::move(shared_memories)),
       player_instruction_limit_turn(player_instruction_limit_turn),
       player_instruction_limit_game(player_instruction_limit_game),
-      num_game_turns(max_no_turns), is_game_timed_out(false), game_timer(),
+      num_game_turns(num_game_turns), is_game_timed_out(false), game_timer(),
       game_duration(game_duration), logger(std::move(logger)),
       log_file_name(std::move(log_file_name)), cancel_flag(false) {
     for (auto &shared_memory : this->shared_memories) {

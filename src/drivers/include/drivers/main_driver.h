@@ -136,7 +136,7 @@ class DRIVERS_EXPORT MainDriver {
     MainDriver(std::unique_ptr<state::IStateSyncer> state_syncer,
                std::vector<std::unique_ptr<SharedMemoryMain>> shared_memories,
                int64_t player_instruction_limit_turn,
-               int64_t player_instruction_limit_game, int64_t max_no_turns,
+               int64_t player_instruction_limit_game, int64_t num_game_turns,
                Timer::Interval game_duration,
                std::unique_ptr<logger::ILogger> logger,
                std::string log_file_name);
