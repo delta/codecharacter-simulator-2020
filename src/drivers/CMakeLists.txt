@@ -18,7 +18,8 @@ find_package(Boost 1.68.0)
 
 add_library(drivers STATIC ${SOURCE_FILES})
 
-target_link_libraries(drivers ${CMAKE_THREAD_LIBS_INIT} player_wrapper)
+target_link_libraries(drivers ${CMAKE_THREAD_LIBS_INIT} player_wrapper
+                      constants)
 
 generate_export_header(drivers EXPORT_FILE_NAME ${EXPORTS_FILE_PATH})
 

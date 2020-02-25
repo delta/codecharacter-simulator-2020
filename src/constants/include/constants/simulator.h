@@ -4,6 +4,8 @@
  * Add constants related to Simulation
  */
 
+#pragma once
+
 #include <array>
 
 namespace Constants {
@@ -29,6 +31,7 @@ const auto SHM_FILE_NAMES = std::array<std::string, 2>{"shm1.txt", "shm2.txt"};
 const auto GAME_LOG_FILE_NAME = "game.log";
 
 // Shared buffer size in bytes
-const double SHARED_BUFFER_SIZE = 65535;
+const size_t SHARED_BUFFER_SIZE = 65535;
 
-} } // namespace Constants::Simulator
+} // namespace Simulator
+} // namespace Constants
