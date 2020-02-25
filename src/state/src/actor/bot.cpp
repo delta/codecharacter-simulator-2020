@@ -114,7 +114,7 @@ void Bot::lateUpdate() {
 
         setPosition(getNewPosition());
 
-        // Checking if the bot has moved into a flag from outside a flag
+        // Checking if the bot is has moved out of a flag from inside a flag
         DoubleVec2D position = getPosition();
         TerrainType terrain = path_planner->getTerrainType(position);
         if (previous_terrain == TerrainType::FLAG &&
@@ -122,7 +122,7 @@ void Bot::lateUpdate() {
             score_manager->actorExitedFlagArea(getActorType(), getPlayerId());
         }
 
-        // Checking if the bot is has moved out of a flag from inside a flag
+        // Checking if the bot has moved into a flag from outside a flag
         if (previous_terrain != TerrainType::FLAG &&
             terrain == TerrainType::FLAG) {
             score_manager->actorEnteredFlagArea(getActorType(), getPlayerId());

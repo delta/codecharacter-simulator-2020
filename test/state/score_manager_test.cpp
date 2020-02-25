@@ -32,17 +32,17 @@ class ScoreManagerTest : public Test {
          * B1 - Bots of player1
          * B2 - Bots of player2
          *
-         *
-         * L L L L L L L L L L
-         * L L L L L L L L L L
-         * L L L L L L L L L L
-         * L L L L B2 L L L L L
-         * F F F F F F F F F F
-         * F F F F F F F F F F
-         * L L L L B1 L L L L L
-         * L L L L L L L L L L
-         * L L L L L L L L L L
-         * L L L L L L L L L L
+         *     1 2 3 4 5 6 8 9 10
+         * 1)  L L L L L L L L L L
+         * 2)  L L L L L L L L L L
+         * 3)  L L L L L L L L L L
+         * 4)  L L L L B2 L L L L L
+         * 5)  F F F F F F F F F F
+         * 6)  F F F F F F F F F F
+         * 7)  L L L L B1 L L L L L
+         * 8)  L L L L L L L L L L
+         * 9)  L L L L L L L L L L
+         * 10) L L L L L L L L L L
          *
          */
 
@@ -130,7 +130,7 @@ TEST_F(ScoreManagerTest, BotEnterExitTest) {
     scores = score_manager->getScores();
 
     ASSERT_EQ(scores[0], 1);
-    ASSERT_EQ(scores[0], 1);
+    ASSERT_EQ(scores[1], 1);
 }
 
 TEST_F(ScoreManagerTest, BotDyingTest) {
@@ -167,4 +167,9 @@ TEST_F(ScoreManagerTest, BotDyingTest) {
     ASSERT_EQ(scores[1], 0);
 }
 
-// TODO : Add test for bot transforming into tower after implementation of state
+/**
+ *  TODO :
+ *  1) Add test for bot transforming into tower
+ *  2) Bot in move to transform
+ *  3) Bot in move to blast
+ */

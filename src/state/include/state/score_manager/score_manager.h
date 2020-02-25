@@ -45,10 +45,14 @@ class STATE_EXPORT ScoreManager {
   public:
     /**
      * Constructors
-     *
      */
     ScoreManager();
 
+    /**
+     * Construct a new Score Manager object
+     *
+     * @param scores
+     */
     ScoreManager(std::array<size_t, 2> scores);
 
     /**

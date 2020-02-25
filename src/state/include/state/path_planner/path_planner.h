@@ -99,6 +99,8 @@ class PathPlanner : public IPathPlanner {
      *
      * @param position Position for which terrain type is requested
      * @return TerrainType Terrain type of the position
+     *
+     * @throw      std::invalid_argument      If position is not within map
      */
     TerrainType getTerrainType(DoubleVec2D position) const;
 
