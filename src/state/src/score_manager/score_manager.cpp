@@ -9,7 +9,7 @@
 namespace state {
 
 ScoreManager::ScoreManager()
-    : scores({0, 0}), num_towers({0, 0}), num_bots({0, 0}) {}
+    : scores({0, 0}), num_bots({0, 0}), num_towers({0, 0}) {}
 
 ScoreManager::ScoreManager(std::array<size_t, 2> scores)
     : scores(scores), num_bots({0, 0}), num_towers({0, 0}) {}
