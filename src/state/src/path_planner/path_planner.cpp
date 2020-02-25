@@ -202,6 +202,7 @@ TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
         throw "Position is not within the map\n";
     }
 
+    // FIX ME : Type resolution to be done with better clarity
     size_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
     size_t map_size = map->getSize();
 
