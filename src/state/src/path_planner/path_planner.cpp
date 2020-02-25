@@ -197,7 +197,7 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
     return (point_a + unit_vector * distance);
 }
 
-TerrainType PathPlanner::getTerrainType(DoubleVec2D position) {
+TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
     if (!path_graph.isValidPosition(position)) {
         throw "Position is not within the map\n";
     }

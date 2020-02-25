@@ -8,7 +8,7 @@
 #include "state/actor/blaster.h"
 #include "state/actor/tower_states/tower_idle_state.h"
 #include "state/actor/tower_states/tower_state.h"
-#include "state/score_manager/score_manager.h"
+
 #include <memory>
 
 namespace state {
@@ -22,8 +22,6 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
      * Controls logic for tower's current state
      */
     std::unique_ptr<TowerState> state;
-
-    ScoreManager *score_manager;
 
     /**
      * Number of turns for which the tower has been alive

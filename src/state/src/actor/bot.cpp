@@ -14,11 +14,11 @@ Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
          size_t damage_points, ScoreManager *score_manager,
          PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position),
+    : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position,
+                 score_manager),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)), score_manager(score_manager),
-      path_planner(path_planner), final_destination(DoubleVec2D::null),
-      is_final_destination_set(false),
+      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
+      final_destination(DoubleVec2D::null), is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
@@ -28,11 +28,11 @@ Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
          ScoreManager *score_manager, PathPlanner *path_planner,
          BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position),
+    : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position,
+                 score_manager),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
-      state(std::make_unique<BotIdleState>(this)), score_manager(score_manager),
-      path_planner(path_planner), final_destination(DoubleVec2D::null),
-      is_final_destination_set(false),
+      state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
+      final_destination(DoubleVec2D::null), is_final_destination_set(false),
       construct_tower_callback(std::move(construct_tower_callback)),
       transform_destination(DoubleVec2D::null),
       is_transform_destination_set(false), is_transforming(false) {}
@@ -99,8 +99,6 @@ void Bot::transform() {
 
 PathPlanner *Bot::getPathPlanner() const { return path_planner; }
 
-ScoreManager *Bot::getScoreManager() const { return score_manager; }
-
 void Bot::lateUpdate() {
     // Updating the hp of the Bot
     setHp(getLatestHp());
@@ -116,7 +114,7 @@ void Bot::lateUpdate() {
 
         setPosition(getNewPosition());
 
-        // Checking if he has moved into a flag from outside a flag
+        // Checking if the bot has moved into a flag from outside a flag
         DoubleVec2D position = getPosition();
         TerrainType terrain = path_planner->getTerrainType(position);
         if (previous_terrain == TerrainType::FLAG &&
@@ -124,7 +122,7 @@ void Bot::lateUpdate() {
             score_manager->actorExitedFlagArea(getActorType(), getPlayerId());
         }
 
-        // Checking if he is moving out of a flag from a flag
+        // Checking if the bot is has moved out of a flag from inside a flag
         if (previous_terrain != TerrainType::FLAG &&
             terrain == TerrainType::FLAG) {
             score_manager->actorEnteredFlagArea(getActorType(), getPlayerId());

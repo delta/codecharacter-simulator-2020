@@ -26,11 +26,6 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     std::unique_ptr<BotState> state;
 
     /**
-     * Score manager to update scores
-     */
-    ScoreManager *score_manager;
-
-    /**
      *  Path Planner to perform movement mechanics
      */
     PathPlanner *path_planner;
@@ -116,13 +111,6 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @return PathPlanner*
      */
     PathPlanner *getPathPlanner() const;
-
-    /**
-     * Returns a pointer to score manager
-     *
-     * @return ScoreManager*
-     */
-    ScoreManager *getScoreManager() const;
 
     /**
      *  check if final_destination is set

@@ -86,7 +86,7 @@ class STATE_EXPORT ScoreManager {
     std::array<size_t, 2> getTowerCounts() const;
 
     /**
-     * Gets the Bot Counts at the end of the turn
+     * Gets the Bot Counts at the end of the turn of both players
      *
      * @return std::array<size_t, 2>
      */

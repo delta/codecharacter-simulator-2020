@@ -12,15 +12,15 @@ namespace state {
 Tower::Tower(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
              DoubleVec2D position, size_t damage_points, size_t blast_range,
              ScoreManager *score_manager, BlastCallback blast_callback)
-    : Actor(id, player_id, ActorType::TOWER, hp, max_hp, position),
+    : Actor(id, player_id, ActorType::TOWER, hp, max_hp, position,
+            score_manager),
       Blaster(blast_range, damage_points, std::move(blast_callback)),
-      score_manager(score_manager),
       state(std::make_unique<TowerIdleState>(this)), age(0) {}
 
 Tower::Tower(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
              size_t damage_points, size_t blast_range,
              ScoreManager *score_manger, BlastCallback blast_callback)
-    : Actor(player_id, ActorType::TOWER, hp, max_hp, position),
+    : Actor(player_id, ActorType::TOWER, hp, max_hp, position, score_manager),
       Blaster(blast_range, damage_points, std::move(blast_callback)),
       state(std::make_unique<TowerIdleState>(this)), age(0) {}
 
