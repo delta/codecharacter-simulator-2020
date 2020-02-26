@@ -262,7 +262,7 @@ void State::createTower(Bot *bot) {
 
     DoubleVec2D position = bot->getPosition();
     if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
-        score_manager->actorExitedFlagArea();
+        score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
 
     // Finding ratio of hps of bot and tower to scale
@@ -284,7 +284,7 @@ void State::createTower(Bot *bot) {
         score_manager.get(), damage_enemy_actors));
 
     if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
-        score_manager->actorExitedFlagArea();
+        score_manager->actorExitedFlagArea(ActorType::TOWER, player_id);
     }
 }
 
