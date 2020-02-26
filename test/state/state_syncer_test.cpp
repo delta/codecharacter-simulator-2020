@@ -1,14 +1,19 @@
 #include "logger/mocks/logger_mock.h"
 #include "state/mocks/command_giver_mock.h"
 #include "state/mocks/state_mock.h"
-#include "state/score_manager/score_manager.h"
 #include "state/path_planner/path_planner.h"
+#include "state/score_manager/score_manager.h"
 #include "state/state_syncer.h"
 #include "gtest/gtest.h"
 
 using namespace std;
 using namespace testing;
 using namespace state;
+
+const auto L = player_state::TerrainType::LAND;
+const auto W = player_state::TerrainType::WATER;
+const auto F = player_state::TerrainType::FLAG;
+const auto T = player_state::TerrainType::TOWER;
 
 class StateSyncerTest : public Test {
   public:
@@ -75,9 +80,6 @@ class StateSyncerTest : public Test {
          *
          */
 
-        const auto L = player_state::TerrainType::LAND;
-        const auto W = player_state::TerrainType::WATER;
-
         // Creating the player state map
         vector<vector<state::TerrainType>> test_map;
         for (size_t x = 0; x < map_size; ++x) {
@@ -95,32 +97,34 @@ class StateSyncerTest : public Test {
             test_map.push_back(map_row);
         }
 
-        // Assinging the tower positions and bot positions for later use and
+        // Assigning the tower positions and bot positions for later use and
         // reference
         tower_positions = {{0, 0}, {4, 4}};
         bot_positions = {{1, 1}, {4, 4}};
 
-        // Assinging the flag locations
+        // Assigning the flag locations
         test_map[2][2] = state::TerrainType::FLAG;
 
-        // Assinging tower locations
-        test_map[tower_positions[0].y][tower_positions[0].x] =
-            state::TerrainType::TOWER;
-        test_map[tower_positions[1].y][tower_positions[1].x] =
-            state::TerrainType::TOWER;
+        // Assigning tower locations
+        for (int64_t player_id = 0; player_id < 2; ++player_id) {
+            test_map[tower_positions[player_id].y]
+                    [tower_positions[player_id].x] = state::TerrainType::TOWER;
+        }
 
         auto map_u = make_unique<Map>(test_map, map_size);
         map = map_u.get();
         path_planner = make_unique<PathPlanner>(std::move(map_u));
 
         // Creating state bots and towers
-        auto state_bot1 = new state::Bot(
-            0, PlayerId::PLAYER1, 100, 100, bot_positions[0], 1, 1, 1, score_manager.get(),
-            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+        auto state_bot1 =
+            new state::Bot(0, PlayerId::PLAYER1, 100, 100, bot_positions[0], 1,
+                           1, 1, score_manager.get(), path_planner.get(),
+                           BlastCallback{}, ConstructTowerCallback{});
 
-        auto state_bot2 = new state::Bot(
-            1, PlayerId::PLAYER2, 100, 100, bot_positions[1], 1, 1, 1, score_manager.get(),
-            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+        auto state_bot2 =
+            new state::Bot(1, PlayerId::PLAYER2, 100, 100, bot_positions[1], 1,
+                           1, 1, score_manager.get(), path_planner.get(),
+                           BlastCallback{}, ConstructTowerCallback{});
 
         auto state_tower1 =
             new state::Tower(2, PlayerId::PLAYER1, 100, 100, tower_positions[0],
@@ -138,9 +142,10 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     // Adding new bots to player state to check if they are added to the player
     // state
     auto new_bots2 = state_bots;
-    auto bot2 = new state::Bot(4, PlayerId::PLAYER1, 100, 100,
-                               DoubleVec2D(3, 3), 1, 1, 1, score_manager.get(), path_planner.get(),
-                               BlastCallback{}, ConstructTowerCallback{});
+    auto bot2 =
+        new state::Bot(4, PlayerId::PLAYER1, 100, 100, DoubleVec2D(3, 3), 1, 1,
+                       1, score_manager.get(), path_planner.get(),
+                       BlastCallback{}, ConstructTowerCallback{});
     new_bots2[0].push_back(bot2);
 
     // Expecting command taker calls
@@ -192,12 +197,6 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     // Checking for bots and tower's new states
     manageStateExpectations(state_bots, state_towers);
     this->state_syncer->updatePlayerStates(player_states);
-
-    // Checking if the map is assigned properly
-    const auto L = player_state::TerrainType::LAND;
-    const auto W = player_state::TerrainType::WATER;
-    const auto F = player_state::TerrainType::FLAG;
-    const auto T = player_state::TerrainType::TOWER;
 
     ASSERT_EQ(player_states[0].map[2][2].getTerrain(), F);
     ASSERT_EQ(player_states[1].map[2][2].getTerrain(), F);
