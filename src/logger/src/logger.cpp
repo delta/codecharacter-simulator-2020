@@ -4,6 +4,7 @@
  */
 
 #include "logger/logger.h"
+#include "constants/constants.h"
 #include "state/interfaces/i_command_taker.h"
 
 using namespace state;
@@ -41,10 +42,10 @@ proto::BotState GetProtoBotState(BotStateName bot_state) {
         curr_bot_state = proto::BOT_TRANSFORM;
         break;
     case BotStateName::BLAST:
-        curr_bot_state = proto::BOT;
+        curr_bot_state = proto::BOT_BLAST;
         break;
     case BotStateName::MOVE_TO_BLAST:
-        curr_bot_state = proto::BOT_BLAST;
+        curr_bot_state = proto::BOT_MOVE_TO_BLAST;
         break;
     case BotStateName::IDLE:
         curr_bot_state = proto::BOT_IDLE;
@@ -121,6 +122,7 @@ void Logger::logState() {
         logs->set_tower_max_hp(this->tower_max_hp);
         logs->set_inst_limit_turn(this->player_instruction_limit_turn);
         logs->set_inst_limit_game(this->player_instruction_limit_game);
+        logs->set_bot_speed(Constants::Actor::BOT_SPEED);
     }
 
     // Log player bots
@@ -131,7 +133,6 @@ void Logger::logState() {
             t_bot->set_id(bot->getActorId());
             t_bot->set_player_id((int) (bot->getPlayerId()));
             t_bot->set_hp(bot->getHp());
-            t_bot->set_speed(bot->getSpeed());
             t_bot->set_blast_range(bot->getBlastRange());
             t_bot->set_blast_bot(bot->isBlasting());
             t_bot->set_transform_bot(bot->isTransforming());
