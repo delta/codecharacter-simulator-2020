@@ -106,6 +106,15 @@ void Bot::lateUpdate() {
     // Resetting the damage incurred
     setDamageIncurred(0);
 
+    // Transition to dead state if dead
+    if (getHp() == 0 && state->getName() != BotStateName::DEAD) {
+        auto new_state = state->update();
+        state->exit();
+        state.reset(static_cast<BotState *>(new_state.release()));
+        state->enter();
+        return;
+    }
+
     // perform a move
     if (isNewPostitionSet()) {
         DoubleVec2D previous_position = getPosition();
@@ -129,18 +138,11 @@ void Bot::lateUpdate() {
         }
 
         clearNewPosition();
+        return;
     }
 
     if (getHp() > 0 && isTransforming()) {
         constructTower();
-    }
-
-    // Transition to dead state if dead
-    if (getHp() == 0 && state->getName() != BotStateName::DEAD) {
-        auto new_state = state->update();
-        state->exit();
-        state.reset(static_cast<BotState *>(new_state.release()));
-        state->enter();
     }
 }
 

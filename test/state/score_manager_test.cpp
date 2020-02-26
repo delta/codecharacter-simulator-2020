@@ -9,6 +9,11 @@ using namespace std;
 using namespace state;
 using namespace testing;
 
+void damage_enemy_actors_mock(PlayerId player_id, ActorId actor_id,
+                              DoubleVec2D position, size_t blast_range) {
+    // Damage enemy actors
+}
+
 class ScoreManagerTest : public Test {
   public:
     array<vector<Bot *>, 2> bots;
@@ -66,7 +71,8 @@ class ScoreManagerTest : public Test {
             auto bot = new state::Bot(
                 Actor::getNextActorId(), PlayerId::PLAYER1, 100, 100,
                 DoubleVec2D(5, 7), speed, 1, 1, score_manager.get(),
-                path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+                path_planner.get(), &damage_enemy_actors_mock,
+                ConstructTowerCallback{});
             bots[0].push_back(bot);
         }
 
@@ -74,7 +80,8 @@ class ScoreManagerTest : public Test {
             auto bot = new state::Bot(
                 Actor::getNextActorId(), PlayerId::PLAYER2, 100, 100,
                 DoubleVec2D(5, 3), speed, 1, 1, score_manager.get(),
-                path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+                path_planner.get(), &damage_enemy_actors_mock,
+                ConstructTowerCallback{});
             bots[1].push_back(bot);
         }
     }
@@ -148,10 +155,11 @@ TEST_F(ScoreManagerTest, BotDyingTest) {
     auto bot_counts = score_manager->getBotCounts();
     ASSERT_EQ(bot_counts[0], 4);
     ASSERT_EQ(bot_counts[1], 4);
+    ASSERT_EQ(bots[0][0]->getState(), BotStateName::IDLE);
 
-    // Transforming all PLAYER2 bots into dead state
+    // Making all PLAYER2 bots blast
     for (int64_t bot_index = 0; bot_index < 4; ++bot_index) {
-        bots[1][bot_index]->setHp(0);
+        bots[1][bot_index]->setBlasting(true);
         bots[1][bot_index]->update();
         bots[1][bot_index]->lateUpdate();
         ASSERT_EQ(bots[1][bot_index]->getState(), BotStateName::DEAD);
@@ -171,5 +179,4 @@ TEST_F(ScoreManagerTest, BotDyingTest) {
  *  TODO :
  *  1) Add test for bot transforming into tower
  *  2) Bot in move to transform
- *  3) Bot in move to blast
  */
