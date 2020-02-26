@@ -3,8 +3,6 @@
  * Definitions for functions of the State class
  */
 
-#pragma once
-
 #include "state/state.h"
 
 namespace state {
