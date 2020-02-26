@@ -33,8 +33,8 @@ size_t StateSyncer::getPlayerId(size_t player_id, bool is_enemy) const {
     return static_cast<size_t>(player_id);
 }
 
-std::array<int64_t, 2> StateSyncer::getScores(bool game_over) const {
-    return state->getScores(game_over);
+std::array<uint64_t, 2> StateSyncer::getScores() const {
+    return state->getScores();
 }
 
 Vec2D StateSyncer::flipOffset(const Map &map, Vec2D position) {
@@ -258,10 +258,6 @@ void StateSyncer::assignTowers(int64_t id,
     for (const auto &player_tower : new_towers) {
         player_towers.push_back(player_tower);
     }
-}
-
-std::array<size_t, 2> StateSyncer::getScores(bool game_over) {
-    return state->getScores(game_over);
 }
 
 } // namespace state

@@ -3,8 +3,6 @@
  * Definitions for functions of the State class
  */
 
-#pragma once
-
 #include "state/state.h"
 
 namespace state {
@@ -19,7 +17,7 @@ State::State(std::unique_ptr<Map> map,
 
 const Map *State::getMap() const { return map.get(); }
 
-const std::array<size_t, 2> State::getScores(bool game_over) const {
+const std::array<uint64_t, 2> State::getScores() const {
     return score_manager->getScores();
 }
 
@@ -39,7 +37,7 @@ const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
         std::vector<T *> actor_row;
         actor_row.resize(actors[id].size());
 
-        for (int actor_index = 0; actor_index < actors[id].size();
+        for (size_t actor_index = 0; actor_index < actors[id].size();
              ++actor_index) {
             actor_row.push_back(actors[id][actor_index].get());
         }
@@ -190,7 +188,7 @@ void State::spawnNewBots() {
             Constants::Actor::BOT_MAX_HP, Constants::Map::PLAYER1_BASE_POSITION,
             Constants::Actor::BOT_SPEED,
             Constants::Actor::BOT_BLAST_IMPACT_RADIUS,
-            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, path_planner.get(),
+            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(), path_planner.get(),
             damage_enemy_actors, create_tower));
     }
 
@@ -202,7 +200,7 @@ void State::spawnNewBots() {
             Constants::Actor::BOT_MAX_HP, Constants::Map::PLAYER2_BASE_POSITION,
             Constants::Actor::BOT_SPEED,
             Constants::Actor::BOT_BLAST_IMPACT_RADIUS,
-            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, path_planner.get(),
+            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(), path_planner.get(),
             damage_enemy_actors, create_tower));
     }
 }
@@ -282,7 +280,7 @@ void State::createTower(Bot *bot) {
     towers[id].push_back(
         make_unique<Tower>(player_id, scaled_hp, Constants::Actor::TOWER_MAX_HP,
                            bot->getPosition(), bot->getBlastDamage(),
-                           bot->getBlastRange(), damage_enemy_actors));
+                           bot->getBlastRange(), score_manager.get(), damage_enemy_actors));
 
     // TODO :
     // If tower is in flag area, then score_manager must be called and

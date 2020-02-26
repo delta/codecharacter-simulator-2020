@@ -15,5 +15,5 @@ class StateSyncerMock : public IStateSyncer {
     MOCK_METHOD1(updatePlayerStates,
                  void(std::array<player_state::State, 2> &player_states));
     MOCK_METHOD1(isGameOver, bool(PlayerId &winner));
-    MOCK_METHOD1(getScores, array<size_t, 2>(bool game_over));
+    MOCK_CONST_METHOD0(getScores, array<uint64_t, 2>());
 };

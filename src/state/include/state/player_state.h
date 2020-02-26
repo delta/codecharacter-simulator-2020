@@ -11,6 +11,8 @@
 
 #include <array>
 
+using namespace std;
+
 namespace player_state {
 
 enum class TerrainType { LAND, WATER, TOWER, FLAG };

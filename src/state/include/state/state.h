@@ -226,7 +226,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#getScores
      */
-    const std::array<int64_t, 2> getScores(bool game_over) const override;
+    const std::array<uint64_t, 2> getScores() const override;
 
     /**
      * @see ICommandTaker#getTowers
