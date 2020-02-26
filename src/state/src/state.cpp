@@ -274,8 +274,13 @@ void State::createTower(Bot *bot) {
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
 
+<<<<<<< 016077fbe8189c58c4664c5ff8c85d306f3fd8cf
     if (path_planner->getTerrainType(tower_position) == TerrainType::FLAG) {
         score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
+=======
+    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
+        score_manager->actorExitedFlagArea();
+>>>>>>> Add score_manager checks in transform
     }
 }
 
