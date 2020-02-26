@@ -140,7 +140,7 @@ TEST_F(ScoreManagerTest, BotEnterExitTest) {
     ASSERT_EQ(scores[1], 1);
 }
 
-TEST_F(ScoreManagerTest, BotDyingTest) {
+TEST_F(ScoreManagerTest, BotBlastingTest) {
     // Moving 4 PLAYER1 and PLAYER2 bots into flag area
     for (int64_t player_id = 0; player_id < 2; ++player_id) {
         for (int64_t bot_index = 0; bot_index < 4; ++bot_index) {
