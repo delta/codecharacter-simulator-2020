@@ -97,7 +97,7 @@ TEST_F(LoggerTest, WriteReadTest) {
 
     /// Simulate movement of bot
 
-    // Bot 1 of player 0 moves to (1, 2) and switches to MOVE state
+    // Bot 1 of player 1 moves to (1, 2) and switches to MOVE state
     std::array<vector<Bot *>, 2> bots_2 = bots;
     bots_2[0][0] = new Bot(
         bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
@@ -105,7 +105,7 @@ TEST_F(LoggerTest, WriteReadTest) {
         BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
         BlastCallback(), ConstructTowerCallback(), false, false);
 
-    // Bot 1 of player 0 moves to (2, 3) and switches back to IDLE state
+    // Bot 1 of player 1 moves to (2, 3) and switches back to IDLE state
     std::array<vector<Bot *>, 2> bots_3 = bots_2;
     bots_3[0][0] = new Bot(
         bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
@@ -115,7 +115,7 @@ TEST_F(LoggerTest, WriteReadTest) {
 
     /// Simulate blast of bot
 
-    // Bot has blasted and moved to dead state
+    // Bot 2 of player 1 has blasted and moved to dead state
     std::array<vector<Bot *>, 2> bots_4 = bots_3;
     bots_4[0][1] = new Bot(
         bot_2->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
@@ -123,7 +123,7 @@ TEST_F(LoggerTest, WriteReadTest) {
         BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
         BlastCallback(), ConstructTowerCallback(), true, false);
 
-    // Blast tower and move to dead state
+    // Blast tower 1 of player 1 and move to dead state
     std::array<vector<Tower *>, 2> towers_2 = towers;
     towers_2[0][0] = new Tower(tower_1->getActorId(), PlayerId::PLAYER2,
                                TowerStateName::DEAD, MAX_TOWER_HP, MAX_TOWER_HP,
@@ -170,10 +170,6 @@ TEST_F(LoggerTest, WriteReadTest) {
     ostringstream str_stream;
     logger->writeGame(str_stream);
     string result_string = str_stream.str();
-
-    std::ofstream out("game.log");
-    out << result_string;
-    out.close();
 
     auto game = make_unique<proto::Game>();
     game->ParseFromString(result_string);

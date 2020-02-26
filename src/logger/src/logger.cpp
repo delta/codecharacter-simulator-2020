@@ -41,7 +41,7 @@ proto::BotState GetProtoBotState(BotStateName bot_state) {
         curr_bot_state = proto::BOT_TRANSFORM;
         break;
     case BotStateName::BLAST:
-        curr_bot_state = proto::BOT_MOVE_TO_TRANSFORM;
+        curr_bot_state = proto::BOT;
         break;
     case BotStateName::MOVE_TO_BLAST:
         curr_bot_state = proto::BOT_BLAST;
