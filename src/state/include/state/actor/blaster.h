@@ -12,8 +12,9 @@
 
 namespace state {
 
-using BlastCallback = std::function<void(PlayerId player_id, ActorId actor_id,
-                                         DoubleVec2D position, int64_t blast_range)>;
+using BlastCallback =
+    std::function<void(PlayerId player_id, ActorId actor_id,
+                       DoubleVec2D position, int64_t blast_range)>;
 
 class STATE_EXPORT Blaster {
   protected:

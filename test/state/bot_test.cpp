@@ -21,7 +21,8 @@ namespace test {
 
 // Mock function declaration for blasting enemy actors
 // Defined in test namespace in tower_test.cpp
-void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position, int64_t blast_range) {}
+void blast_enemies(PlayerId player_id, ActorId actor_id, DoubleVec2D position,
+                   int64_t blast_range) {}
 
 // Mock function definition for transforming bot to tower
 void construct_tower(Bot *) {}

@@ -188,8 +188,8 @@ void State::spawnNewBots() {
             Constants::Actor::BOT_MAX_HP, Constants::Map::PLAYER1_BASE_POSITION,
             Constants::Actor::BOT_SPEED,
             Constants::Actor::BOT_BLAST_IMPACT_RADIUS,
-            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(), path_planner.get(),
-            damage_enemy_actors, create_tower));
+            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(),
+            path_planner.get(), damage_enemy_actors, create_tower));
     }
 
     // Player2 spawns
@@ -200,8 +200,8 @@ void State::spawnNewBots() {
             Constants::Actor::BOT_MAX_HP, Constants::Map::PLAYER2_BASE_POSITION,
             Constants::Actor::BOT_SPEED,
             Constants::Actor::BOT_BLAST_IMPACT_RADIUS,
-            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(), path_planner.get(),
-            damage_enemy_actors, create_tower));
+            Constants::Actor::BOT_BLAST_DAMAGE_POINTS, score_manager.get(),
+            path_planner.get(), damage_enemy_actors, create_tower));
     }
 }
 
@@ -277,10 +277,10 @@ void State::createTower(Bot *bot) {
     using namespace std::placeholders;
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
-    towers[id].push_back(
-        make_unique<Tower>(player_id, scaled_hp, Constants::Actor::TOWER_MAX_HP,
-                           bot->getPosition(), bot->getBlastDamage(),
-                           bot->getBlastRange(), score_manager.get(), damage_enemy_actors));
+    towers[id].push_back(make_unique<Tower>(
+        player_id, scaled_hp, Constants::Actor::TOWER_MAX_HP,
+        bot->getPosition(), bot->getBlastDamage(), bot->getBlastRange(),
+        score_manager.get(), damage_enemy_actors));
 
     // TODO :
     // If tower is in flag area, then score_manager must be called and
