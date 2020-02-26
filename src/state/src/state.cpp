@@ -260,9 +260,10 @@ void State::createTower(Bot *bot) {
     int64_t id = static_cast<int64_t>(player_id);
     auto bot_id = bot->getActorId();
 
-    // TODO :
-    // If the bot is in a flag area, then score_manager must be called and
-    // actorExitedFlagArea
+    DoubleVec2D position = bot->getPosition();
+    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
+        score_manager->actorExitedFlagArea();
+    }
 
     // Finding ratio of hps of bot and tower to scale
     double scaling_ratio = (double) (Constants::Actor::BOT_MAX_HP) /
@@ -282,9 +283,9 @@ void State::createTower(Bot *bot) {
         bot->getPosition(), bot->getBlastDamage(), bot->getBlastRange(),
         score_manager.get(), damage_enemy_actors));
 
-    // TODO :
-    // If tower is in flag area, then score_manager must be called and
-    // actorEnteredFlagArea should be called
+    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
+        score_manager->actorExitedFlagArea();
+    }
 }
 
 void State::blastActor(PlayerId player_id, ActorId actor_id,
