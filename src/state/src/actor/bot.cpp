@@ -45,8 +45,8 @@ Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
 
 Bot::Bot(ActorId actor_id, PlayerId player_id, size_t hp, size_t max_hp,
          BotStateName bot_state_name, DoubleVec2D position, size_t speed,
-         size_t blast_range, size_t damage_points, ScoreManager *score_manager, PathPlanner *path_planner,
-         BlastCallback blast_callback,
+         size_t blast_range, size_t damage_points, ScoreManager *score_manager,
+         PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback, bool is_blasting,
          bool is_transforming)
     : Unit::Unit(actor_id, player_id, ActorType::BOT, hp, max_hp, speed,

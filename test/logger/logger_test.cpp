@@ -53,18 +53,18 @@ class LoggerTest : public testing::Test {
 TEST_F(LoggerTest, WriteReadTest) {
 
     // Create and assign bots for each player
-    auto *bot_1 =
-        new Bot(state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
-                DoubleVec2D(1, 1), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS, 0,
-                score_manager.get(), path_planner.get(), BlastCallback(), ConstructTowerCallback());
-    auto *bot_2 =
-        new Bot(state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
-                DoubleVec2D(2, 1), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS, 0,
-                score_manager.get(), path_planner.get(), BlastCallback(), ConstructTowerCallback());
-    auto *bot_3 =
-        new Bot(state::PlayerId::PLAYER2, MAX_BOT_HP, MAX_TOWER_HP,
-                DoubleVec2D(2, 2), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS, 0,
-                score_manager.get(), path_planner.get(), BlastCallback(), ConstructTowerCallback());
+    auto *bot_1 = new Bot(state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
+                          DoubleVec2D(1, 1), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS,
+                          0, score_manager.get(), path_planner.get(),
+                          BlastCallback(), ConstructTowerCallback());
+    auto *bot_2 = new Bot(state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
+                          DoubleVec2D(2, 1), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS,
+                          0, score_manager.get(), path_planner.get(),
+                          BlastCallback(), ConstructTowerCallback());
+    auto *bot_3 = new Bot(state::PlayerId::PLAYER2, MAX_BOT_HP, MAX_TOWER_HP,
+                          DoubleVec2D(2, 2), BOT_SPEED, BOT_BLAST_IMPACT_RADIUS,
+                          0, score_manager.get(), path_planner.get(),
+                          BlastCallback(), ConstructTowerCallback());
 
     std::array<vector<Bot *>, 2> bots;
     vector<Bot *> player_1_bots;
@@ -99,29 +99,29 @@ TEST_F(LoggerTest, WriteReadTest) {
 
     // Bot 1 of player 0 moves to (1, 2) and switches to MOVE state
     std::array<vector<Bot *>, 2> bots_2 = bots;
-    bots_2[0][0] =
-        new Bot(bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP,
-                MAX_TOWER_HP, BotStateName::MOVE, DoubleVec2D(1, 2), BOT_SPEED,
-                BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(), BlastCallback(),
-                ConstructTowerCallback(), false, false);
+    bots_2[0][0] = new Bot(
+        bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
+        BotStateName::MOVE, DoubleVec2D(1, 2), BOT_SPEED,
+        BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
+        BlastCallback(), ConstructTowerCallback(), false, false);
 
     // Bot 1 of player 0 moves to (2, 3) and switches back to IDLE state
     std::array<vector<Bot *>, 2> bots_3 = bots_2;
-    bots_3[0][0] =
-        new Bot(bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP,
-                MAX_TOWER_HP, BotStateName::IDLE, DoubleVec2D(1, 3), BOT_SPEED,
-                BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(), BlastCallback(),
-                ConstructTowerCallback(), false, false);
+    bots_3[0][0] = new Bot(
+        bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
+        BotStateName::IDLE, DoubleVec2D(1, 3), BOT_SPEED,
+        BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
+        BlastCallback(), ConstructTowerCallback(), false, false);
 
     /// Simulate blast of bot
 
     // Bot has blasted and moved to dead state
     std::array<vector<Bot *>, 2> bots_4 = bots_3;
-    bots_4[0][1] =
-        new Bot(bot_2->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP,
-                MAX_TOWER_HP, BotStateName::DEAD, DoubleVec2D(2, 1), BOT_SPEED,
-                BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(), BlastCallback(),
-                ConstructTowerCallback(), true, false);
+    bots_4[0][1] = new Bot(
+        bot_2->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
+        BotStateName::DEAD, DoubleVec2D(2, 1), BOT_SPEED,
+        BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
+        BlastCallback(), ConstructTowerCallback(), true, false);
 
     // Blast tower and move to dead state
     std::array<vector<Tower *>, 2> towers_2 = towers;
