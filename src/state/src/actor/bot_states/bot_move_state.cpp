@@ -53,6 +53,7 @@ std::unique_ptr<IActorState> BotMoveState::update() const {
     auto current_position = bot->getPosition();
     auto speed = bot->getSpeed();
     auto destination = bot->getDestination();
+
     auto next_position =
         path_planner->getNextPosition(current_position, destination, speed);
 

@@ -26,7 +26,7 @@ void StateSyncer::updateMainState(
     updatePlayerStates(player_states);
 }
 
-bool StateSyncer::isGameOver(PlayerId &winner) {
+bool StateSyncer::isGameOver(PlayerId &winner) const {
     return state->isGameOver(winner);
 }
 
@@ -37,7 +37,7 @@ size_t StateSyncer::getPlayerId(size_t player_id, bool is_enemy) const {
     return static_cast<size_t>(player_id);
 }
 
-std::array<int64_t, 2> StateSyncer::getScores(bool game_over) {
+std::array<int64_t, 2> StateSyncer::getScores(bool game_over) const {
     return state->getScores(game_over);
 }
 

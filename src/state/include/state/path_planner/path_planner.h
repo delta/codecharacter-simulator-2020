@@ -95,6 +95,16 @@ class PathPlanner : public IPathPlanner {
     bool isValidBotPosition(DoubleVec2D position);
 
     /**
+     * Returns the terrain type of the position
+     *
+     * @param position Position for which terrain type is requested
+     * @return TerrainType Terrain type of the position
+     *
+     * @throw      std::invalid_argument      If position is not within map
+     */
+    TerrainType getTerrainType(DoubleVec2D position) const;
+
+    /**
      * Build a new tower at given position
      * @param position
      * @return Vec2D If successfully built, Offset in which tower has been built

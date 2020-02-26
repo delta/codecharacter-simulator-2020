@@ -45,27 +45,34 @@ class STATE_EXPORT Unit : public Actor {
 
   public:
     /**
-     *  Construct a new Unit object
+     * Construct a new Unit object
      *
      * @param id
      * @param player_id
      * @param actor_type
      * @param hp
+     * @param max_hp
+     * @param speed
      * @param position
+     * @param score_manager
      */
     Unit(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-         size_t max_hp, size_t speed, DoubleVec2D position);
+         size_t max_hp, size_t speed, DoubleVec2D position,
+         ScoreManager *score_manager);
 
     /**
-     *  Construct a new Unit object, with auto incrementing id.
+     * Construct a new Unit object
      *
      * @param player_id
      * @param actor_type
      * @param hp
+     * @param max_hp
+     * @param speed
      * @param position
+     * @param score_manager
      */
     Unit(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-         size_t speed, DoubleVec2D position);
+         size_t speed, DoubleVec2D position, ScoreManager *score_manager);
 
     /**
      * Destructor

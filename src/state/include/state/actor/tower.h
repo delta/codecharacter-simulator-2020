@@ -8,6 +8,7 @@
 #include "state/actor/blaster.h"
 #include "state/actor/tower_states/tower_idle_state.h"
 #include "state/actor/tower_states/tower_state.h"
+
 #include <memory>
 
 namespace state {
@@ -29,36 +30,36 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
 
   public:
     /**
-     *  Construct a new Tower object
+     * Construct a new Tower object
      *
      * @param id
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param damage_points
      * @param blast_range
+     * @param score_manager
      * @param blast_callback
      */
     Tower(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
           DoubleVec2D position, size_t damage_points, size_t blast_range,
-          BlastCallback blast_callback);
+          ScoreManager *score_manager, BlastCallback blast_callback);
 
     /**
      *  Construct a new Tower object, with auto incrementing id
      *
      * @param player_id
-     * @param actor_type
      * @param hp
      * @param max_hp
      * @param position
      * @param damage_points
      * @param blast_range
+     * @param score_manager
      * @param blast_callback
      */
     Tower(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
-          size_t damage_points, size_t blast_range,
+          size_t damage_points, size_t blast_range, ScoreManager *score_manager,
           BlastCallback blast_callback);
 
     /**

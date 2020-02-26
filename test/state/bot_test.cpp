@@ -61,8 +61,10 @@ class BotTest : public Test {
         blast_callback = &blast_enemies;
         construct_tower_callback = &construct_tower;
 
+        array<size_t, 2> scores = {0, 0};
+        auto score_manager = new ScoreManager(scores);
         bot = make_unique<Bot>(1, PlayerId::PLAYER1, hp, max_hp, start_position,
-                               speed, blast_range, damage_points,
+                               speed, blast_range, damage_points, score_manager,
                                path_planner.get(), blast_callback,
                                construct_tower_callback);
     }

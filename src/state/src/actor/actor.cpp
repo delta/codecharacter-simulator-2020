@@ -11,14 +11,16 @@ namespace state {
 ActorId Actor::next_actor_id = 0;
 
 Actor::Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-             size_t max_hp, DoubleVec2D position)
+             size_t max_hp, DoubleVec2D position, ScoreManager *score_manager)
     : id(id), player_id(player_id), actor_type(actor_type), hp(hp),
-      max_hp(max_hp), damage_incurred(0), position(position) {}
+      max_hp(max_hp), damage_incurred(0), position(position),
+      score_manager(score_manager) {}
 
 Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-             DoubleVec2D position)
+             DoubleVec2D position, ScoreManager *score_manager)
     : id(Actor::getNextActorId()), player_id(player_id), actor_type(actor_type),
-      hp(hp), max_hp(max_hp), damage_incurred(0), position(position) {}
+      hp(hp), max_hp(max_hp), damage_incurred(0), position(position),
+      score_manager(score_manager) {}
 
 ActorId Actor::getActorId() const { return id; }
 
@@ -67,5 +69,7 @@ void Actor::setPosition(DoubleVec2D p_position) {
     }
     position = p_position;
 }
+
+ScoreManager *Actor::getScoreManager() const { return score_manager; }
 
 } // namespace state

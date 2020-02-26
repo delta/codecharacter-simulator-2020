@@ -11,10 +11,11 @@ namespace state {
 
 Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
          DoubleVec2D position, size_t speed, size_t blast_range,
-         size_t damage_points, PathPlanner *path_planner,
-         BlastCallback blast_callback,
+         size_t damage_points, ScoreManager *score_manager,
+         PathPlanner *path_planner, BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position),
+    : Unit::Unit(id, player_id, ActorType::BOT, hp, max_hp, speed, position,
+                 score_manager),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
       state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
@@ -24,9 +25,11 @@ Bot::Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
 
 Bot::Bot(PlayerId player_id, size_t hp, size_t max_hp, DoubleVec2D position,
          size_t speed, size_t blast_range, size_t damage_points,
-         PathPlanner *path_planner, BlastCallback blast_callback,
+         ScoreManager *score_manager, PathPlanner *path_planner,
+         BlastCallback blast_callback,
          ConstructTowerCallback construct_tower_callback)
-    : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position),
+    : Unit::Unit(player_id, ActorType::BOT, hp, max_hp, speed, position,
+                 score_manager),
       Blaster::Blaster(blast_range, damage_points, std::move(blast_callback)),
       state(std::make_unique<BotIdleState>(this)), path_planner(path_planner),
       final_destination(DoubleVec2D::null), is_final_destination_set(false),
@@ -103,22 +106,43 @@ void Bot::lateUpdate() {
     // Resetting the damage incurred
     setDamageIncurred(0);
 
-    // perform a move
-    if (isNewPostitionSet()) {
-        setPosition(getNewPosition());
-        clearNewPosition();
-    }
-
-    if (getHp() > 0 && isTransforming()) {
-        constructTower();
-    }
-
     // Transition to dead state if dead
     if (getHp() == 0 && state->getName() != BotStateName::DEAD) {
         auto new_state = state->update();
         state->exit();
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
+        return;
+    }
+
+    // perform a move
+    if (isNewPostitionSet()) {
+        DoubleVec2D previous_position = getPosition();
+        TerrainType previous_terrain =
+            path_planner->getTerrainType(previous_position);
+
+        setPosition(getNewPosition());
+
+        // Checking if the bot is has moved out of a flag from inside a flag
+        DoubleVec2D position = getPosition();
+        TerrainType terrain = path_planner->getTerrainType(position);
+        if (previous_terrain == TerrainType::FLAG &&
+            terrain != TerrainType::FLAG) {
+            score_manager->actorExitedFlagArea(getActorType(), getPlayerId());
+        }
+
+        // Checking if the bot has moved into a flag from outside a flag
+        if (previous_terrain != TerrainType::FLAG &&
+            terrain == TerrainType::FLAG) {
+            score_manager->actorEnteredFlagArea(getActorType(), getPlayerId());
+        }
+
+        clearNewPosition();
+        return;
+    }
+
+    if (getHp() > 0 && isTransforming()) {
+        constructTower();
     }
 }
 
@@ -136,6 +160,7 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
+
         new_state = state->update();
     }
 }

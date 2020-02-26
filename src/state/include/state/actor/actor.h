@@ -7,6 +7,7 @@
 
 #include "physics/vector.hpp"
 #include "state/interfaces/i_updatable.h"
+#include "state/score_manager/score_manager.h"
 #include "state/state_export.h"
 #include "state/utilities.h"
 
@@ -59,6 +60,11 @@ class STATE_EXPORT Actor : public IUpdatable {
      */
     DoubleVec2D position;
 
+    /**
+     * Score manager to update scores
+     */
+    ScoreManager *score_manager;
+
   public:
     /**
      *  Construct a new Actor object
@@ -71,7 +77,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @param position
      */
     Actor(ActorId id, PlayerId player_id, ActorType actor_type, size_t hp,
-          size_t max_hp, DoubleVec2D position);
+          size_t max_hp, DoubleVec2D position, ScoreManager *score_manager);
 
     /**
      *  Construct a new Actor object, with auto incrementing id.
@@ -83,7 +89,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      * @param position
      */
     Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
-          DoubleVec2D position);
+          DoubleVec2D position, ScoreManager *score_manager);
 
     /**
      * Destructor
@@ -112,7 +118,7 @@ class STATE_EXPORT Actor : public IUpdatable {
     PlayerId getPlayerId() const;
 
     /**
-     *  Get the Actorype of Actor.
+     *  Get the Actor type of Actor.
      *
      * @return ActorType
      */
@@ -160,7 +166,7 @@ class STATE_EXPORT Actor : public IUpdatable {
     /**
      *  Set the damage incurred of the Actor
      *
-     * @throw std::out_of_range If the damange incurred is negative
+     * @throw std::out_of_range If the damage incurred is negative
      */
     void setDamageIncurred(int64_t damage_incurred);
 
@@ -168,7 +174,7 @@ class STATE_EXPORT Actor : public IUpdatable {
      *  Used to reduce hp of the Actor.
      *  Increases damage_incurred of Actor upto its Hp.
      *
-     * @param damage_amout
+     * @param damage_amount
      */
     void damage(size_t damage_amount);
 
@@ -184,6 +190,13 @@ class STATE_EXPORT Actor : public IUpdatable {
      *
      */
     void setPosition(DoubleVec2D p_position);
+
+    /**
+     * Returns a pointer to the score manager
+     *
+     * @return ScoreManager*
+     */
+    ScoreManager *getScoreManager() const;
 };
 
 } // namespace state

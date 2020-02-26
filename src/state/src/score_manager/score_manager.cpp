@@ -8,6 +8,9 @@
 
 namespace state {
 
+ScoreManager::ScoreManager()
+    : scores({0, 0}), num_bots({0, 0}), num_towers({0, 0}) {}
+
 ScoreManager::ScoreManager(std::array<size_t, 2> scores)
     : scores(scores), num_bots({0, 0}), num_towers({0, 0}) {}
 
@@ -23,24 +26,32 @@ double ScoreManager::getPlayerPoints(PlayerId player_id) const {
 
 void ScoreManager::actorEnteredFlagArea(ActorType actor_type,
                                         PlayerId player_id) {
+    size_t id = static_cast<size_t>(player_id);
     switch (actor_type) {
     case ActorType::BOT:
-        num_bots[static_cast<size_t>(player_id)]++;
+        num_bots[id]++;
         break;
     case ActorType::TOWER:
-        num_towers[static_cast<size_t>(player_id)]++;
+        num_towers[id]++;
         break;
     }
 }
 
+std::array<size_t, 2> ScoreManager::getTowerCounts() const {
+    return num_towers;
+}
+
+std::array<size_t, 2> ScoreManager::getBotCounts() const { return num_bots; }
+
 void ScoreManager::actorExitedFlagArea(ActorType actor_type,
                                        PlayerId player_id) {
+    int64_t id = static_cast<size_t>(player_id);
     switch (actor_type) {
     case ActorType::BOT:
-        num_bots[static_cast<size_t>(player_id)]--;
+        num_bots[id]--;
         break;
     case ActorType::TOWER:
-        num_towers[static_cast<size_t>(player_id)]--;
+        num_towers[id]--;
         break;
     }
 }

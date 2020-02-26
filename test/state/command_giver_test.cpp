@@ -20,6 +20,7 @@ class CommandGiverTest : public Test {
     StateMock *state;
     LoggerMock *logger;
     StateSyncerMock *state_syncer;
+    unique_ptr<ScoreManager> score_manager;
     unique_ptr<PathPlanner> path_planner;
     unique_ptr<CommandGiver> command_giver;
     array<player_state::State, 2> player_states;
@@ -50,6 +51,8 @@ class CommandGiverTest : public Test {
         state_syncer = u_state_syncer.get();
         command_giver =
             make_unique<CommandGiver>(move(u_state), move(u_logger));
+        array<size_t, 2> scores = {0, 0};
+        score_manager = make_unique<ScoreManager>(scores);
 
         // Creating the player and state map
         map_size = 5;
@@ -190,8 +193,8 @@ class CommandGiverTest : public Test {
             player_state::Tower player_tower;
             player_tower.id = actor_id++;
 
-            // Assiging player_tower's position for each player and appending it
-            // to player's towers
+            // Assigning player_tower's position for each player and appending
+            // it to player's towers
             player_tower.position = position;
 
             player_states[player_id].towers.push_back(player_tower);
@@ -207,20 +210,22 @@ class CommandGiverTest : public Test {
         player_states[1].score = 1000;
 
         // Creating state bots and towers
-        auto state_bot1 = new state::Bot(
-            1, PlayerId::PLAYER1, 100, 100, bot_positions[0], 1, 1, 1,
-            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+        auto state_bot1 =
+            new state::Bot(1, PlayerId::PLAYER1, 100, 100, bot_positions[0], 1,
+                           1, 1, score_manager.get(), path_planner.get(),
+                           BlastCallback{}, ConstructTowerCallback{});
 
-        auto state_bot2 = new state::Bot(
-            2, PlayerId::PLAYER2, 100, 100, bot_positions[1], 1, 1, 1,
-            path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+        auto state_bot2 =
+            new state::Bot(2, PlayerId::PLAYER2, 100, 100, bot_positions[1], 1,
+                           1, 1, score_manager.get(), path_planner.get(),
+                           BlastCallback{}, ConstructTowerCallback{});
 
         auto state_tower1 =
             new state::Tower(3, PlayerId::PLAYER1, 100, 100, tower_positions[0],
-                             2, 2, BlastCallback{});
+                             2, 2, score_manager.get(), BlastCallback{});
         auto state_tower2 =
             new state::Tower(4, PlayerId::PLAYER2, 100, 100, tower_positions[1],
-                             2, 2, BlastCallback{});
+                             2, 2, score_manager.get(), BlastCallback{});
 
         state_bots = {{{state_bot1}, {state_bot2}}};
         state_towers = {{{state_tower1}, {state_tower2}}};
@@ -374,9 +379,9 @@ TEST_F(CommandGiverTest, ExceedTowerLimit) {
     for (size_t tower_count = 0;
          tower_count < Constants::Actor::MAX_NUM_TOWERS - 1; ++tower_count) {
         size_t actor_id = Actor::getNextActorId();
-        auto state_tower =
-            new state::Tower(actor_id, PlayerId::PLAYER1, 100, 100,
-                             DoubleVec2D(0, 0), 2, 2, BlastCallback{});
+        auto state_tower = new state::Tower(
+            actor_id, PlayerId::PLAYER1, 100, 100, DoubleVec2D(0, 0), 2, 2,
+            score_manager.get(), BlastCallback{});
         state_towers[0].push_back(state_tower);
 
         // Creating the player state tower
