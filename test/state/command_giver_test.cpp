@@ -164,7 +164,7 @@ class CommandGiverTest : public Test {
             player_state::Bot player_bot;
             player_bot.id = actor_id++;
 
-            // Assiging player_bot's position for each player and appending
+            // Assigning player_bot's position for each player and appending
             // it to player's towers
             player_bot.position = position;
             player_states[player_id].bots.push_back(player_bot);
