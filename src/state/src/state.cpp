@@ -9,6 +9,10 @@ namespace state {
 State::State() {}
 
 State::State(std::unique_ptr<Map> map,
+             std::unique_ptr<ScoreManager> score_manager)
+    : map(std::move(map)), score_manager(std::move(score_manager)) {}
+
+State::State(std::unique_ptr<Map> map,
              std::unique_ptr<ScoreManager> score_manager,
              std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
              std::array<std::vector<std::unique_ptr<Tower>>, 2> towers)
@@ -29,7 +33,7 @@ std::array<uint64_t, 2> State::getScores() const {
  * @return const std::array<std::vector<T *>, 2>
  */
 template <typename T>
-const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
+std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     std::array<std::vector<std::unique_ptr<T>>, 2> &actors) {
     std::array<std::vector<T *>, 2> ret_actors;
 

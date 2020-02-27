@@ -122,16 +122,6 @@ class STATE_EXPORT State : public ICommandTaker {
     Bot *getBotById(ActorId actor_id);
 
     /**
-     * Get the Impact Points when an actor blasts in a position
-     *
-     * @param position Position where blaster is blasting
-     * @param impact_range Impact range where bot blast is affected
-     * @return std::vector<Vec2D> Impact points
-     */
-    std::vector<Vec2D> getImpactPoints(DoubleVec2D position,
-                                       int64_t impact_range);
-
-    /**
      * Get the actors who get damage from position
      *
      * @param blast_position
