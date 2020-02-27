@@ -1,13 +1,13 @@
 #include "constants/constants.h"
 #include "logger/logger.h"
+#include "state/actor/bot_states/bot_move_state.h"
 #include "state/mocks/state_mock.h"
 #include "state/score_manager/score_manager.h"
 #include "state/utilities.h"
 #include "gtest/gtest.h"
-#include <state/actor/bot_states/bot_move_state.h>
 
 using namespace std;
-using namespace ::testing;
+using namespace testing;
 using namespace state;
 using namespace logger;
 using namespace Constants::Simulator;
@@ -43,8 +43,7 @@ class LoggerTest : public testing::Test {
         }};
         map = make_unique<Map>(map_matrix, TEST_MAP_SIZE);
 
-        this->score_manager =
-            make_unique<ScoreManager>(std::array<size_t, 2>{0, 0});
+        this->score_manager = make_unique<ScoreManager>();
     }
 };
 
