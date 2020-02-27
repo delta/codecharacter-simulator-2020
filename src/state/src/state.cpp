@@ -14,6 +14,7 @@ State::State(std::unique_ptr<Map> map,
 
 State::State(std::unique_ptr<Map> map,
              std::unique_ptr<ScoreManager> score_manager,
+             std::unique_ptr<PathPlanner> path_planner,
              std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
              std::array<std::vector<std::unique_ptr<Tower>>, 2> towers)
     : map(std::move(map)), score_manager(std::move(score_manager)),
@@ -35,7 +36,7 @@ std::array<uint64_t, 2> State::getScores() const {
 template <typename T>
 std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     std::array<std::vector<std::unique_ptr<T>>, 2> &actors) {
-    std::array<std::vector<T *>, 2> ret_actors;
+    auto ret_actors = std::array<std::vector<T *>, 2>{};
 
     for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
          ++id) {
@@ -44,7 +45,7 @@ std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
 
         for (size_t actor_index = 0; actor_index < actors[id].size();
              ++actor_index) {
-            actor_row[id] = actors[id][actor_index].get();
+            actor_row[actor_index] = actors[id][actor_index].get();
         }
         ret_actors[id] = actor_row;
     }
@@ -266,6 +267,7 @@ void State::createTower(Bot *bot) {
     tower_position.y += 0.5;
 
     using namespace std::placeholders;
+
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
     towers[id].push_back(make_unique<Tower>(

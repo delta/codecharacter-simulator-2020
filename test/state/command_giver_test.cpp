@@ -127,9 +127,8 @@ class CommandGiverTest : public Test {
             .map[tower_positions[1].y][tower_positions[1].x]
             .setTerrain(T);
 
-        auto map_u = make_unique<Map>(test_map, map_size);
-        map = map_u.get();
-        path_planner = make_unique<PathPlanner>(std::move(map_u));
+        map = new Map(test_map, map_size);
+        path_planner = make_unique<PathPlanner>(map);
 
         // Clearing player state
         for (int player_id = 0; player_id < 2; ++player_id) {

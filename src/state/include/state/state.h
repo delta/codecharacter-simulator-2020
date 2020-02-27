@@ -32,6 +32,11 @@ class STATE_EXPORT State : public ICommandTaker {
     std::unique_ptr<ScoreManager> score_manager;
 
     /**
+     * An instance of path planner
+     */
+    std::unique_ptr<PathPlanner> path_planner;
+
+    /**
      * A list of bots indexed by player
      */
     std::array<std::vector<std::unique_ptr<Bot>>, 2> bots;
@@ -46,11 +51,6 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::array<std::vector<std::unique_ptr<TransformRequest>>, 2>
         transform_requests;
-
-    /**
-     * An instance of path planner
-     */
-    std::unique_ptr<PathPlanner> path_planner;
 
     /**
      * Function to check whether the opponent is also requesting to change to
@@ -138,13 +138,14 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     State();
 
-    State(std::unique_ptr<Map> map,
-          std::unique_ptr<ScoreManager> score_manager);
+    State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
+          std::unique_ptr<PathPlanner> path_planner);
 
     /**
      * @see ICommandTaker#MoveBot
      */
     State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
+          std::unique_ptr<PathPlanner> path_planner,
           std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
           std::array<std::vector<std::unique_ptr<Tower>>, 2> towers);
 

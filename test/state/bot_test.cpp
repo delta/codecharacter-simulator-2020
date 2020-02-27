@@ -55,8 +55,8 @@ class BotTest : public Test {
         };
         // clang-format on
 
-        auto map = make_unique<Map>(map_matrix, MAP_SIZE);
-        path_planner = make_unique<PathPlanner>(std::move(map));
+        auto map = new Map(map_matrix, MAP_SIZE);
+        path_planner = make_unique<PathPlanner>(map);
         path_planner->recomputePathGraph();
         blast_callback = &blast_enemies;
         construct_tower_callback = &construct_tower;

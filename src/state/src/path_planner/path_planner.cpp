@@ -8,7 +8,7 @@
 
 namespace state {
 
-PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
+PathPlanner::PathPlanner(Map *p_map) : map(p_map) {
     auto map_size = map->getSize();
     auto valid_terrain = std::vector<std::vector<bool>>(
         map_size, std::vector<bool>(map_size, true));
@@ -198,13 +198,13 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
 }
 
 TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
-    if (!path_graph.isValidPosition(position)) {
-        throw "Position is not within the map\n";
-    }
-
     // FIX ME : Type resolution to be done with better clarity
     size_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
     size_t map_size = map->getSize();
+
+    if (pos_x < 0 || pos_y < 0 || pos_x >= map_size || pos_y >= map_size) {
+        throw std::invalid_argument("Position is not within the map\n");
+    }
 
     if (pos_x == map_size) {
         --pos_x;
@@ -219,15 +219,20 @@ TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          DoubleVec2D destination,
                                          size_t speed) {
+    std::cerr << "WORKING TILL HERE\n";                                  
     std::vector<DoubleVec2D> path = path_graph.getPath(source, destination);
+    std::cerr << "WORKING TILL THERE\n";
 
     if (path.empty()) {
         return DoubleVec2D::null;
     }
 
+    std::cerr << "WORKING TILL HERE\n";
+
     double distance_left = speed;
     DoubleVec2D current_position = source;
 
+    std::cerr << "WORKING TILL THERE\n";
     for (auto next_position : path) {
         if (distance_left == 0 || current_position == destination)
             break;

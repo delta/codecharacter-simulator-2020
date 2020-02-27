@@ -19,9 +19,14 @@ namespace state {
 /**
  * ICommandTaker interface to define the game action methods
  */
-class STATE_EXPORT ICommandTaker : public IUpdatable {
+class STATE_EXPORT ICommandTaker {
   public:
     virtual ~ICommandTaker(){};
+
+    /**
+     * Triggers updation of the main state
+     */
+    virtual void update() = 0;
 
     /**
      * Handles bot movement
