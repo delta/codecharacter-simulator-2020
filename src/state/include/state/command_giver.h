@@ -30,16 +30,15 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * Helper function to validate blast request by a bot and make
      * command_taker call blastBot internally
      */
-    void blastBot(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
+    void blastBot(ActorId actor_id, DoubleVec2D position);
 
     /**
      * Helper function to validate blast request by a bot and make
      * command_taker call blastTower internally
      *
-     * @param player_id
      * @param actor_id
      */
-    void blastTower(PlayerId player_id, ActorId actor_id);
+    void blastTower(ActorId actor_id);
 
     /**
      * Helper function to validate transform request and make command_taker call
@@ -50,7 +49,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     /**
      * Helper function to make command_taker call MoveBot internally
      */
-    void moveBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
+    void moveBot(ActorId bot_id, DoubleVec2D position);
 
     /**
      * Helper function to flip a bot position

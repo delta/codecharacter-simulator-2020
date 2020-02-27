@@ -60,24 +60,4 @@ Actor *State::getActorById(ActorId actor_id) {
     return tower;
 }
 
-Actor *State::getActorByPosition(DoubleVec2D position) {
-    for (int player_id = 0;
-         player_id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
-         ++player_id) {
-        for (auto &bot : bots[player_id]) {
-            if (bot->getPosition() == position) {
-                return bot.get();
-            }
-        }
-
-        for (auto &tower : towers[player_id]) {
-            if (tower->getPosition() == position) {
-                return tower.get();
-            }
-        }
-    }
-
-    return nullptr;
-}
-
 } // namespace state

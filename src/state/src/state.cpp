@@ -33,7 +33,8 @@ const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     std::array<std::vector<std::unique_ptr<T>>, 2> &actors) {
     std::array<std::vector<T *>, 2> ret_actors;
 
-    for (int id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT); ++id) {
+    for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
+         ++id) {
         std::vector<T *> actor_row;
         actor_row.resize(actors[id].size());
 
@@ -48,7 +49,6 @@ const std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
 
 Vec2D State::getOffsetFromPosition(DoubleVec2D position) {
     int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
-    size_t map_size = map->getSize();
 
     return {pos_x, pos_y};
 }
@@ -77,7 +77,6 @@ void State::handleTransformRequests() {
     // to acknowledge and which transform requests to ignore
     for (int64_t id = 0; id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
          ++id) {
-        auto player_id = static_cast<PlayerId>(id);
         for (const auto &request : transform_requests[id]) {
             int64_t bot_id = request->getBotId();
             auto bot = getBotById(bot_id);
@@ -98,8 +97,7 @@ void State::handleTransformRequests() {
     }
 }
 
-void State::moveBot(PlayerId player_id, ActorId actor_id,
-                    DoubleVec2D position) {
+void State::moveBot(ActorId actor_id, DoubleVec2D position) {
     // Setting the bot's destination
     auto bot = getBotById(actor_id);
     bot->move(position);
@@ -122,14 +120,14 @@ std::vector<Actor *> State::getAffectedActors(PlayerId player_id,
 
     for (auto &bot : bots[enemy_id]) {
         DoubleVec2D bot_position = bot->getPosition();
-        if (bot_position.distance(bot_position) <= impact_range) {
+        if (bot_position.distance(blast_position) <= impact_range) {
             affected_actors.push_back(bot.get());
         }
     }
 
     for (auto &tower : towers[enemy_id]) {
         DoubleVec2D tower_position = tower->getPosition();
-        if (tower_position.distance(tower_position) <= impact_range) {
+        if (tower_position.distance(blast_position) <= impact_range) {
             affected_actors.push_back(tower.get());
         }
     }
@@ -140,7 +138,6 @@ std::vector<Actor *> State::getAffectedActors(PlayerId player_id,
 void State::damageEnemyActors(PlayerId player_id, ActorId actor_id,
                               DoubleVec2D position) {
     const Blaster *blaster = getBlasterById(actor_id);
-    const Actor *actor = getActorById(actor_id);
 
     int64_t impact_radius = blaster->getBlastRange();
     int64_t damage_points = blaster->getBlastDamage();
@@ -232,7 +229,7 @@ void State::update() {
     // Updating the scores
     score_manager->updateScores();
 
-    // Spawing bots at base positions
+    // Spawning bots at base positions
     spawnNewBots();
 }
 
@@ -260,11 +257,15 @@ void State::createTower(Bot *bot) {
     int64_t tower_hp = std::floor(hp_ratio * bot_hp);
     DoubleVec2D tower_position = getOffsetFromPosition(bot_position);
 
+    // Making the tower position as the center of the offset
+    tower_position.x += 0.5;
+    tower_position.y += 0.5;
+
     using namespace std::placeholders;
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
     towers[id].push_back(make_unique<Tower>(
-        bot_id, player_id, hp_ratio, Constants::Actor::TOWER_MAX_HP,
+        bot_id, player_id, tower_hp, Constants::Actor::TOWER_MAX_HP,
         tower_position, Constants::Actor::TOWER_BLAST_DAMAGE_POINTS,
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
@@ -274,13 +275,12 @@ void State::createTower(Bot *bot) {
     }
 }
 
-void State::blastBot(PlayerId player_id, ActorId actor_id,
-                     DoubleVec2D position) {
+void State::blastBot(ActorId actor_id, DoubleVec2D position) {
     auto bot = getBotById(actor_id);
     bot->setFinalDestination(position);
 }
 
-void State::blastTower(PlayerId player_id, ActorId actor_id) {
+void State::blastTower(ActorId actor_id) {
     auto tower = getTowerById(actor_id);
     tower->setBlasting(true);
 }

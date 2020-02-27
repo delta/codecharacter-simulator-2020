@@ -32,8 +32,7 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void moveBot(PlayerId player_id, ActorId bot_id,
-                         DoubleVec2D position) = 0;
+    virtual void moveBot(ActorId bot_id, DoubleVec2D position) = 0;
 
     /**
      * Handles bot transform
@@ -51,22 +50,19 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
     /**
      * Blasts a bot and destroy units nearby
      *
-     * @param[in]  player_id     Player to act upon
      * @param[in]  actor_id      Actor id to act upon
      * @param[in] position Position where the actor should blast
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void blastBot(PlayerId player_id, ActorId actor_id,
-                          DoubleVec2D position) = 0;
+    virtual void blastBot(ActorId actor_id, DoubleVec2D position) = 0;
 
     /**
      * Blasts a tower and destroy units nearby
      *
-     * @param player_id
      * @param actor_id
      */
-    virtual void blastTower(PlayerId player_id, ActorId actor_id) = 0;
+    virtual void blastTower(ActorId actor_id) = 0;
 
     /**
      * Get map from state

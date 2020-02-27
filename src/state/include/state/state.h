@@ -104,7 +104,7 @@ class STATE_EXPORT State : public ICommandTaker {
     Blaster *getBlasterById(ActorId id);
 
     /**
-     * Get the Tower By Id object
+     * Get the Tower By Id
      *
      * @param player_id
      * @param actor_id
@@ -113,7 +113,7 @@ class STATE_EXPORT State : public ICommandTaker {
     Tower *getTowerById(ActorId actor_id);
 
     /**
-     * Get the Bot By Id object
+     * Get the Bot By Id
      *
      * @param player_id
      * @param actor_id
@@ -161,8 +161,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#moveBot
      */
-    void moveBot(PlayerId player_id, ActorId actor_id,
-                 DoubleVec2D position) override;
+    void moveBot(ActorId actor_id, DoubleVec2D position) override;
 
     /**
      * Handles all transform requests and builds towers given situations
@@ -188,13 +187,12 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#blastBot
      */
-    void blastBot(PlayerId player_id, ActorId actor_id,
-                  DoubleVec2D position) override;
+    void blastBot(ActorId actor_id, DoubleVec2D position) override;
 
     /**
      * @see ICommandTaker#blastTower
      */
-    void blastTower(PlayerId player_id, ActorId actor_id) override;
+    void blastTower(ActorId actor_id) override;
 
     /**
      * Callback passed to all blasters to damage neighbouring actors given a
