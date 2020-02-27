@@ -47,7 +47,7 @@ class LOGGER_EXPORT ILogger {
      * state to stream (i.e before calling WriteGame)
      */
     virtual void logFinalGameParams(state::PlayerId player_id,
-                                    std::array<size_t, 2> final_scores) = 0;
+                                    std::array<uint64_t, 2> final_scores) = 0;
 
     /**
      * Writes the complete serialized logs to stream

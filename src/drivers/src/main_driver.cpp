@@ -38,17 +38,17 @@ MainDriver::MainDriver(
 }
 
 void MainDriver::endGame(state::PlayerId player_id,
-                         std::array<int64_t, 2> final_scores) {
+                         std::array<uint64_t, 2> final_scores) {
     std::ofstream log_file(log_file_name, std::ios::out | std::ios::binary);
 
-    logger->LogFinalGameParams(player_id, final_scores);
-    logger->WriteGame(log_file);
+    logger->logFinalGameParams(player_id, final_scores);
+    logger->writeGame(log_file);
     this->game_timer.stop();
 }
 
 std::array<PlayerResult, 2> MainDriver::getPlayerResults() {
     // Get the scores, with the game_over parameter set to true
-    auto player_scores = this->state_syncer->getScores(true);
+    auto player_scores = this->state_syncer->getScores();
     auto player_results = std::array<PlayerResult, 2>{};
 
     // Write the player results
@@ -197,7 +197,7 @@ GameResult MainDriver::run() {
             }
 
             // Write the turn's instruction counts
-            logger->LogInstructionCount(
+            logger->logInstructionCount(
                 static_cast<state::PlayerId>(cur_player_id),
                 current_player_buffer->turn_instruction_counter);
         }

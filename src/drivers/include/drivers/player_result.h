@@ -50,7 +50,7 @@ struct DRIVERS_EXPORT PlayerResult {
     /**
      * The score of the player
      */
-    int64_t score;
+    uint64_t score;
 
     /**
      * The status of the player

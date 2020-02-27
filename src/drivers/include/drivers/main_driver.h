@@ -120,7 +120,7 @@ class DRIVERS_EXPORT MainDriver {
      * @param final_scores Scores of players
      */
     void endGame(state::PlayerId player_id = state::PlayerId::PLAYER1,
-                 std::array<int64_t, 2> final_scores = {0, 0});
+                 std::array<uint64_t, 2> final_scores = {0, 0});
 
     /**
      * Blocking function that runs the game
