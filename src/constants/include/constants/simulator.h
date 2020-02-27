@@ -1,6 +1,5 @@
 /**
  * @file simulator.h
-<<<<<<< HEAD
  * Add constants related to Simulation
  */
 
