@@ -18,6 +18,12 @@ namespace drivers {
  * An asynchronous timer class
  */
 class DRIVERS_EXPORT Timer {
+  public:
+    /**
+     * Interval of time
+     */
+    typedef std::chrono::milliseconds Interval;
+
   private:
     /**
      * True if this timer is running, false otherwise
@@ -34,20 +40,15 @@ class DRIVERS_EXPORT Timer {
      * Amount of time the timer has been running for
      * Valid if is_running is true
      */
-    std::chrono::milliseconds timer_run_duration;
+    Interval timer_run_duration;
 
     /**
      * Timer wakes up every timer_wake_up_duration ms to check if it has been
      * stopped
      */
-    std::chrono::milliseconds timer_wake_up_duration;
+    Interval timer_wake_up_duration;
 
   public:
-    /**
-     * Interval of time
-     */
-    typedef std::chrono::milliseconds Interval;
-
     /**
      * Callback that timer can call
      */
