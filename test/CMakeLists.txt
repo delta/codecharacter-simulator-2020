@@ -13,6 +13,7 @@ set(SOURCE_FILES
     state/command_giver_test.cpp
     state/score_manager_test.cpp
     state/state_syncer_test.cpp
+    state/state_test.cpp
 )
 
 include_directories(.)
