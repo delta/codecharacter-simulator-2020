@@ -4,8 +4,6 @@
 #include "state/score_manager/score_manager.h"
 #include "state/utilities.h"
 #include "gtest/gtest.h"
-#include <fstream>
-#include <sstream>
 #include <state/actor/bot_states/bot_move_state.h>
 
 using namespace std;
@@ -76,7 +74,7 @@ TEST_F(LoggerTest, WriteReadTest) {
     bots[0] = player_1_bots;
     bots[1] = player_2_bots;
 
-    // Creating one villager for each player
+    // Creating one tower for each player
     auto *tower_1 = new Tower(PlayerId::PLAYER1, MAX_TOWER_HP, MAX_TOWER_HP,
                               DoubleVec2D(1, 2), 0, TOWER_BLAST_IMPACT_RADIUS,
                               score_manager.get(), BlastCallback());
@@ -105,7 +103,7 @@ TEST_F(LoggerTest, WriteReadTest) {
         BOT_BLAST_IMPACT_RADIUS, 0, score_manager.get(), path_planner.get(),
         BlastCallback(), ConstructTowerCallback(), false, false);
 
-    // Bot 1 of player 1 moves to (2, 3) and switches back to IDLE state
+    // Bot 1 of player 1 moves to (1, 3) and switches back to IDLE state
     std::array<vector<Bot *>, 2> bots_3 = bots_2;
     bots_3[0][0] = new Bot(
         bot_1->getActorId(), state::PlayerId::PLAYER1, MAX_BOT_HP, MAX_TOWER_HP,
@@ -180,7 +178,7 @@ TEST_F(LoggerTest, WriteReadTest) {
     ASSERT_EQ(game->map_elements(7), proto::FLAG);
     ASSERT_EQ(game->map_elements(15), proto::WATER);
 
-    // Check if scores are fine
+    // Check if scores have been assigned correctly
     ASSERT_EQ(game->states(0).scores(0), 100);
     ASSERT_EQ(game->states(0).scores(1), 100);
     ASSERT_EQ(game->states(2).scores(0), 300);

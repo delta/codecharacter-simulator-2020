@@ -188,7 +188,7 @@ void Logger::logState() {
     // Log the errors, clear the error vectors
     for (auto &player_errors : errors) {
         auto player_error_struct = game_state->add_player_errors();
-        for (auto error_code : player_errors) {
+        for (const auto &error_code : player_errors) {
             player_error_struct->add_errors(error_code);
         }
         player_errors.clear();

@@ -11,7 +11,7 @@ namespace Constants::Simulator {
 const uint64_t PLAYER_INSTRUCTION_LIMIT_TURN = 10000000;
 
 // Number of instructions exceeding which the entire game is cancelled
-const int64_t PLAYER_INSTRUCTION_LIMIT_GAME =
+const uint64_t PLAYER_INSTRUCTION_LIMIT_GAME =
     10 * PLAYER_INSTRUCTION_LIMIT_TURN;
 
 // Number of turns in the game

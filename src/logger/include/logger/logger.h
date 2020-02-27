@@ -52,7 +52,7 @@ class LOGGER_EXPORT Logger : public ILogger {
     size_t current_error_code;
 
     /**
-     * Holds the error codes that occured in a particular move for each player
+     * Holds the error codes that occurred in a particular move for each player
      */
     std::array<std::vector<size_t>, 2> errors;
 
