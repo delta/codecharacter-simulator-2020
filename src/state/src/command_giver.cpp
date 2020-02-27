@@ -247,10 +247,6 @@ void CommandGiver::runCommands(
                                      "Cannot blast bot in an invalid position");
                 } else {
                     blastBot(player_bot.id, final_destination);
-                }
-            } else if (is_moving_to_transform) {
-                // Validating the position where the player wants to transform
-                // the bot
                 DoubleVec2D transform_destination =
                     player_bot.transform_destination;
                 if (player_id == PlayerId::PLAYER2) {

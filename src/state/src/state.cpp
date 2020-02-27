@@ -244,13 +244,8 @@ void State::createTower(Bot *bot) {
     auto id = static_cast<int64_t>(player_id);
     auto bot_id = bot->getActorId();
 
-<<<<<<< 0b36cf999605c361226f2de66db9149cb45d0ed5
     DoubleVec2D bot_position = bot->getPosition();
     if (path_planner->getTerrainType(bot_position) == TerrainType::FLAG) {
-=======
-    DoubleVec2D position = bot->getPosition();
-    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
->>>>>>> Fix bad function call to scoremanager
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
 
@@ -279,17 +274,8 @@ void State::createTower(Bot *bot) {
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
 
-<<<<<<< 016077fbe8189c58c4664c5ff8c85d306f3fd8cf
     if (path_planner->getTerrainType(tower_position) == TerrainType::FLAG) {
         score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
-=======
-    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
-<<<<<<< 0b36cf999605c361226f2de66db9149cb45d0ed5
-        score_manager->actorExitedFlagArea();
->>>>>>> Add score_manager checks in transform
-=======
-        score_manager->actorExitedFlagArea(ActorType::TOWER, player_id);
->>>>>>> Fix bad function call to scoremanager
     }
 }
 
