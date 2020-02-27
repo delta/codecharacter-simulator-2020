@@ -44,7 +44,7 @@ std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
 
         for (size_t actor_index = 0; actor_index < actors[id].size();
              ++actor_index) {
-            actor_row.push_back(actors[id][actor_index].get());
+            actor_row[id] = actors[id][actor_index].get();
         }
         ret_actors[id] = actor_row;
     }
@@ -73,7 +73,7 @@ void State::handleTransformRequests() {
         for (const auto &bot : bots[id]) {
             DoubleVec2D bot_position = bot->getPosition();
             Vec2D offset = getOffsetFromPosition(bot_position);
-            position_counts[offset.y][offset.x]++;
+            position_counts[offset.x][offset.y]++;
         }
     }
 
@@ -89,7 +89,7 @@ void State::handleTransformRequests() {
 
             // Checking if only one actor is in the offset position where
             // transforming is requested
-            if (position_counts[offset.y][offset.x] == 1) {
+            if (position_counts[offset.x][offset.y] == 1) {
                 createTower(bot);
             }
         }
