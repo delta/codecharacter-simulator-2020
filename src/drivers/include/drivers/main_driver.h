@@ -92,13 +92,6 @@ class DRIVERS_EXPORT MainDriver {
     Timer::Interval game_duration;
 
     /**
-     * Blocking function that runs the game
-     *
-     * @return     GameResult object with winner, win type, and player results
-     */
-    GameResult run();
-
-    /**
      * Instance of logger to write game to log file
      */
     std::unique_ptr<logger::ILogger> logger;
@@ -128,6 +121,13 @@ class DRIVERS_EXPORT MainDriver {
      */
     void endGame(state::PlayerId player_id = state::PlayerId::PLAYER1,
                  std::array<int64_t, 2> final_scores = {0, 0});
+
+    /**
+     * Blocking function that runs the game
+     *
+     * @return GameResult object with winner, win type, and player results
+     */
+    GameResult run();
 
   public:
     /**

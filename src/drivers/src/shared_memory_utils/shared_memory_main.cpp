@@ -12,7 +12,8 @@ using namespace boost::interprocess;
 
 SharedMemoryMain::SharedMemoryMain(const std::string &shared_memory_name,
                                    bool is_player_running,
-                                   int64_t instruction_count,
+                                   uint64_t turn_instruction_counter,
+                                   uint64_t game_instruction_counter,
                                    const transfer_state::State &transfer_state)
     : shared_memory_name(shared_memory_name),
       // Creating shared memory
@@ -20,7 +21,7 @@ SharedMemoryMain::SharedMemoryMain(const std::string &shared_memory_name,
                     Constants::Simulator::SHARED_BUFFER_SIZE) {
     // Constructing unique instance of SharedBuffer in shared memory
     this->shared_memory.construct<SharedBuffer>(unique_instance)(
-        is_player_running, instruction_count, instruction_count,
+        is_player_running, turn_instruction_counter, game_instruction_counter,
         transfer_state);
 }
 

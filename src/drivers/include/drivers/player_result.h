@@ -59,24 +59,25 @@ struct DRIVERS_EXPORT PlayerResult {
 };
 
 DRIVERS_EXPORT inline std::ostream &
-operator<<(std::ostream &ostream, const PlayerResult::Status &status) {
+operator<<(std::ostream &os, const PlayerResult::Status &status) {
     switch (status) {
-    case PlayerResult::Status::UNDEFINED:
-        ostream << "UNDEFINED";
-        break;
     case PlayerResult::Status::NORMAL:
-        ostream << "NORMAL";
-        break;
-    case PlayerResult::Status::EXCEEDED_INSTRUCTION_LIMIT:
-        ostream << "EXCEEDED_INSTRUCTION_LIMIT";
-        break;
-    case PlayerResult::Status::RUNTIME_ERROR:
-        ostream << "RUNTIME_ERROR";
+        os << "NORMAL";
         break;
     case PlayerResult::Status::TIMEOUT:
-        ostream << "TIMEOUT";
+        os << "TIMEOUT";
+        break;
+    case PlayerResult::Status::RUNTIME_ERROR:
+        os << "RUNTIME_ERROR";
+        break;
+    case PlayerResult::Status::EXCEEDED_INSTRUCTION_LIMIT:
+        os << "EXCEEDED_INSTRUCTION_LIMIT";
+        break;
+    case PlayerResult::Status::UNDEFINED:
+        os << "UNDEFINED";
         break;
     }
-    return ostream;
+
+    return os;
 }
 } // namespace drivers
