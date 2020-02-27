@@ -138,9 +138,9 @@ TEST_F(LoggerTest, WriteReadTest) {
         .WillOnce(Return(bots_3))
         .WillRepeatedly(Return(bots_4));
 
-    std::array<int64_t, 2> scores1 = {100, 100};
-    std::array<int64_t, 2> scores2 = {300, 200};
-    EXPECT_CALL(*state, getScores(_))
+    std::array<uint64_t, 2> scores1 = {100, 100};
+    std::array<uint64_t, 2> scores2 = {300, 200};
+    EXPECT_CALL(*state, getScores())
         .WillOnce(Return(scores1))
         .WillRepeatedly(Return(scores2));
 

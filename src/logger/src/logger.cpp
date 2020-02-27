@@ -102,7 +102,7 @@ void Logger::logState() {
 
     auto bots = state->getBots();
     auto towers = state->getTowers();
-    auto scores = state->getScores(false);
+    auto scores = state->getScores();
 
     // Things logged only in first turn
     if (turn_count == 1) {
