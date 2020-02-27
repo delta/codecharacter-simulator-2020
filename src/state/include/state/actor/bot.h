@@ -113,6 +113,29 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
         ConstructTowerCallback construct_tower_callback);
 
     /**
+     *  Construct a new Bot object, with auto incrementing id.
+     *
+     * @param player_id
+     * @param hp
+     * @param max_hp
+     * @param bot_state_name
+     * @param position
+     * @param speed
+     * @param blast_range
+     * @param damage_points
+     * @param score_manager
+     * @param path_planner
+     * @param blast_callback
+     * @param construct_tower_callback
+     */
+    Bot(ActorId id, PlayerId player_id, size_t hp, size_t max_hp,
+        BotStateName bot_state_name, DoubleVec2D position, size_t speed,
+        size_t blast_range, size_t damage_points, ScoreManager *score_manager,
+        PathPlanner *path_planner, BlastCallback blast_callback,
+        ConstructTowerCallback construct_tower_callback, bool is_blasting,
+        bool is_transforming);
+
+    /**
      * Returns a pointer to path planner
      *
      * @return PathPlanner*

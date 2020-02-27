@@ -50,6 +50,9 @@ class STATE_EXPORT Blaster {
     Blaster(size_t blast_range, size_t damage_points,
             BlastCallback blast_callback);
 
+    Blaster(size_t blast_range, size_t damage_points, bool blasting,
+            BlastCallback blast_callback);
+
     /**
      * Method to set blast_callback
      *

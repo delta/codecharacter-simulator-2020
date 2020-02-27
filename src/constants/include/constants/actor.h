@@ -14,6 +14,9 @@
 
 namespace Constants::Actor {
 
+// Maximum HP of Bot actor
+const uint64_t MAX_BOT_HP = 200;
+
 // Maximum number of bots per player
 const size_t MAX_NUM_BOTS = 500;
 
@@ -31,6 +34,9 @@ const uint64_t BOT_SPEED = 2;
 
 // Frequency at which bots spawn at home base per turn
 const uint64_t BOT_SPAWN_FREQUENCY = 1;
+
+// Maximum HP of Tower actor
+const uint64_t MAX_TOWER_HP = 500;
 
 // Maximum number of towers per player
 const size_t MAX_NUM_TOWERS = 200;

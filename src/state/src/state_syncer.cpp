@@ -23,7 +23,7 @@ void StateSyncer::updateMainState(
     state->update();
 
     // Logging the state
-    logger->LogState();
+    logger->logState();
 
     // Removing the dead actors in state
     state->removeDeadActors();

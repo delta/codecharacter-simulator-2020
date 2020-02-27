@@ -14,12 +14,10 @@
 
 #include <cstdint>
 #include <ostream>
-
-// TODO: Remove this once logger is implemented
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-private-field"
+#include <unordered_map>
 
 namespace logger {
+
 class LOGGER_EXPORT Logger : public ILogger {
   private:
     /**
@@ -34,7 +32,7 @@ class LOGGER_EXPORT Logger : public ILogger {
 
     /**
      * Stores the instruction counts until they are written into the log along
-     * with the remaininig state data, every turn
+     * with the remaining state data, every turn
      */
     std::vector<size_t> instruction_counts;
 
@@ -54,7 +52,7 @@ class LOGGER_EXPORT Logger : public ILogger {
     size_t current_error_code;
 
     /**
-     * Holds the error codes that occured in a particular move for each player
+     * Holds the error codes that occurred in a particular move for each player
      */
     std::array<std::vector<size_t>, 2> errors;
 
@@ -87,34 +85,32 @@ class LOGGER_EXPORT Logger : public ILogger {
            size_t tower_max_hp);
 
     /**
-     * @see ILogger#LogState
+     * @see ILogger#logState
      */
-    void LogState() override;
+    void logState() override;
 
     /**
-     * @see ILogger#LogInstructionCount
+     * @see ILogger#logInstructionCount
      */
-    void LogInstructionCount(state::PlayerId player_id, size_t count) override;
+    void logInstructionCount(state::PlayerId player_id, size_t count) override;
 
     /**
-     * @see ILogger#LogError
+     * @see ILogger#logError
      */
-    void LogError(state::PlayerId player_id, ErrorType error_type,
+    void logError(state::PlayerId player_id, ErrorType error_type,
                   std::string message) override;
 
     /**
-     * @see ILogger#LogFinalGameParams
+     * @see ILogger#logFinalGameParams
      */
-    void LogFinalGameParams(state::PlayerId player_id,
+    void logFinalGameParams(state::PlayerId player_id,
                             std::array<size_t, 2> final_scores) override;
 
     /**
-     * @see ILogger#WriteGame
+     * @see ILogger#writeGame
      * Defaults to std::cout when no stream passed
      */
-    void WriteGame(std::ostream &write_stream = std::cout) override;
+    void writeGame(std::ostream &write_stream = std::cout) override;
 };
 
 } // namespace logger
-
-#pragma GCC diagnostic pop

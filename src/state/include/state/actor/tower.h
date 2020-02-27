@@ -63,6 +63,25 @@ class STATE_EXPORT Tower : public Actor, public Blaster {
           BlastCallback blast_callback);
 
     /**
+     *  Construct a new Tower object
+     *
+     * @param id
+     * @param player_id
+     * @param tower_state
+     * @param actor_type
+     * @param hp
+     * @param max_hp
+     * @param position
+     * @param damage_points
+     * @param blast_range
+     * @param blast_callback
+     */
+    Tower(ActorId id, PlayerId player_id, TowerStateName tower_state, size_t hp,
+          size_t max_hp, DoubleVec2D position, size_t damage_points,
+          size_t blast_range, BlastCallback blast_callback,
+          ScoreManager *score_manager, bool is_blasting);
+
+    /**
      * @see Blaster#Blast
      */
     void blast() override;

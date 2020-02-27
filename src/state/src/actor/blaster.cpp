@@ -12,6 +12,12 @@ Blaster::Blaster(size_t blast_range, size_t damage_points,
                  BlastCallback blast_callback)
     : blast_range(blast_range), damage_points(damage_points), blasting(false),
       blast_callback(std::move(blast_callback)) {}
+
+Blaster::Blaster(size_t blast_range, size_t damage_points, bool blasting,
+                 BlastCallback blast_callback)
+    : blast_range(blast_range), damage_points(damage_points),
+      blasting(blasting), blast_callback(std::move(blast_callback)) {}
+
 void Blaster::setBlastCallback(BlastCallback blast_callback) {
     this->blast_callback = blast_callback;
 }
