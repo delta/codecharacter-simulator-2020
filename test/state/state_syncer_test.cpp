@@ -17,9 +17,9 @@ const auto T = player_state::TerrainType::TOWER;
 
 class StateSyncerTest : public Test {
   public:
-    Map *map;
     unique_ptr<StateSyncer> state_syncer;
     unique_ptr<PathPlanner> path_planner;
+    unique_ptr<Map> map;
     unique_ptr<ScoreManager> score_manager;
     StateMock *state;
     LoggerMock *logger;
@@ -41,7 +41,9 @@ class StateSyncerTest : public Test {
         EXPECT_CALL(*this->state, getTowers)
             .Times(5)
             .WillRepeatedly(Return(towers));
-        EXPECT_CALL(*this->state, getMap).Times(9).WillRepeatedly(Return(map));
+        EXPECT_CALL(*this->state, getMap)
+            .Times(9)
+            .WillRepeatedly(Return(map.get()));
     }
 
     StateSyncerTest() {
@@ -110,9 +112,8 @@ class StateSyncerTest : public Test {
                     [tower_positions[player_id].x] = state::TerrainType::TOWER;
         }
 
-        auto map_u = make_unique<Map>(test_map, map_size);
-        map = map_u.get();
-        path_planner = make_unique<PathPlanner>(std::move(map_u));
+        map = make_unique<Map>(test_map, map_size);
+        path_planner = make_unique<PathPlanner>(map.get());
 
         // Creating state bots and towers
         auto state_bot1 =

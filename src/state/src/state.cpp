@@ -9,21 +9,29 @@ namespace state {
 State::State() {}
 
 State::State(std::unique_ptr<Map> map,
-             std::unique_ptr<ScoreManager> score_manager)
-    : map(std::move(map)), score_manager(std::move(score_manager)) {}
+             std::unique_ptr<ScoreManager> score_manager,
+             std::unique_ptr<PathPlanner> path_planner)
+    : map(std::move(map)), score_manager(std::move(score_manager)),
+      path_planner(std::move(path_planner)) {}
 
 State::State(std::unique_ptr<Map> map,
              std::unique_ptr<ScoreManager> score_manager,
+             std::unique_ptr<PathPlanner> path_planner,
              std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
              std::array<std::vector<std::unique_ptr<Tower>>, 2> towers)
     : map(std::move(map)), score_manager(std::move(score_manager)),
-      bots(std::move(bots)), towers(std::move(towers)) {}
+      path_planner(std::move(path_planner)), bots(std::move(bots)),
+      towers(std::move(towers)) {}
 
 Map *State::getMap() const { return map.get(); }
 
 std::array<uint64_t, 2> State::getScores() const {
     return score_manager->getScores();
 }
+
+ScoreManager *State::getScoreManager() const { return score_manager.get(); }
+
+PathPlanner *State::getPathPlanner() const { return path_planner.get(); }
 
 /**
  * Get the Raw Ptrs From Unique Ptrs object
@@ -35,7 +43,7 @@ std::array<uint64_t, 2> State::getScores() const {
 template <typename T>
 std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     std::array<std::vector<std::unique_ptr<T>>, 2> &actors) {
-    std::array<std::vector<T *>, 2> ret_actors;
+    auto ret_actors = std::array<std::vector<T *>, 2>{};
 
     for (size_t id = 0; id < static_cast<size_t>(PlayerId::PLAYER_COUNT);
          ++id) {
@@ -44,7 +52,7 @@ std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
 
         for (size_t actor_index = 0; actor_index < actors[id].size();
              ++actor_index) {
-            actor_row[id] = actors[id][actor_index].get();
+            actor_row[actor_index] = actors[id][actor_index].get();
         }
         ret_actors[id] = actor_row;
     }
@@ -152,7 +160,14 @@ void State::damageEnemyActors(PlayerId player_id, ActorId actor_id,
 
     // Adding to the actor's damage incurred
     for (auto &affected_actor : affected_actors) {
-        affected_actor->damage(damage_points);
+        DoubleVec2D affected_actor_position = affected_actor->getPosition();
+        double_t distance = position.distance(affected_actor_position);
+        double_t remaining_distance = impact_radius - distance;
+        double_t normalized_remaining_distance =
+            remaining_distance / impact_radius;
+        uint64_t inflicted_damage =
+            damage_points * normalized_remaining_distance;
+        affected_actor->damage(inflicted_damage);
     }
 }
 
@@ -162,6 +177,10 @@ std::array<std::vector<Tower *>, 2> State::getTowers() {
 
 std::array<std::vector<Bot *>, 2> State::getBots() {
     return getRawPtrsFromUniquePtrs(bots);
+}
+
+std::array<std::vector<TransformRequest *>, 2> State::getTransformRequests() {
+    return getRawPtrsFromUniquePtrs(transform_requests);
 }
 
 void State::spawnNewBots() {
@@ -249,9 +268,9 @@ void State::createTower(Bot *bot) {
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
 
-    // Finding ratio of hps of bot and tower to scale
-    double hp_ratio = (double) (Constants::Actor::BOT_MAX_HP) /
-                      (double) (Constants::Actor::TOWER_MAX_HP);
+    // Finding ratio of hps of tower and bot to scale
+    double hp_ratio = (double) (Constants::Actor::TOWER_MAX_HP) /
+                      (double) (Constants::Actor::BOT_MAX_HP);
 
     // Transitioning the bot into the dead state
     bot->setState(BotStateName::DEAD);
@@ -266,6 +285,7 @@ void State::createTower(Bot *bot) {
     tower_position.y += 0.5;
 
     using namespace std::placeholders;
+
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
     towers[id].push_back(make_unique<Tower>(
@@ -292,9 +312,9 @@ void State::blastTower(ActorId actor_id) {
 void State::removeDeadActors() {
     for (auto &state_bots : bots) {
         // Dividing the bots into dead and alive bots
-        auto partition_point =
-            std::stable_partition(state_bots.begin(), state_bots.end(),
-                                  [](auto &s) { return s->getHp() != 0; });
+        auto partition_point = std::stable_partition(
+            state_bots.begin(), state_bots.end(),
+            [](auto &s) { return s->getState() != BotStateName::DEAD; });
 
         // Delete the dead bots
         state_bots.erase(partition_point, state_bots.end());
@@ -302,9 +322,9 @@ void State::removeDeadActors() {
 
     for (auto &state_towers : towers) {
         // Dividing tower into dead and alive towers
-        auto partition_point =
-            std::stable_partition(state_towers.begin(), state_towers.end(),
-                                  [](auto &s) { return s->getHp() != 0; });
+        auto partition_point = std::stable_partition(
+            state_towers.begin(), state_towers.end(),
+            [](auto &s) { return s->getState() != TowerStateName::DEAD; });
 
         // Delete the dead bots
         state_towers.erase(partition_point, state_towers.end());

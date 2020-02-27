@@ -18,7 +18,10 @@ class StateMock : public ICommandTaker {
     MOCK_METHOD1(isGameOver, bool(PlayerId &winner));
     MOCK_METHOD0(getBots, array<vector<state::Bot *>, 2>());
     MOCK_METHOD0(getTowers, array<vector<state::Tower *>, 2>());
+    MOCK_METHOD0(getTransformRequests, array<vector<TransformRequest *>, 2>());
     MOCK_CONST_METHOD0(getMap, Map *());
+    MOCK_CONST_METHOD0(getScoreManager, ScoreManager *());
+    MOCK_CONST_METHOD0(getPathPlanner, PathPlanner *());
     MOCK_METHOD0(update, void());
     MOCK_METHOD0(lateUpdate, void());
     MOCK_METHOD0(removeDeadActors, void());

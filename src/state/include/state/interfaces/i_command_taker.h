@@ -10,6 +10,7 @@
 #include "state/actor/tower.h"
 #include "state/interfaces/i_updatable.h"
 #include "state/map/map.h"
+#include "state/transform_request.h"
 #include "state/utilities.h"
 
 #include <memory>
@@ -19,9 +20,14 @@ namespace state {
 /**
  * ICommandTaker interface to define the game action methods
  */
-class STATE_EXPORT ICommandTaker : public IUpdatable {
+class STATE_EXPORT ICommandTaker {
   public:
     virtual ~ICommandTaker(){};
+
+    /**
+     * Triggers updation of the main state
+     */
+    virtual void update() = 0;
 
     /**
      * Handles bot movement
@@ -67,9 +73,23 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
     /**
      * Get map from state
      *
-     * @return map
+     * @return Map*
      */
     virtual Map *getMap() const = 0;
+
+    /**
+     * Gets the Score Manager
+     *
+     * @return ScoreManager*
+     */
+    virtual ScoreManager *getScoreManager() const = 0;
+
+    /**
+     * Get the Path Planner
+     *
+     * @return PathPlanner*
+     */
+    virtual PathPlanner *getPathPlanner() const = 0;
 
     /**
      * Get game scores from state
@@ -91,6 +111,14 @@ class STATE_EXPORT ICommandTaker : public IUpdatable {
      * @return towers
      */
     virtual std::array<std::vector<Tower *>, 2> getTowers() = 0;
+
+    /**
+     * Get the Transform Requests object
+     *
+     * @return std::array<std::vector<TransformRequest *>, 2>
+     */
+    virtual std::array<std::vector<TransformRequest *>, 2>
+    getTransformRequests() = 0;
 
     /**
      * Removes all the dead actors from state

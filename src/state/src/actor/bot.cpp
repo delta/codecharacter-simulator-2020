@@ -211,12 +211,15 @@ void Bot::lateUpdate() {
         }
 
         clearNewPosition();
-        return;
     }
 
     if (getHp() > 0 && isTransforming()) {
         constructTower();
     }
+}
+
+void Bot::setConstructTowerCallback(ConstructTowerCallback construct_tower) {
+    construct_tower_callback = construct_tower;
 }
 
 void Bot::update() {
@@ -233,7 +236,6 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-
         new_state = state->update();
     }
 }
