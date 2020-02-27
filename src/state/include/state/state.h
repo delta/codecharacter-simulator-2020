@@ -76,7 +76,7 @@ class STATE_EXPORT State : public ICommandTaker {
      * @return Pointer to the actor
      * @return Nullptr
      */
-    Actor *getActorById(PlayerId player_id, ActorId actor_id);
+    Actor *getActorById(ActorId actor_id);
 
     /**
      * Returns the actor at given position if an actor exists at given point
@@ -88,7 +88,7 @@ class STATE_EXPORT State : public ICommandTaker {
     Actor *getActorByPosition(DoubleVec2D position);
 
     /**
-     * Returns an offset From position object
+     * Returns an offset from position
      *
      * @param position Position for which offset is requested
      * @return Vec2D Offset
@@ -110,7 +110,7 @@ class STATE_EXPORT State : public ICommandTaker {
      * @param actor_id
      * @return Tower*
      */
-    Tower *getTowerById(PlayerId player_id, ActorId actor_id);
+    Tower *getTowerById(ActorId actor_id);
 
     /**
      * Get the Bot By Id object
@@ -119,16 +119,7 @@ class STATE_EXPORT State : public ICommandTaker {
      * @param actor_id
      * @return Bot*
      */
-    Bot *getBotById(PlayerId player_id, ActorId actor_id);
-
-    /**
-     * Get the Blaster by id
-     *
-     * @param player_id
-     * @param actor_id
-     * @return Blaster*
-     */
-    Blaster *getBlasterById(PlayerId player_id, ActorId actor_id);
+    Bot *getBotById(ActorId actor_id);
 
     /**
      * Get the Impact Points when an actor blasts in a position
@@ -143,12 +134,12 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * Get the actors who get damage from position
      *
-     * @param position
+     * @param blast_position
      * @param impact_range
      * @return std::vector<Actor *>
      */
     std::vector<Actor *> getAffectedActors(PlayerId player_id,
-                                           DoubleVec2D position,
+                                           DoubleVec2D blast_position,
                                            int64_t impact_range);
 
   public:
@@ -181,7 +172,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * Remove dead actors at the end of the turn
      */
-    void removeDeadActors();
+    void removeDeadActors() override;
 
     /**
      * Spawn new bots for each player at the end of each turn
@@ -195,10 +186,15 @@ class STATE_EXPORT State : public ICommandTaker {
                       DoubleVec2D position) override;
 
     /**
-     * @see ICommandTaker#blastActor
+     * @see ICommandTaker#blastBot
      */
-    void blastActor(PlayerId player_id, ActorId actor_id,
-                    DoubleVec2D position) override;
+    void blastBot(PlayerId player_id, ActorId actor_id,
+                  DoubleVec2D position) override;
+
+    /**
+     * @see ICommandTaker#blastTower
+     */
+    void blastTower(PlayerId player_id, ActorId actor_id) override;
 
     /**
      * Callback passed to all blasters to damage neighbouring actors given a
@@ -221,22 +217,22 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#getMap
      */
-    const Map *getMap() const override;
+    Map *getMap() const override;
 
     /**
      * @see ICommandTaker#getScores
      */
-    const std::array<uint64_t, 2> getScores() const override;
+    std::array<uint64_t, 2> getScores() const override;
 
     /**
      * @see ICommandTaker#getTowers
      */
-    const std::array<std::vector<Tower *>, 2> getTowers() override;
+    std::array<std::vector<Tower *>, 2> getTowers() override;
 
     /**
      * @see ICommandTaker#getBots
      */
-    const std::array<std::vector<Bot *>, 2> getBots() override;
+    std::array<std::vector<Bot *>, 2> getBots() override;
 
     void update() override;
 };

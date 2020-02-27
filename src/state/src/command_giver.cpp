@@ -13,9 +13,13 @@ CommandGiver::CommandGiver(std::unique_ptr<ICommandTaker> state,
                            std::unique_ptr<logger::ILogger> logger)
     : state(std::move(state)), logger(std::move(logger)) {}
 
-void CommandGiver::blastActor(PlayerId player_id, ActorId actor_id,
-                              DoubleVec2D position) {
-    state->blastActor(player_id, actor_id, position);
+void CommandGiver::blastBot(PlayerId player_id, ActorId actor_id,
+                            DoubleVec2D position) {
+    state->blastBot(player_id, actor_id, position);
+}
+
+void CommandGiver::blastTower(PlayerId player_id, ActorId actor_id) {
+    state->blastTower(player_id, actor_id);
 }
 
 void CommandGiver::transformBot(PlayerId player_id, ActorId bot_id,
@@ -41,18 +45,12 @@ Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) {
 
 bool CommandGiver::isValidBotPosition(const Map &map, DoubleVec2D position) {
     double_t map_size = map.getSize();
-    bool within_map = (position.x >= 0 && position.x <= map_size &&
-                       position.y >= 0 && position.y <= map_size);
+    size_t x = position.x, y = position.y;
+    bool within_map = (x >= 0 && x < map_size && y >= 0 && y < map_size);
 
     if (!within_map) {
         return false;
     }
-
-    size_t x = position.x, y = position.y;
-    if (x == map_size)
-        --x;
-    if (y == map_size)
-        --y;
 
     // If the bot can exist in any of the neighbouring blocks, it is a valid
     // position
@@ -222,7 +220,7 @@ void CommandGiver::runCommands(
             }
 
             if (is_blasting) {
-                blastActor(player_id, player_bot.id, player_bot_position);
+                blastBot(player_id, player_bot.id, player_bot_position);
             } else if (is_transforming) {
                 size_t num_towers = state_towers[id].size();
                 if (num_towers >= Constants::Actor::MAX_NUM_TOWERS) {
@@ -252,7 +250,7 @@ void CommandGiver::runCommands(
                                      logger::ErrorType::INVALID_BLAST_POSITION,
                                      "Cannot blast bot in an invalid position");
                 } else {
-                    blastActor(player_id, player_bot.id, final_destination);
+                    blastBot(player_id, player_bot.id, final_destination);
                 }
             } else if (is_moving_to_transform) {
                 // Validating the position where the player wants to transform
@@ -363,8 +361,7 @@ void CommandGiver::runCommands(
             if (is_blasting) {
                 uint64_t tower_age = state_tower->getAge();
                 if (tower_age >= Constants::Actor::TOWER_MIN_BLAST_AGE) {
-                    blastActor(player_id, player_tower.id,
-                               player_tower_position);
+                    blastTower(player_id, player_tower.id);
                 } else {
                     logger->LogError(player_id,
                                      logger::ErrorType::NO_EARLY_BLAST_TOWER,

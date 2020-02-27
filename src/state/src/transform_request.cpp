@@ -5,7 +5,7 @@ TransformRequest::TransformRequest(PlayerId player_id, ActorId bot_id,
                                    DoubleVec2D position)
     : player_id(player_id), bot_id(bot_id), position(position) {}
 
-ActorId TransformRequest::getActorId() { return bot_id; }
+ActorId TransformRequest::getBotId() { return bot_id; }
 
 DoubleVec2D TransformRequest::getPosition() { return position; }
 

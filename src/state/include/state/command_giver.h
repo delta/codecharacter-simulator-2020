@@ -27,10 +27,19 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     std::unique_ptr<logger::ILogger> logger;
 
     /**
-     * Helper function to validate blast request by an actor and make
-     * command_taker call BlastActor internally
+     * Helper function to validate blast request by a bot and make
+     * command_taker call blastBot internally
      */
-    void blastActor(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
+    void blastBot(PlayerId player_id, ActorId actor_id, DoubleVec2D position);
+
+    /**
+     * Helper function to validate blast request by a bot and make
+     * command_taker call blastTower internally
+     *
+     * @param player_id
+     * @param actor_id
+     */
+    void blastTower(PlayerId player_id, ActorId actor_id);
 
     /**
      * Helper function to validate transform request and make command_taker call

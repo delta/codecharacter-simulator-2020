@@ -38,6 +38,9 @@ const size_t MAX_NUM_TOWERS = 200;
 // Blast impact radius around the tower
 const uint64_t TOWER_BLAST_IMPACT_RADIUS = 3;
 
+// Blast damage of a bot
+const size_t TOWER_BLAST_DAMAGE_POINTS = 10;
+
 // Minimum number of turns tower must be alive to be able to blast
 const uint64_t TOWER_MIN_BLAST_AGE = 5;
 

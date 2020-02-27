@@ -30,7 +30,7 @@ enum class BotState : int8_t {
     DEAD
 };
 
-inline std::ostream &operator<<(std::ostream &os, const BotState &bot_state) {
+inline ostream &operator<<(ostream &os, const BotState &bot_state) {
     switch (bot_state) {
     case BotState::IDLE:
         os << "IDLE";
@@ -61,8 +61,7 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const TowerState &tower_state) {
+inline ostream &operator<<(ostream &os, const TowerState &tower_state) {
     switch (tower_state) {
     case TowerState::IDLE:
         os << "IDLE";
@@ -180,8 +179,7 @@ struct Bot : _Unit, _Blaster {
     virtual ~Bot() {}
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Bot &bot) {
-    using std::endl;
+inline ostream &operator<<(ostream &os, const Bot &bot) {
     os << "Bot(id: " << bot.id << ") {" << endl;
     os << "   hp: " << bot.hp << endl;
     os << "   position: " << bot.position << endl;
@@ -206,7 +204,11 @@ struct Tower : _Actor, _Blaster {
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Tower &tower) {
+inline ostream &operator<<(ostream &os, const Tower &tower) {
+    os << "Tower(id: " << tower.id << ") {" << endl;
+    os << "   hp: " << tower.hp << endl;
+    os << "   hp: " << tower.hp << endl;
+    os << "   position: " << tower.position << endl;
     os << "   hp: " << tower.hp << endl;
     os << "   state: " << tower.state << endl;
     os << "}" << endl;
@@ -223,18 +225,17 @@ struct MapElement {
  * Main Player state, the struct interface available to each player.
  */
 struct State {
-    std::array<std::array<MapElement, Constants::Map::MAP_SIZE>,
-               Constants::Map::MAP_SIZE>
+    array<array<MapElement, Constants::Map::MAP_SIZE>, Constants::Map::MAP_SIZE>
         map;
 
-    std::vector<Bot> bots;
-    std::vector<Bot> enemy_bots;
+    vector<Bot> bots;
+    vector<Bot> enemy_bots;
 
     int64_t num_bots;
     int64_t num_enemy_bots;
 
-    std::vector<Tower> towers;
-    std::vector<Tower> enemy_towers;
+    vector<Tower> towers;
+    vector<Tower> enemy_towers;
 
     int64_t num_towers;
     int64_t num_enemy_towers;
@@ -253,9 +254,7 @@ struct State {
           score(0) {}
 };
 
-inline std::ostream &operator<<(std::ostream &os, const State &state) {
-    using std::endl;
-
+inline ostream &operator<<(ostream &os, const State &state) {
     os << "Map:" << endl;
     for (auto const &row : state.map) {
         for (auto const &elem : row) {

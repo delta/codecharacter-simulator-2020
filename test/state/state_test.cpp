@@ -11,10 +11,9 @@ const auto F = state::TerrainType::FLAG;
 const auto T = state::TerrainType::TOWER;
 
 class StateTest : public Test {
-    public:
-
+  public:
     Map *map;
-    ScoreManager* score_manager;
+    ScoreManager *score_manager;
     unique_ptr<PathPlanner> path_planner;
     unique_ptr<State> state;
     array<vector<Bot *>, 2> state_bots;
@@ -55,20 +54,16 @@ class StateTest : public Test {
         state_bots = {{{bot1}, {bot2}}};
         int64_t tower_hp = 250, tower_max_hp = 250, tower_blast_range = 5,
                 tower_damage_points = 50;
-        auto tower1 =
-            new Tower(PlayerId::PLAYER1, tower_hp, tower_max_hp,
-                               {0, 0}, tower_damage_points, tower_blast_range,
-                               score_manager, BlastCallback{});
-        auto tower2 =
-            new Tower(PlayerId::PLAYER2, tower_hp, tower_max_hp,
-                               {4, 4}, tower_damage_points, tower_blast_range,
-                               score_manager, BlastCallback{});
-        state_towers = {{ {tower1}, {tower2}}};
+        auto tower1 = new Tower(PlayerId::PLAYER1, tower_hp, tower_max_hp,
+                                {0, 0}, tower_damage_points, tower_blast_range,
+                                score_manager, BlastCallback{});
+        auto tower2 = new Tower(PlayerId::PLAYER2, tower_hp, tower_max_hp,
+                                {4, 4}, tower_damage_points, tower_blast_range,
+                                score_manager, BlastCallback{});
+        state_towers = {{{tower1}, {tower2}}};
 
-        // state = make_unique<State>(std::move(u_move))                               
+        // state = make_unique<State>(std::move(u_move))
     }
 };
 
-TEST_F(StateTest, MoveBotTest) {
-
-}
+TEST_F(StateTest, MoveBotTest) {}

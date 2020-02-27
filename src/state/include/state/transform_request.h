@@ -12,8 +12,6 @@
 
 namespace state {
 
-using GetBotCallback =
-    std::function<Actor *(PlayerId player_id, ActorId bot_id)>;
 class TransformRequest {
     /**
      * Player Id of player bot requesting to transform
@@ -32,7 +30,7 @@ class TransformRequest {
 
   public:
     /**
-     * Connstructor
+     * Constructor
      */
     TransformRequest(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
     /**
@@ -40,7 +38,7 @@ class TransformRequest {
      *
      * @return ActorId Bot_id
      */
-    ActorId getActorId();
+    ActorId getBotId();
 
     /**
      * Returns the Position where the bot is requesting to transform

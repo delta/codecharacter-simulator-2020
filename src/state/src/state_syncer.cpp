@@ -22,6 +22,12 @@ void StateSyncer::updateMainState(
     // Updating the main state
     state->update();
 
+    // Logging the state
+    logger->LogState();
+
+    // Removing the dead actors in state
+    state->removeDeadActors();
+
     // Updating the player states
     updatePlayerStates(player_states);
 }
@@ -113,9 +119,6 @@ void StateSyncer::updatePlayerStates(
             }
         }
     }
-
-    // Logging the state
-    logger->LogState();
 }
 
 DoubleVec2D StateSyncer::flipBotPosition(const Map &map, DoubleVec2D position) {

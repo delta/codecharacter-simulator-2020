@@ -23,7 +23,7 @@ class STATE_EXPORT Blaster {
      * and that position are within the blast range
      * The blast range is circular
      */
-    size_t blast_range;
+    int64_t blast_range;
 
     /**
      * The damage that this blaster inflicts upon blasting
