@@ -79,6 +79,32 @@ void Bot::setTransforming(bool p_transforming) {
 
 BotStateName Bot::getState() const { return state->getName(); }
 
+void Bot::setState(BotStateName bot_state) {
+    switch (bot_state) {
+    case BotStateName::IDLE:
+        state = std::make_unique<BotIdleState>(this);
+        break;
+    case BotStateName::MOVE:
+        state = std::make_unique<BotMoveState>(this);
+        break;
+    case BotStateName::BLAST:
+        state = std::make_unique<BotBlastState>(this);
+        break;
+    case BotStateName::TRANSFORM:
+        state = std::make_unique<BotTransformState>(this);
+        break;
+    case BotStateName::MOVE_TO_BLAST:
+        state = std::make_unique<BotMoveToBlastState>(this);
+        break;
+    case BotStateName::MOVE_TO_TRANSFORM:
+        state = std::make_unique<BotMoveToTransformState>(this);
+        break;
+    case BotStateName::DEAD:
+        state = std::make_unique<BotDeadState>(this);
+        break;
+    }
+}
+
 void Bot::constructTower() { construct_tower_callback(this); }
 
 bool Bot::isTransforming() const { return is_transforming; }

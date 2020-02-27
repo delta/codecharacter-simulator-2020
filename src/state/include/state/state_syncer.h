@@ -78,14 +78,9 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
         std::array<player_state::State, 2> &player_states) override;
 
     /**
-     * @see IStateSyncer #IsGameOver
-     */
-    bool isGameOver(PlayerId &winner) const override;
-
-    /**
      * @see IStateSyncer #GetScores
      */
-    std::array<int64_t, 2> getScores(bool game_over) const override;
+    std::array<uint64_t, 2> getScores() const override;
 
     /**
      * Function to the assign player state bots their new states after
@@ -112,7 +107,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
                       bool is_enemy);
 
     /**
-     * Helper function to get the player id
+     *  Returns the player's id
      *
      * @param player_id Id struct
      * @param is_enemy Whether this is the id of the enemy

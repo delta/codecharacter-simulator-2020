@@ -14,7 +14,7 @@ namespace state {
 
 using BlastCallback =
     std::function<void(PlayerId player_id, ActorId actor_id,
-                       DoubleVec2D position, size_t blast_range)>;
+                       DoubleVec2D position, int64_t blast_range)>;
 
 class STATE_EXPORT Blaster {
   protected:
@@ -23,7 +23,7 @@ class STATE_EXPORT Blaster {
      * and that position are within the blast range
      * The blast range is circular
      */
-    size_t blast_range;
+    int64_t blast_range;
 
     /**
      * The damage that this blaster inflicts upon blasting

@@ -6,7 +6,14 @@
 #pragma once
 
 #include "state/actor/blaster.h"
+#include "state/actor/bot_states/bot_blast_state.h"
+#include "state/actor/bot_states/bot_dead_state.h"
+#include "state/actor/bot_states/bot_idle_state.h"
+#include "state/actor/bot_states/bot_move_state.h"
+#include "state/actor/bot_states/bot_move_to_blast_state.h"
+#include "state/actor/bot_states/bot_move_to_transform_state.h"
 #include "state/actor/bot_states/bot_state.h"
+#include "state/actor/bot_states/bot_transform_state.h"
 #include "state/actor/unit.h"
 #include "state/path_planner/path_planner.h"
 #include "state/score_manager/score_manager.h"
@@ -196,6 +203,13 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
      * @return BotStateName
      */
     BotStateName getState() const;
+
+    /**
+     * Sets the state of the bot
+     *
+     * @param state_name The state that the bot should transition into
+     */
+    void setState(BotStateName state_name);
 
     /**
      * @see Blaster#Blast
