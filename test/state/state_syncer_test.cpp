@@ -42,7 +42,6 @@ class StateSyncerTest : public Test {
             .Times(5)
             .WillRepeatedly(Return(towers));
         EXPECT_CALL(*this->state, getMap).Times(9).WillRepeatedly(Return(map));
-        EXPECT_CALL(*this->logger, LogState);
     }
 
     StateSyncerTest() {
