@@ -89,6 +89,13 @@ void StateSyncer::updatePlayerStates(
         assignTowers(player_id, player_states[player_id].towers, false);
         assignTowers(enemy_id, player_states[player_id].enemy_towers, true);
 
+        // Assigning the number of bots and towers
+        player_states[player_id].num_bots = state_bots[player_id].size();
+        player_states[enemy_id].num_enemy_bots = state_bots[player_id].size();
+        player_states[player_id].num_towers = state_towers[player_id].size();
+        player_states[enemy_id].num_enemy_towers =
+            state_towers[player_id].size();
+
         // Adding the player state map
         // For player1, positions need not be flipped
         size_t map_size = map->getSize();
@@ -130,9 +137,9 @@ void StateSyncer::assignBots(int64_t id,
                              bool is_enemy) {
     auto state_bots = state->getBots();
     auto map = state->getMap();
-    size_t player_id = id;
+    size_t player_id = getPlayerId(id, is_enemy);
     std::vector<player_state::Bot> new_bots;
-    size_t num_state_bots = state_bots[player_id].size(),
+    size_t num_state_bots = state_bots[id].size(),
            num_player_bots = player_bots.size();
 
     for (size_t bot_index = 0; bot_index < num_state_bots; ++bot_index) {
@@ -142,8 +149,9 @@ void StateSyncer::assignBots(int64_t id,
         if (bot_index < num_player_bots) {
             new_bot = player_bots[bot_index];
         }
-        auto state_bot = state_bots[player_id][bot_index];
+        auto state_bot = state_bots[id][bot_index];
 
+        new_bot.id = state_bot->getActorId();
         new_bot.hp = state_bot->getHp();
         new_bot.position = DoubleVec2D::null;
 
@@ -171,9 +179,6 @@ void StateSyncer::assignBots(int64_t id,
             new_bot.state = player_state::BotState::TRANSFORM;
             break;
         }
-
-        // Checking if it's player 2, then flipping the position
-        player_id = getPlayerId(id, is_enemy);
 
         // For player one, the positions need not be inverted
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
@@ -206,11 +211,11 @@ void StateSyncer::assignTowers(int64_t id,
                                std::vector<player_state::Tower> &player_towers,
                                bool is_enemy) {
     auto state_towers = state->getTowers();
-    size_t player_id = id;
+    size_t player_id = getPlayerId(id, is_enemy);
+    auto map = state->getMap();
     std::vector<player_state::Tower> new_towers;
     size_t num_state_towers = state_towers[id].size(),
            num_player_towers = player_towers.size();
-    auto map = state->getMap();
 
     for (size_t tower_index = 0; tower_index < num_state_towers;
          ++tower_index) {
@@ -223,6 +228,7 @@ void StateSyncer::assignTowers(int64_t id,
 
         auto state_tower = state_towers[id][tower_index];
         new_tower.id = state_tower->getActorId();
+        new_tower.hp = state_tower->getHp();
 
         // Assigning the tower's state
         switch (state_tower->getState()) {
@@ -236,8 +242,6 @@ void StateSyncer::assignTowers(int64_t id,
             new_tower.state = player_state::TowerState::BLAST;
             break;
         }
-
-        player_id = getPlayerId(id, is_enemy);
 
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             new_tower.position = state_tower->getPosition();
