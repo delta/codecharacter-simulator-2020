@@ -178,30 +178,6 @@ void Bot::setConstructTowerCallback(ConstructTowerCallback construct_tower) {
 void Bot::update() {
     // get new state based on bot properties
     auto new_state = state->update();
-    std::cerr << "HERE]\n";
-    switch(getState()){
-        case BotStateName::IDLE:
-            std::cerr << "IDLE\n";
-        break;
-                    case BotStateName::DEAD:
-            std::cerr << "DEAD\n";
-        break;
-                    case BotStateName::MOVE:
-            std::cerr << "MOVE\n";
-        break;
-                    case BotStateName::TRANSFORM:
-            std::cerr << "TRANSFORM\n";
-        break;
-                    case BotStateName::BLAST:
-            std::cerr << "BLAST\n";
-        break;
-                    case BotStateName::MOVE_TO_BLAST:
-            std::cerr << "MOVE_TO_BLAST\n";
-        break;
-                    case BotStateName::MOVE_TO_TRANSFORM:
-            std::cerr << "MOVE_TO_TRANSFORM\n";
-        break;
-    }
 
     // until no state transitions occur, in a single frame
     while (new_state != nullptr) {
@@ -213,33 +189,7 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-
-        switch(getState()){
-            case BotStateName::IDLE:
-                std::cerr << "IDLE\n";
-            break;
-                        case BotStateName::DEAD:
-                std::cerr << "DEAD\n";
-            break;
-                        case BotStateName::MOVE:
-                std::cerr << "MOVE\n";
-            break;
-                        case BotStateName::TRANSFORM:
-                std::cerr << "TRANSFORM\n";
-            break;
-                        case BotStateName::BLAST:
-                std::cerr << "BLAST\n";
-            break;
-                        case BotStateName::MOVE_TO_BLAST:
-                std::cerr << "MOVE_TO_BLAST\n";
-            break;
-                        case BotStateName::MOVE_TO_TRANSFORM:
-                std::cerr << "MOVE_TO_TRANSFORM\n";
-            break;
-        }
-
         new_state = state->update();
-        std::cerr << "HERE4\n";
     }
 }
 

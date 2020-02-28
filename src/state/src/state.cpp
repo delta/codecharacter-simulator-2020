@@ -9,8 +9,10 @@ namespace state {
 State::State() {}
 
 State::State(std::unique_ptr<Map> map,
-             std::unique_ptr<ScoreManager> score_manager)
-    : map(std::move(map)), score_manager(std::move(score_manager)) {}
+             std::unique_ptr<ScoreManager> score_manager,
+             std::unique_ptr<PathPlanner> path_planner)
+    : map(std::move(map)), score_manager(std::move(score_manager)),
+      path_planner(std::move(path_planner)) {}
 
 State::State(std::unique_ptr<Map> map,
              std::unique_ptr<ScoreManager> score_manager,
@@ -18,13 +20,18 @@ State::State(std::unique_ptr<Map> map,
              std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
              std::array<std::vector<std::unique_ptr<Tower>>, 2> towers)
     : map(std::move(map)), score_manager(std::move(score_manager)),
-      bots(std::move(bots)), towers(std::move(towers)) {}
+      path_planner(std::move(path_planner)), bots(std::move(bots)),
+      towers(std::move(towers)) {}
 
 Map *State::getMap() const { return map.get(); }
 
 std::array<uint64_t, 2> State::getScores() const {
     return score_manager->getScores();
 }
+
+ScoreManager *State::getScoreManager() const { return score_manager.get(); }
+
+PathPlanner *State::getPathPlanner() const { return path_planner.get(); }
 
 /**
  * Get the Raw Ptrs From Unique Ptrs object
@@ -250,9 +257,9 @@ void State::createTower(Bot *bot) {
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
 
-    // Finding ratio of hps of bot and tower to scale
-    double hp_ratio = (double) (Constants::Actor::BOT_MAX_HP) /
-                      (double) (Constants::Actor::TOWER_MAX_HP);
+    // Finding ratio of hps of tower and bot to scale
+    double hp_ratio = (double) (Constants::Actor::TOWER_MAX_HP) /
+                      (double) (Constants::Actor::BOT_MAX_HP);
 
     // Transitioning the bot into the dead state
     bot->setState(BotStateName::DEAD);

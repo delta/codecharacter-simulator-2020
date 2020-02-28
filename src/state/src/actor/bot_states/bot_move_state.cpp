@@ -56,8 +56,6 @@ std::unique_ptr<IActorState> BotMoveState::update() const {
 
     auto next_position =
         path_planner->getNextPosition(current_position, destination, speed);
-    
-    std::cerr << "WORKING TILL THERE\n";
 
     if (next_position) {
         bot->setNewPosition(next_position);

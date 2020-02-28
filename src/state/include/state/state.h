@@ -209,6 +209,20 @@ class STATE_EXPORT State : public ICommandTaker {
     Map *getMap() const override;
 
     /**
+     * @see ICommandTaker#getScoreManager
+     *
+     * @return ScoreManager*
+     */
+    ScoreManager *getScoreManager() const override;
+
+    /**
+     * @see ICommandTaker#getPathPlanner
+     *
+     * @return PathPlanner*
+     */
+    PathPlanner *getPathPlanner() const override;
+
+    /**
      * @see ICommandTaker#getScores
      */
     std::array<uint64_t, 2> getScores() const override;

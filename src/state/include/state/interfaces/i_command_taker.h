@@ -72,9 +72,23 @@ class STATE_EXPORT ICommandTaker {
     /**
      * Get map from state
      *
-     * @return map
+     * @return Map*
      */
     virtual Map *getMap() const = 0;
+
+    /**
+     * Gets the Score Manager
+     *
+     * @return ScoreManager*
+     */
+    virtual ScoreManager *getScoreManager() const = 0;
+
+    /**
+     * Get the Path Planner
+     *
+     * @return PathPlanner*
+     */
+    virtual PathPlanner *getPathPlanner() const = 0;
 
     /**
      * Get game scores from state

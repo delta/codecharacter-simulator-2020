@@ -206,33 +206,21 @@ TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
         throw std::invalid_argument("Position is not within the map\n");
     }
 
-    if (pos_x == map_size) {
-        --pos_x;
-    }
-    if (pos_y == map_size) {
-        --pos_y;
-    }
-
     return map->getTerrainType(pos_x, pos_y);
 }
 
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          DoubleVec2D destination,
                                          size_t speed) {
-    std::cerr << "WORKING TILL HERE\n";                                  
     std::vector<DoubleVec2D> path = path_graph.getPath(source, destination);
-    std::cerr << "WORKING TILL THERE\n";
 
     if (path.empty()) {
         return DoubleVec2D::null;
     }
 
-    std::cerr << "WORKING TILL HERE\n";
-
     double distance_left = speed;
     DoubleVec2D current_position = source;
 
-    std::cerr << "WORKING TILL THERE\n";
     for (auto next_position : path) {
         if (distance_left == 0 || current_position == destination)
             break;
