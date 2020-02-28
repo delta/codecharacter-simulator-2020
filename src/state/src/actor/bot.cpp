@@ -219,7 +219,7 @@ void Bot::lateUpdate() {
 }
 
 void Bot::setConstructTowerCallback(ConstructTowerCallback construct_tower) {
-    construct_tower_callback = construct_tower;
+    construct_tower_callback = std::move(construct_tower);
 }
 
 void Bot::update() {

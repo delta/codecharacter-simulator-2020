@@ -183,7 +183,7 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::vector<Actor *> getAffectedActors(PlayerId player_id,
                                            DoubleVec2D blast_position,
-                                           int64_t impact_range);
+                                           size_t impact_range);
 
     /**
      * Callback passed to all blasters to damage neighbouring actors given a

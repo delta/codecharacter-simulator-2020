@@ -17,19 +17,17 @@ class StateTest : public Test {
     int64_t bot_max_hp, tower_max_hp;
 
     StateTest() {
-
-        // std::cerr << "Starting state tests\n\n\n\n\n\n\n\n";
         map_size = 5;
 
         auto score_manager = make_unique<ScoreManager>();
 
         // clang-format off
         auto test_map = vector<vector<TerrainType>>{
-            {T, L, L, L, W}, 
+            {L, L, L, L, W}, 
             {L, L, L, L, L},
             {L, L, L, L, L},
             {L, L, L, F, L},
-            {W, L, L, L, T},
+            {W, L, L, L, L},
         };
         // clang-format on
 
@@ -170,7 +168,6 @@ TEST_F(StateTest, TransformRequestTest) {
 
     transform_requests = state->getTransformRequests();
     ASSERT_EQ(transform_requests[0].size(), 1);
-    ASSERT_EQ(transform_requests[1].size(), 0);
 
     auto transform_request = transform_requests[0][0];
     ASSERT_EQ(transform_request->getPlayerId(), player_id);
