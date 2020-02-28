@@ -312,9 +312,9 @@ void State::blastTower(ActorId actor_id) {
 void State::removeDeadActors() {
     for (auto &state_bots : bots) {
         // Dividing the bots into dead and alive bots
-        auto partition_point =
-            std::stable_partition(state_bots.begin(), state_bots.end(),
-                                  [](auto &s) { return s->getHp() != 0; });
+        auto partition_point = std::stable_partition(
+            state_bots.begin(), state_bots.end(),
+            [](auto &s) { return s->getState() != BotStateName::DEAD; });
 
         // Delete the dead bots
         state_bots.erase(partition_point, state_bots.end());
@@ -322,9 +322,9 @@ void State::removeDeadActors() {
 
     for (auto &state_towers : towers) {
         // Dividing tower into dead and alive towers
-        auto partition_point =
-            std::stable_partition(state_towers.begin(), state_towers.end(),
-                                  [](auto &s) { return s->getHp() != 0; });
+        auto partition_point = std::stable_partition(
+            state_towers.begin(), state_towers.end(),
+            [](auto &s) { return s->getState() != TowerStateName::DEAD; });
 
         // Delete the dead bots
         state_towers.erase(partition_point, state_towers.end());

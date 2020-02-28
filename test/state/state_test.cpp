@@ -203,13 +203,20 @@ TEST_F(StateTest, RemoveDeadActors) {
     auto bots = state->getBots();
     auto towers = state->getTowers();
 
-    auto bot = bots[0][0];
-    bot->setHp(0);
     ASSERT_EQ(bots[0].size(), 1);
 
+    auto bot = bots[0][0];
+    bot->setHp(0);
+    bot->update();
+
+    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+
+    ASSERT_EQ(bots[1].size(), 1);
     auto tower = towers[1][0];
     tower->setHp(0);
-    ASSERT_EQ(bots[1].size(), 1);
+    tower->update();
+
+    ASSERT_EQ(tower->getState(), TowerStateName::DEAD);
 
     // Removing dead actors from state
     state->removeDeadActors();
