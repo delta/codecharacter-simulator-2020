@@ -160,7 +160,14 @@ void State::damageEnemyActors(PlayerId player_id, ActorId actor_id,
 
     // Adding to the actor's damage incurred
     for (auto &affected_actor : affected_actors) {
-        affected_actor->damage(damage_points);
+        DoubleVec2D affected_actor_position = affected_actor->getPosition();
+        double_t distance = position.distance(affected_actor_position);
+        double_t remaining_distance = impact_radius - distance;
+        double_t normalized_remaining_distance =
+            remaining_distance / impact_radius;
+        uint64_t inflicted_damage =
+            damage_points * normalized_remaining_distance;
+        affected_actor->damage(inflicted_damage);
     }
 }
 
@@ -170,6 +177,10 @@ std::array<std::vector<Tower *>, 2> State::getTowers() {
 
 std::array<std::vector<Bot *>, 2> State::getBots() {
     return getRawPtrsFromUniquePtrs(bots);
+}
+
+std::array<std::vector<TransformRequest *>, 2> State::getTransformRequests() {
+    return getRawPtrsFromUniquePtrs(transform_requests);
 }
 
 void State::spawnNewBots() {

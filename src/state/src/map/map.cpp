@@ -11,9 +11,7 @@ namespace state {
 Map::Map(std::vector<std::vector<TerrainType>> map, size_t map_size)
     : map(std::move(map)), map_size(map_size) {}
 
-size_t Map::getSize() const {
-    return map_size;
-}
+size_t Map::getSize() const { return map_size; }
 
 TerrainType Map::getTerrainType(size_t x, size_t y) const { return map[x][y]; }
 

@@ -71,14 +71,6 @@ class StateTest : public Test {
     }
 };
 
-TEST_F(StateTest, SamePointers) {
-    auto state_bots = state->getBots();
-    auto bot = state_bots[0][0];
-    auto path_planner1 = state->getPathPlanner();
-    auto path_planner2 = bot->getPathPlanner();
-    ASSERT_EQ(path_planner1, path_planner2);
-}
-
 TEST_F(StateTest, GetActors) {
     auto bots = state->getBots();
     auto towers = state->getTowers();
@@ -141,7 +133,8 @@ TEST_F(StateTest, CreateTowerTest) {
     bots = state->getBots();
     auto towers = state->getTowers();
 
-    // Checking to see if the bot was removed from state and if a tower was added to state
+    // Checking to see if the bot was removed from state and if a tower was
+    // added to state
     ASSERT_EQ(bots[1].size(), 1);
     ASSERT_EQ(towers[1].size(), 2);
 
@@ -151,7 +144,7 @@ TEST_F(StateTest, CreateTowerTest) {
 
     // Check if the tower HP has been scaled correctly
     double hp_ratio = double(tower_max_hp) / double(bot_max_hp);
-    
+
     int64_t tower_hp = hp * hp_ratio;
     ASSERT_EQ(tower->getHp(), tower_hp);
 
@@ -160,4 +153,136 @@ TEST_F(StateTest, CreateTowerTest) {
     auto tower_counts = score_manager->getTowerCounts();
     ASSERT_EQ(tower_counts[1], 1);
     ASSERT_EQ(bot_counts[1], 0);
+}
+
+TEST_F(StateTest, TransformRequestTest) {
+    auto bots = state->getBots();
+    auto bot = bots[0][0];
+    auto actor_id = bot->getActorId();
+    auto player_id = bot->getPlayerId();
+    auto position = bot->getPosition();
+
+    auto transform_requests = state->getTransformRequests();
+    ASSERT_EQ(transform_requests[0].size(), 0);
+    ASSERT_EQ(transform_requests[1].size(), 0);
+
+    state->transformBot(player_id, actor_id, position);
+
+    transform_requests = state->getTransformRequests();
+    ASSERT_EQ(transform_requests[0].size(), 1);
+    ASSERT_EQ(transform_requests[1].size(), 0);
+
+    auto transform_request = transform_requests[0][0];
+    ASSERT_EQ(transform_request->getPlayerId(), player_id);
+    ASSERT_EQ(transform_request->getBotId(), actor_id);
+    ASSERT_EQ(transform_request->getPosition(), position);
+}
+
+TEST_F(StateTest, BlastBotTest) {
+    auto bots = state->getBots();
+    auto bot = bots[0][0];
+
+    // Checking if the bot's final destination is set after calling blastBot
+    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    state->blastBot(bot->getActorId(), DoubleVec2D(3, 2));
+    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D(3, 2));
+}
+
+TEST_F(StateTest, BlastTowerTest) {
+    auto towers = state->getTowers();
+    auto tower = towers[0][0];
+
+    // Checking if the tower's blasting property is set after calling blastTower
+    ASSERT_EQ(tower->isBlasting(), false);
+    state->blastTower(tower->getActorId());
+    ASSERT_EQ(tower->isBlasting(), true);
+}
+
+TEST_F(StateTest, RemoveDeadActors) {
+    // Killing PLAYER1 bot 1 and PLAYER2 tower1
+    auto bots = state->getBots();
+    auto towers = state->getTowers();
+
+    auto bot = bots[0][0];
+    bot->setHp(0);
+    ASSERT_EQ(bots[0].size(), 1);
+
+    auto tower = towers[1][0];
+    tower->setHp(0);
+    ASSERT_EQ(bots[1].size(), 1);
+
+    // Removing dead actors from state
+    state->removeDeadActors();
+
+    bots = state->getBots();
+    towers = state->getTowers();
+
+    ASSERT_EQ(bots[0].size(), 0);
+    ASSERT_EQ(towers[1].size(), 0);
+}
+
+TEST_F(StateTest, SpawnNewBots) {
+    // Checking initial number of bots that both players have and checking if
+    // the number of bot increases by bot frequency
+    auto bots = state->getBots();
+
+    ASSERT_EQ(bots[0].size(), 1);
+    ASSERT_EQ(bots[1].size(), 1);
+
+    state->spawnNewBots();
+
+    bots = state->getBots();
+
+    ASSERT_EQ(bots[0].size(), 2);
+    ASSERT_EQ(bots[1].size(), 2);
+}
+
+TEST_F(StateTest, DamageEnemyActorsTest) {
+    // Making all the bots move to the center and making one bot blast
+    auto bots = state->getBots();
+    auto towers = state->getTowers();
+
+    auto bot = bots[0][0];
+    auto bot_position = DoubleVec2D(2, 2);
+    auto impact_radius = bot->getBlastRange();
+    auto damage_points = bot->getBlastDamage();
+
+    bot->setPosition(bot_position);
+
+    towers[0][0]->setPosition(DoubleVec2D(3, 3));
+    bots[1][0]->setPosition(DoubleVec2D(2, 3));
+    towers[1][0]->setPosition(DoubleVec2D(1, 1));
+
+    // Making the player1 blast and checking the damage_incurred to the PLAYER2
+    // bot and PLAYER2 tower
+    state->damageEnemyActors(PlayerId::PLAYER1, bot->getActorId(),
+                             bot->getPosition());
+
+    // Checking the damage incurred of PLAYER1 and PLAYER2
+    bots = state->getBots();
+    towers = state->getTowers();
+
+    // Calculating the damage that tower 1 should have incurred
+    double_t bot_distance = bot_position.distance(bots[1][0]->getPosition());
+    double_t tower_distance =
+        bot_position.distance(towers[1][0]->getPosition());
+
+    double_t bot_remaining_distance = impact_radius - bot_distance;
+    double_t tower_remaining_distance = impact_radius - tower_distance;
+
+    double_t normalized_bot_distance = bot_remaining_distance / impact_radius;
+    double_t normalized_tower_distance =
+        tower_remaining_distance / impact_radius;
+
+    uint64_t damage_incurred_bot = normalized_bot_distance * damage_points;
+    uint64_t damage_incurred_tower = normalized_tower_distance * damage_points;
+
+    ASSERT_EQ(towers[0][0]->getDamageIncurred(), 0);
+    ASSERT_EQ(bots[1][0]->getDamageIncurred(), damage_incurred_bot);
+    ASSERT_EQ(towers[1][0]->getDamageIncurred(), damage_incurred_tower);
+}
+
+TEST_F(StateTest, GetAffectedActorsTest) {
+    // Moving PLAYER1 bot to center and making the PLAYER2 tower in it's blast
+    // range but not the PLAYER2 bot
 }

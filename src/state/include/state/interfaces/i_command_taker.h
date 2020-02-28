@@ -10,6 +10,7 @@
 #include "state/actor/tower.h"
 #include "state/interfaces/i_updatable.h"
 #include "state/map/map.h"
+#include "state/transform_request.h"
 #include "state/utilities.h"
 
 #include <memory>
@@ -110,6 +111,14 @@ class STATE_EXPORT ICommandTaker {
      * @return towers
      */
     virtual std::array<std::vector<Tower *>, 2> getTowers() = 0;
+
+    /**
+     * Get the Transform Requests object
+     *
+     * @return std::array<std::vector<TransformRequest *>, 2>
+     */
+    virtual std::array<std::vector<TransformRequest *>, 2>
+    getTransformRequests() = 0;
 
     /**
      * Removes all the dead actors from state

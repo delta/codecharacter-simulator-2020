@@ -237,6 +237,18 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::array<std::vector<Bot *>, 2> getBots() override;
 
+    /**
+     * Get the Transform Requests object
+     *
+     * @return std::array<std::vector<std::unique_ptr<TransformRequest>>, 2>
+     */
+    std::array<std::vector<TransformRequest *>, 2>
+    getTransformRequests() override;
+
+    /**
+     * Updates the main state by calling update for each of the state actors
+     * individually followed by updating scores and removing dead actors
+     */
     void update() override;
 };
 } // namespace state
