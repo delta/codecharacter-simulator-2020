@@ -4,7 +4,10 @@ project(drivers)
 set(SOURCE_FILES
     src/shared_memory_utils/shared_memory_main.cpp
     src/shared_memory_utils/shared_memory_player.cpp
-    src/shared_memory_utils/shared_buffer.cpp)
+    src/shared_memory_utils/shared_buffer.cpp
+    src/timer.cpp
+    src/player_driver.cpp
+    src/main_driver.cpp)
 
 set(INCLUDE_PATH include)
 
@@ -15,7 +18,8 @@ find_package(Boost 1.68.0)
 
 add_library(drivers STATIC ${SOURCE_FILES})
 
-target_link_libraries(drivers ${CMAKE_THREAD_LIBS_INIT} player_wrapper)
+target_link_libraries(drivers ${CMAKE_THREAD_LIBS_INIT} player_wrapper
+                      constants)
 
 generate_export_header(drivers EXPORT_FILE_NAME ${EXPORTS_FILE_PATH})
 

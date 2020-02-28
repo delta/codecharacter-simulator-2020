@@ -220,7 +220,7 @@ void Logger::logError(state::PlayerId player_id, ErrorType error_type,
 };
 
 void Logger::logFinalGameParams(state::PlayerId player_id,
-                                std::array<size_t, 2> final_scores) {
+                                std::array<uint64_t, 2> final_scores) {
     // Write the error mapping to logs
     // Flip the mapping, int error_code -> string message
     for (const auto &element : error_map) {

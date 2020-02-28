@@ -9,9 +9,12 @@
 
 namespace drivers {
 
-SharedBuffer::SharedBuffer(bool is_player_running, int64_t instruction_counter,
+SharedBuffer::SharedBuffer(bool is_player_running,
+                           int64_t turn_instruction_counter,
+                           int64_t game_instruction_counter,
                            transfer_state::State transfer_state)
     : is_player_running(is_player_running),
-      instruction_counter(instruction_counter),
+      turn_instruction_counter(turn_instruction_counter),
+      game_instruction_counter(game_instruction_counter),
       transfer_state(std::move(transfer_state)) {}
 } // namespace drivers

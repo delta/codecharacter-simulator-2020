@@ -104,7 +104,7 @@ class LOGGER_EXPORT Logger : public ILogger {
      * @see ILogger#logFinalGameParams
      */
     void logFinalGameParams(state::PlayerId player_id,
-                            std::array<size_t, 2> final_scores) override;
+                            std::array<uint64_t, 2> final_scores) override;
 
     /**
      * @see ILogger#writeGame

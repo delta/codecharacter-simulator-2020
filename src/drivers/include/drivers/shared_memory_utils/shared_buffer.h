@@ -15,7 +15,8 @@ namespace drivers {
  * Struct for using as buffer in shared memory
  */
 struct DRIVERS_EXPORT SharedBuffer {
-    SharedBuffer(bool is_player_running, int64_t instruction_counter,
+    SharedBuffer(bool is_player_running, int64_t turn_instruction_counter,
+                 int64_t game_instruction_counter,
                  transfer_state::State transfer_state);
 
     /**
@@ -26,7 +27,12 @@ struct DRIVERS_EXPORT SharedBuffer {
     /**
      * Count of the number of instructions executed in the present turn
      */
-    std::atomic<uint64_t> instruction_counter;
+    std::atomic<uint64_t> turn_instruction_counter;
+
+    /**
+     * Count of the number of instructions executed in the game
+     */
+    std::atomic<uint64_t> game_instruction_counter;
 
     /**
      * Player's copy of the state with limited information
