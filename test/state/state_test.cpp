@@ -285,4 +285,82 @@ TEST_F(StateTest, DamageEnemyActorsTest) {
 TEST_F(StateTest, GetAffectedActorsTest) {
     // Moving PLAYER1 bot to center and making the PLAYER2 tower in it's blast
     // range but not the PLAYER2 bot
+    auto bots = state->getBots();
+    auto towers = state->getTowers();
+
+    auto bot = bots[0][0];
+    auto bot_position = DoubleVec2D(2.5, 2.5);
+    bot->setPosition(bot_position);
+    bot->setBlastRange(2);
+
+    // Moving the PLAYER2 tower within the range of the bot and the PLAYER2 bot
+    // outside the blast range
+    towers[1][0]->setPosition(DoubleVec2D(3.5, 3.5));
+    bots[1][0]->setPosition(DoubleVec2D(4, 4));
+
+    auto affected_actors = state->getAffectedActors(
+        bot->getPlayerId(), bot_position, bot->getBlastRange());
+    ASSERT_EQ(affected_actors.size(), 1);
+    auto affected_actor = affected_actors[0];
+    ASSERT_EQ(affected_actor->getActorId(), towers[1][0]->getActorId());
+}
+
+TEST_F(StateTest, RejectTransformRequestTest){
+    // Moving bots into one square and asking both bots to transform
+    auto bots = state->getBots();
+    auto bot1 = bots[0][0];
+    auto bot2 = bots[1][0];
+
+    bot1->setPosition(DoubleVec2D(2.5, 2.3));
+    bot2->setPosition(DoubleVec2D(2.2, 2.7));
+
+    state->transformBot(bot1->getPlayerId(), bot1->getActorId(), bot1->getPosition());
+    state->transformBot(bot2->getPlayerId(), bot2->getActorId(), bot2->getPosition());
+
+    // Calling handleTransformRequests and checking to assert that no tower is built
+    state->handleTransformRequests();
+
+    bots = state->getBots();
+    auto towers = state->getTowers();
+
+    // Checking to see that the bots haven't been killed 
+    ASSERT_EQ(bots[0].size(), 1);
+    ASSERT_EQ(bots[1].size(), 1);
+
+    // Checking to see that no towers are added
+    ASSERT_EQ(towers[0].size(), 1);
+    ASSERT_EQ(towers[1].size(), 1);
+
+    // Making both the bots stand on the same offset but only one bot tries to transform
+    state->transformBot(bot1->getPlayerId(), bot1->getActorId(), bot1->getPosition());
+
+    // Calling handleTransformRequests and checking to assert that no tower is built
+    state->handleTransformRequests();
+
+    bots = state->getBots();
+    towers = state->getTowers();
+
+    // Checking to see that the bot isn't killed and no tower is added to the bot
+    ASSERT_EQ(bots[0].size(), 1);
+    ASSERT_EQ(towers[0].size(), 1);
+}
+
+TEST_F(StateTest, AcknowledgeTransformRequest){
+    // Making PLAYER1 bot transform
+    auto bots = state->getBots();
+    auto bot = bots[0][0];
+    
+    state->transformBot(bot->getPlayerId(), bot->getActorId(), bot->getPosition());
+
+    // Calling handle transform requests to see whether a tower is built
+    state->handleTransformRequests();
+
+    bots = state->getBots();
+    auto towers = state->getTowers();
+
+    ASSERT_EQ(bots[0][0]->getState(), BotStateName::DEAD);
+    ASSERT_EQ(bots[1].size(), 1);
+
+    ASSERT_EQ(towers[0].size(), 2);
+    ASSERT_EQ(towers[1].size(), 1);
 }

@@ -236,5 +236,3 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     ASSERT_EQ(player_states[1].towers[0].position, DoubleVec2D(0, 0));
     ASSERT_EQ(player_states[1].towers[0].state, player_state::TowerState::IDLE);
 }
-
-// TODO : Need to add test to check if dead actors are removed properly

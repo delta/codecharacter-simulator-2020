@@ -121,17 +121,6 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     Bot *getBotById(ActorId actor_id);
 
-    /**
-     * Get the actors who get damage from position
-     *
-     * @param blast_position
-     * @param impact_range
-     * @return std::vector<Actor *>
-     */
-    std::vector<Actor *> getAffectedActors(PlayerId player_id,
-                                           DoubleVec2D blast_position,
-                                           int64_t impact_range);
-
   public:
     /**
      * Constructors
@@ -184,6 +173,17 @@ class STATE_EXPORT State : public ICommandTaker {
      * @see ICommandTaker#blastTower
      */
     void blastTower(ActorId actor_id) override;
+
+    /**
+     * Get the actors who get damage from position
+     *
+     * @param blast_position
+     * @param impact_range
+     * @return std::vector<Actor *>
+     */
+    std::vector<Actor *> getAffectedActors(PlayerId player_id,
+                                           DoubleVec2D blast_position,
+                                           int64_t impact_range);
 
     /**
      * Callback passed to all blasters to damage neighbouring actors given a

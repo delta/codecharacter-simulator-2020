@@ -29,4 +29,12 @@ size_t Blaster::getBlastRange() const { return blast_range; }
 
 size_t Blaster::getBlastDamage() const { return damage_points; }
 
+void Blaster::setBlastRange(size_t p_blast_range) {
+    blast_range = p_blast_range;
+}
+
+void Blaster::setBlastDamage(size_t p_blast_damage) {
+    damage_points = p_blast_damage;
+}
+
 } // namespace state
