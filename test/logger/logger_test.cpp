@@ -5,6 +5,7 @@
 #include "state/score_manager/score_manager.h"
 #include "state/utilities.h"
 #include "gtest/gtest.h"
+#include <fstream>
 
 using namespace std;
 using namespace testing;
