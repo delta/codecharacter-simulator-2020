@@ -13,10 +13,12 @@ set(SOURCE_FILES
     state/command_giver_test.cpp
     state/score_manager_test.cpp
     state/state_syncer_test.cpp
-    logger/logger_test.cpp
+    state/state_test.cpp
     llvm_pass/llvm_pass_test.cpp
     drivers/timer_test.cpp
-    drivers/main_driver_test.cpp)
+    drivers/main_driver_test.cpp
+    logger/logger_test.cpp
+  )
 
 if(NOT BUILD_PROJECT STREQUAL "all")
   include(${CMAKE_INSTALL_PREFIX}/lib/physics_config.cmake)

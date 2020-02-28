@@ -247,6 +247,8 @@ void CommandGiver::runCommands(
                                      "Cannot blast bot in an invalid position");
                 } else {
                     blastBot(player_bot.id, final_destination);
+                }
+            } else if (is_moving_to_transform) {
                 DoubleVec2D transform_destination =
                     player_bot.transform_destination;
                 if (player_id == PlayerId::PLAYER2) {
@@ -277,8 +279,8 @@ void CommandGiver::runCommands(
                 }
                 transformBot(player_id, player_bot.id, transform_destination);
             } else if (is_moving) {
-                // Validates the position that the player has requested to move
-                // onto
+                // Validates the position that the player has requested to
+                // move onto
                 DoubleVec2D destination = player_bot.destination;
                 if (player_id == PlayerId::PLAYER2) {
                     destination = flipBotPosition(*map, destination);
@@ -364,5 +366,5 @@ void CommandGiver::runCommands(
             }
         }
     }
-}
+} // namespace state
 } // namespace state
