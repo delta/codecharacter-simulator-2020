@@ -96,7 +96,7 @@ TEST_F(LLVMPassTest, NormalTest1) {
 // Player driver needs to exit gracefully
 // Instrumentation needs to work correctly
 TEST_F(LLVMPassTest, PlayerDriverTimeout) {
-    int num_turns = 50;
+    int num_turns = 200;
     int time_limit_ms = 1500;
 
     setPlayerDriver<PlayerCode0>(num_turns, time_limit_ms, 0);
