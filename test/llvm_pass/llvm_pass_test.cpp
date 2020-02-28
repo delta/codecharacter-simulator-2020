@@ -35,7 +35,7 @@ class LLVMPassTest : public Test {
         // Remove if SHM with name already exists
         boost::interprocess::shared_memory_object::remove(shm_name.c_str());
 
-        this->shm_main = make_unique<SharedMemoryMain>(shm_name, false, 0,
+        this->shm_main = make_unique<SharedMemoryMain>(shm_name, false, 0, 0,
                                                        transfer_state::State());
         this->buf = shm_main->getBuffer();
     }
@@ -67,7 +67,8 @@ TEST_F(LLVMPassTest, NormalTest1) {
     // Start the player driver
     thread runner([this] { player_driver->start(); });
 
-    buf->instruction_counter = 0;
+    buf->game_instruction_counter = 0;
+    buf->turn_instruction_counter = 0;
 
     buf->is_player_running = true;
     while (buf->is_player_running)
@@ -75,7 +76,8 @@ TEST_F(LLVMPassTest, NormalTest1) {
 
     int inst_count_one = player_driver->getCount();
 
-    buf->instruction_counter = 0;
+    buf->game_instruction_counter = 0;
+    buf->turn_instruction_counter = 0;
 
     buf->is_player_running = true;
     while (buf->is_player_running)
@@ -85,8 +87,8 @@ TEST_F(LLVMPassTest, NormalTest1) {
 
     runner.join();
 
-    ASSERT_GT(buf->instruction_counter, 0);
-    ASSERT_EQ(buf->instruction_counter, inst_count_two);
+    ASSERT_GT(buf->turn_instruction_counter, 0);
+    ASSERT_EQ(buf->turn_instruction_counter, inst_count_two);
     ASSERT_EQ(inst_count_two, inst_count_one);
 }
 
@@ -99,7 +101,8 @@ TEST_F(LLVMPassTest, PlayerDriverTimeout) {
 
     setPlayerDriver<PlayerCode0>(num_turns, time_limit_ms, 0);
 
-    buf->instruction_counter = 0;
+    buf->game_instruction_counter = 0;
+    buf->turn_instruction_counter = 0;
 
     thread runner([this] { player_driver->start(); });
 
@@ -111,7 +114,7 @@ TEST_F(LLVMPassTest, PlayerDriverTimeout) {
     buf->is_player_running = true;
     while (buf->is_player_running && !is_timed_out)
         ;
-    int prev_instruction_count = buf->instruction_counter;
+    int prev_instruction_count = buf->turn_instruction_counter;
 
     for (int i = 1; i < num_turns; ++i) {
         buf->is_player_running = true;
@@ -119,8 +122,8 @@ TEST_F(LLVMPassTest, PlayerDriverTimeout) {
             ;
         // Number of instructions every turn must be the same, as the exact same
         // player code runs every turn
-        EXPECT_EQ(prev_instruction_count, buf->instruction_counter);
-        prev_instruction_count = buf->instruction_counter;
+        EXPECT_EQ(prev_instruction_count, buf->turn_instruction_counter);
+        prev_instruction_count = buf->turn_instruction_counter;
     }
 
     EXPECT_EQ(is_timed_out, true);
@@ -136,7 +139,8 @@ TEST_F(LLVMPassTest, NormalTest2) {
 
     setPlayerDriver<PlayerCode1>(num_turns, time_limit_ms, 0);
 
-    buf->instruction_counter = 0;
+    buf->turn_instruction_counter = 0;
+    buf->game_instruction_counter = 0;
 
     thread runner([this] { player_driver->start(); });
 
@@ -148,7 +152,7 @@ TEST_F(LLVMPassTest, NormalTest2) {
     buf->is_player_running = true;
     while (buf->is_player_running && !is_timed_out)
         ;
-    int prev_instruction_count = buf->instruction_counter;
+    int prev_instruction_count = buf->turn_instruction_counter;
     EXPECT_GT(prev_instruction_count, 0);
 
     for (int i = 1; i < num_turns; ++i) {
@@ -157,9 +161,9 @@ TEST_F(LLVMPassTest, NormalTest2) {
             ;
         // Number of instructions every turn must be the same, as the exact same
         // player code runs every turn
-        EXPECT_EQ(prev_instruction_count, buf->instruction_counter);
-        prev_instruction_count = buf->instruction_counter;
-        buf->instruction_counter = 0;
+        EXPECT_EQ(prev_instruction_count, buf->turn_instruction_counter);
+        prev_instruction_count = buf->turn_instruction_counter;
+        buf->turn_instruction_counter = 0;
     }
 
     runner.join();

@@ -11,7 +11,7 @@ using namespace drivers;
 // Arg 3: num_turns
 // Arg 4: turn_instruction_limit
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
+    if (argc != 6) {
         return 1;
     }
 
@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
     int time_limit_ms = atoi(argv[2]);
     int num_turns = atoi(argv[3]);
     int turn_instruction_limit = atoi(argv[4]);
+    int game_instruction_limit = atoi(argv[5]);
 
     // Create shm for player
     unique_ptr<SharedMemoryPlayer> shm_player =
@@ -36,10 +37,12 @@ int main(int argc, char *argv[]) {
         while (!buf->is_player_running && !is_time_over)
             ;
 
+        buf->turn_instruction_counter = turn_instruction_limit;
+
         if (i < num_turns / 2)
-            buf->instruction_counter = turn_instruction_limit;
+            buf->game_instruction_counter = game_instruction_limit;
         else
-            buf->instruction_counter = turn_instruction_limit + 1;
+            buf->game_instruction_counter = game_instruction_limit + 1;
 
         buf->is_player_running = false;
     }
