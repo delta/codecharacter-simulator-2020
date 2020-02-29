@@ -10,6 +10,7 @@
 #include "state/utilities.h"
 
 #include <array>
+#include <queue>
 
 using namespace std;
 
@@ -297,6 +298,56 @@ inline ostream &operator<<(ostream &os, const State &state) {
     os << state.score << endl;
 
     return os;
+}
+
+// Adding player state helper functions
+
+// NOTE : Finding nearest flag locations on the basis of manhattan message
+inline Vec2D findNearestFlagLocation(vector<vector<MapElement>, MapElement> map, Vec2D position){
+    // Creating a queue to implement BFS
+    queue<Vec2D> visit_next;
+    visit_next.push(position);
+
+    // Creating a visited array to not revisit the same position twice
+    using namespace Constants::Map;
+    array<array<bool, MAP_SIZE>, MAP_SIZE> visited;
+
+    for(size_t x = 0; x < MAP_SIZE; ++x){
+        for(size_t y = 0; y < MAP_SIZE; ++y){
+            visited[x][y] = false;
+        }
+    }
+
+    // A helper function to check if positions are within the map
+    auto is_position_valid = [map_size](Vec2D position){
+        return (position.x >= 0 && position.y >= 0 && position.x <= map_size && position.y <= map_size);
+    };
+
+    vector<pair<int, int>> delta_changes = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    while(!visit_next.empty()){
+        Vec2D position = visit_next.front();
+        
+        if(map[position.x][position.y].getTerrain() == TerrainType::FLAG){
+            return position;
+        }
+
+        // Adding neighbours of position which haven't already been visited
+        for(const auto &delta_change : delta_changes){
+            auto new_x = position.x + delta_change.first;
+            auto new_y = position.y + delta_change.second;
+            Vec2D new_position = Vec2D(new_x, new_y);
+            if(is_position_valid(new_position) && !visited[new_x][new_y]){
+                visit_next.push(new_position);
+            }
+        }
+    }
+
+    return Vec2D::null;
+} 
+
+inline Vec2D findNearestBuildableOffset(Vec2D position){
+    
 }
 
 } // namespace player_state
