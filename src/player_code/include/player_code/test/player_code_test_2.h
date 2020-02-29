@@ -12,7 +12,7 @@ namespace player_code {
 /**
  * Class where player defines AI code
  */
-class PLAYER_CODE_EXPORT PlayerCode0 : public player_wrapper::IPlayerCode {
+class PLAYER_CODE_EXPORT PlayerCode2 : public player_wrapper::IPlayerCode {
     /**
      * Player AI update function (main logic of the AI)
      */

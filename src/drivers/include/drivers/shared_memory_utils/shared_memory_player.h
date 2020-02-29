@@ -31,7 +31,7 @@ class DRIVERS_EXPORT SharedMemoryPlayer {
      *
      * @throw      std::exception      If shm doesn't already exist
      */
-    SharedMemoryPlayer(std::string shared_memory_name);
+    SharedMemoryPlayer(const std::string &shared_memory_name);
 
     /**
      * Gets pointer to shared memory

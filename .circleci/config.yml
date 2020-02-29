@@ -19,7 +19,7 @@ jobs:
             apt update
             apt install -y --no-install-recommends build-essential clang-9 clang-format-9 llvm-9 llvm-9-dev llvm-9-runtime
             wget "https://cmake.org/files/v3.15/cmake-3.15.4-Linux-x86_64.tar.gz" --no-check-certificate
-            wget "https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.gz" --no-check-certificate
+            wget "https://sourceforge.net/projects/boost/files/boost/1.68.0/boost_1_68_0.tar.gz" --no-check-certificate
             tar xf cmake-3.15.4-Linux-x86_64.tar.gz
             tar xf boost_1_68_0.tar.gz
             cp -r cmake-3.15.4-Linux-x86_64/bin/* /usr/local/bin

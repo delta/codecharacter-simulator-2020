@@ -30,7 +30,7 @@ const auto SHM_FILE_NAMES = std::array<std::string, 2>{"shm1.txt", "shm2.txt"};
 const auto GAME_LOG_FILE_NAME = "game.log";
 
 // Shared buffer size in bytes
-const size_t SHARED_BUFFER_SIZE = 65535;
+const size_t SHARED_BUFFER_SIZE = 262143;
 
 } // namespace Simulator
 } // namespace Constants

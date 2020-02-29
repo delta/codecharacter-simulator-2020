@@ -8,8 +8,6 @@ set(PLAYER_ID
 
 set(SOURCE_FILES src/player_code.cpp)
 
-set(CMAKE_CXX_FLAGS "-Werror=return-type")
-
 set(INCLUDE_PATH include)
 
 set(EXPORTS_DIR ${CMAKE_BINARY_DIR}/exports)
@@ -36,11 +34,12 @@ function(instrument_and_install_lib TARGET_NAME)
     add_dependencies(${TARGET_NAME} instruction_count_pass)
   endif()
   target_link_libraries(${TARGET_NAME} state)
+
   set_target_properties(
     ${TARGET_NAME}
     PROPERTIES
       COMPILE_FLAGS
-      "-D__GLIBCXX_USE_CXX11_ABI=0 -fno-rtti -Xclang-9 -load -Xclang-9 ${LLVM_PASS_PATH} -c -fPIC"
+      "-D__GLIBCXX_USE_CXX11_ABI=0 -fno-rtti -Xclang -load -Xclang ${LLVM_PASS_PATH} -c -fPIC"
   )
 
   install(
@@ -94,8 +93,9 @@ install(FILES ${EXPORTS_FILE_PATH} DESTINATION include/player_code)
 
 if((NOT BUILD_PROJECT STREQUAL "player_code") AND (NOT BUILD_PROJECT STREQUAL
                                                    "no_tests"))
+  set(TEST_FILES test/player_code_test_0.cpp test/player_code_test_1.cpp
+                 test/player_code_test_2.cpp)
   set(PLAYER_CODE_TEST_COUNT 0)
-  set(TEST_FILES test/player_code_test_0.cpp)
 
   foreach(FILE ${TEST_FILES})
     add_library(player_code_test_${PLAYER_CODE_TEST_COUNT} SHARED ${FILE})

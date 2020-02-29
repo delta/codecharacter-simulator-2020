@@ -54,11 +54,17 @@ ConvertToPlayerState(const transfer_state::State &ts) {
     ps.map = ts.map;
 
     // Copy Bots
+    ps.bots.clear();
     ps.bots = arrayToVector(ts.bots, ts.num_bots);
+
+    ps.enemy_bots.clear();
     ps.enemy_bots = arrayToVector(ts.enemy_bots, ts.num_enemy_bots);
 
     // Copy Towers
+    ps.towers.clear();
     ps.towers = arrayToVector(ts.towers, ts.num_towers);
+
+    ps.enemy_towers.clear();
     ps.enemy_towers = arrayToVector(ts.enemy_towers, ts.num_enemy_towers);
 
     // Copy score
