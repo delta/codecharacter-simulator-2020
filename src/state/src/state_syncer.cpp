@@ -56,6 +56,7 @@ void StateSyncer::updatePlayerStates(
     std::array<std::array<player_state::MapElement, Constants::Map::MAP_SIZE>,
                Constants::Map::MAP_SIZE>
         player_map{};
+    std::vector<Vec2D> flag_offsets{};
 
     // Creating a map of player_state map type
     for (size_t i = 0; i < map->getSize(); ++i) {
@@ -67,6 +68,7 @@ void StateSyncer::updatePlayerStates(
                 break;
             case TerrainType::FLAG:
                 map_element.type = player_state::TerrainType::FLAG;
+                flag_offsets.push_back(Vec2D(i, j));
                 break;
             case TerrainType::WATER:
                 map_element.type = player_state::TerrainType::WATER;
@@ -117,6 +119,24 @@ void StateSyncer::updatePlayerStates(
                         player_map[flipped_position.y][flipped_position.x];
                 }
             }
+        }
+
+        // Assinging the flag offset positions to the player states
+        size_t total_flag_offsets = flag_offsets.size();
+        player_states[player_id].flag_offsets.clear();
+        player_states[player_id].flag_offsets.resize(total_flag_offsets);
+
+        if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
+            std::copy(flag_offsets.begin(), flag_offsets.end(),
+                      player_states[player_id].flag_offsets.begin());
+        } else {
+            // Flipping all the map positions and moving it into PLAYER2's
+            // flag_offset positions as they won't be asked for again
+            for_each(flag_offsets.begin(), flag_offsets.end(),
+                     [map](auto &flag_offset) {
+                         flag_offset = flipOffset(*map, flag_offset);
+                     });
+            player_states[player_id].flag_offsets = std::move(flag_offsets);
         }
     }
 }

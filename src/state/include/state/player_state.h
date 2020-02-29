@@ -224,6 +224,7 @@ struct MapElement {
 struct State {
     array<array<MapElement, Constants::Map::MAP_SIZE>, Constants::Map::MAP_SIZE>
         map;
+    vector<Vec2D> flag_offsets;
 
     vector<Bot> bots;
     vector<Bot> enemy_bots;
