@@ -86,7 +86,7 @@ TEST_F(StateTest, GetMap) {
     size_t map_size = map->getSize();
     ASSERT_EQ(map_size, 5);
     size_t p1 = 0, p2 = 3;
-    ASSERT_EQ(map->getTerrainType(p1, p1), TerrainType::TOWER);
+    ASSERT_EQ(map->getTerrainType(p1, p1), TerrainType::LAND);
     ASSERT_EQ(map->getTerrainType(p2, p2), TerrainType::FLAG);
 }
 
@@ -189,10 +189,24 @@ TEST_F(StateTest, BlastTowerTest) {
     auto towers = state->getTowers();
     auto tower = towers[0][0];
 
+    // Assigning the tower's BlastCallback
+    auto blast_tower_callback =
+        std::bind(&State::damageEnemyActors, state.get(), placeholders::_1,
+                  placeholders::_2, placeholders::_3);
+
     // Checking if the tower's blasting property is set after calling blastTower
+    tower->setBlastCallback(blast_tower_callback);
     ASSERT_EQ(tower->isBlasting(), false);
     state->blastTower(tower->getActorId());
     ASSERT_EQ(tower->isBlasting(), true);
+
+    // Updating state and removing dead actors to check if the tower is removed
+    // from state
+    state->update();
+    state->removeDeadActors();
+
+    towers = state->getTowers();
+    ASSERT_EQ(towers[0].size(), 0);
 }
 
 TEST_F(StateTest, RemoveDeadActors) {

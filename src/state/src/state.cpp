@@ -125,7 +125,7 @@ void State::transformBot(PlayerId player_id, ActorId bot_id,
 
 std::vector<Actor *> State::getAffectedActors(PlayerId player_id,
                                               DoubleVec2D blast_position,
-                                              int64_t impact_range) {
+                                              size_t impact_range) {
     std::vector<Actor *> affected_actors;
     int64_t id = static_cast<int64_t>(player_id);
     int64_t enemy_id = (id + 1) % static_cast<int64_t>(PlayerId::PLAYER_COUNT);

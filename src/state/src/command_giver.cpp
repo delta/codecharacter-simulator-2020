@@ -368,5 +368,5 @@ void CommandGiver::runCommands(
             }
         }
     }
-} 
+}
 } // namespace state
