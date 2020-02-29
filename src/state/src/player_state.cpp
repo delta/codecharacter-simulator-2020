@@ -5,27 +5,29 @@ namespace player_state {
 
 ostream &operator<<(ostream &os,
                     array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map) {
-    os << "\n MAP \n";
+    os << "\Map{";
     for (int x = 0; x < MAP_SIZE; ++x) {
+        os << "{";
         for (int y = 0; y < MAP_SIZE; ++y) {
             auto type = map[x][y].getTerrain();
             switch (type) {
             case TerrainType::FLAG:
-                os << "F";
+                os << "F, ";
                 break;
             case TerrainType::LAND:
-                os << "L";
+                os << "L, ";
                 break;
             case TerrainType::WATER:
-                os << "W";
+                os << "W, ";
                 break;
             case TerrainType::TOWER:
-                os << "T";
+                os << "T, ";
                 break;
             }
         }
-        os << "\n";
+        os << "}\n";
     }
+    os << "}";
 }
 
 ostream &operator<<(ostream &os, const TowerState &tower_state) {
