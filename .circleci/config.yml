@@ -24,6 +24,10 @@ jobs:
             tar xf boost_1_68_0.tar.gz
             cp -r cmake-3.15.4-Linux-x86_64/bin/* /usr/local/bin
             cp -r cmake-3.15.4-Linux-x86_64/share/* /usr/local/share
+            cd boost_1_68_0
+            bash bootstrap.sh
+            ./b2
+            cd ..
             mkdir /usr/local/share/boost
             cp -r boost_1_68_0/* /usr/local/share/boost
             curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format
