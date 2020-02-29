@@ -26,7 +26,7 @@ jobs:
             cp -r cmake-3.15.4-Linux-x86_64/share/* /usr/local/share
             cd boost_1_68_0
             bash bootstrap.sh
-            ./b2
+            ./b2 --with-system
             cd ..
             mkdir /usr/local/share/boost
             cp -r boost_1_68_0/* /usr/local/share/boost
