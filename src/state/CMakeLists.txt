@@ -33,7 +33,9 @@ set(SOURCE_FILES
     src/actor/bot_states/bot_move_to_blast_state.cpp
     src/actor/bot_states/bot_move_to_transform_state.cpp
     src/score_manager/score_manager.cpp
-    src/path_planner/path_planner.cpp)
+    src/path_planner/path_planner.cpp
+    src/player_state.cpp
+    )
 
 set(INCLUDE_PATH include)
 
