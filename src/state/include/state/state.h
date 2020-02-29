@@ -32,6 +32,11 @@ class STATE_EXPORT State : public ICommandTaker {
     std::unique_ptr<ScoreManager> score_manager;
 
     /**
+     * An instance of path planner
+     */
+    std::unique_ptr<PathPlanner> path_planner;
+
+    /**
      * A list of bots indexed by player
      */
     std::array<std::vector<std::unique_ptr<Bot>>, 2> bots;
@@ -46,11 +51,6 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::array<std::vector<std::unique_ptr<TransformRequest>>, 2>
         transform_requests;
-
-    /**
-     * An instance of path planner
-     */
-    std::unique_ptr<PathPlanner> path_planner;
 
     /**
      * Function to check whether the opponent is also requesting to change to
@@ -121,30 +121,20 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     Bot *getBotById(ActorId actor_id);
 
-    /**
-     * Get the actors who get damage from position
-     *
-     * @param blast_position
-     * @param impact_range
-     * @return std::vector<Actor *>
-     */
-    std::vector<Actor *> getAffectedActors(PlayerId player_id,
-                                           DoubleVec2D blast_position,
-                                           int64_t impact_range);
-
   public:
     /**
      * Constructors
      */
     State();
 
-    State(std::unique_ptr<Map> map,
-          std::unique_ptr<ScoreManager> score_manager);
+    State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
+          std::unique_ptr<PathPlanner> path_planner);
 
     /**
      * @see ICommandTaker#MoveBot
      */
     State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
+          std::unique_ptr<PathPlanner> path_planner,
           std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
           std::array<std::vector<std::unique_ptr<Tower>>, 2> towers);
 
@@ -185,6 +175,17 @@ class STATE_EXPORT State : public ICommandTaker {
     void blastTower(ActorId actor_id) override;
 
     /**
+     * Get the actors who get damage from position
+     *
+     * @param blast_position
+     * @param impact_range
+     * @return std::vector<Actor *>
+     */
+    std::vector<Actor *> getAffectedActors(PlayerId player_id,
+                                           DoubleVec2D blast_position,
+                                           size_t impact_range);
+
+    /**
      * Callback passed to all blasters to damage neighbouring actors given a
      * position
      *
@@ -208,6 +209,20 @@ class STATE_EXPORT State : public ICommandTaker {
     Map *getMap() const override;
 
     /**
+     * @see ICommandTaker#getScoreManager
+     *
+     * @return ScoreManager*
+     */
+    ScoreManager *getScoreManager() const override;
+
+    /**
+     * @see ICommandTaker#getPathPlanner
+     *
+     * @return PathPlanner*
+     */
+    PathPlanner *getPathPlanner() const override;
+
+    /**
      * @see ICommandTaker#getScores
      */
     std::array<uint64_t, 2> getScores() const override;
@@ -222,6 +237,18 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::array<std::vector<Bot *>, 2> getBots() override;
 
+    /**
+     * Get the Transform Requests object
+     *
+     * @return std::array<std::vector<std::unique_ptr<TransformRequest>>, 2>
+     */
+    std::array<std::vector<TransformRequest *>, 2>
+    getTransformRequests() override;
+
+    /**
+     * Updates the main state by calling update for each of the state actors
+     * individually followed by updating scores and removing dead actors
+     */
     void update() override;
 };
 } // namespace state

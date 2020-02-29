@@ -158,6 +158,13 @@ class STATE_EXPORT Bot : public Unit, public Blaster {
     void setFinalDestination(DoubleVec2D p_final_destination);
 
     /**
+     * Sets the Construct Tower Callback
+     *
+     * @param construct_tower
+     */
+    void setConstructTowerCallback(ConstructTowerCallback construct_tower);
+
+    /**
      *  Get the value of final_destination
      *
      * @return DoubleVec2D

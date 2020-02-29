@@ -8,7 +8,7 @@
 
 namespace state {
 
-PathPlanner::PathPlanner(std::unique_ptr<Map> p_map) : map(std::move(p_map)) {
+PathPlanner::PathPlanner(Map *p_map) : map(p_map) {
     auto map_size = map->getSize();
     auto valid_terrain = std::vector<std::vector<bool>>(
         map_size, std::vector<bool>(map_size, true));
@@ -198,19 +198,12 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
 }
 
 TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
-    if (!path_graph.isValidPosition(position)) {
-        throw "Position is not within the map\n";
-    }
-
     // FIX ME : Type resolution to be done with better clarity
     size_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
     size_t map_size = map->getSize();
 
-    if (pos_x == map_size) {
-        --pos_x;
-    }
-    if (pos_y == map_size) {
-        --pos_y;
+    if (pos_x < 0 || pos_y < 0 || pos_x >= map_size || pos_y >= map_size) {
+        throw std::invalid_argument("Position is not within the map\n");
     }
 
     return map->getTerrainType(pos_x, pos_y);

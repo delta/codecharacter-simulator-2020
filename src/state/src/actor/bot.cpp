@@ -219,6 +219,10 @@ void Bot::lateUpdate() {
     }
 }
 
+void Bot::setConstructTowerCallback(ConstructTowerCallback construct_tower) {
+    construct_tower_callback = std::move(construct_tower);
+}
+
 void Bot::update() {
     // get new state based on bot properties
     auto new_state = state->update();
@@ -233,7 +237,6 @@ void Bot::update() {
         */
         state.reset(static_cast<BotState *>(new_state.release()));
         state->enter();
-
         new_state = state->update();
     }
 }

@@ -281,8 +281,8 @@ void CommandGiver::runCommands(
                 }
                 transformBot(player_id, player_bot.id, transform_destination);
             } else if (is_moving) {
-                // Validates the position that the player has requested to move
-                // onto
+                // Validates the position that the player has requested to
+                // move onto
                 DoubleVec2D destination = player_bot.destination;
                 if (player_id == PlayerId::PLAYER2) {
                     destination = flipBotPosition(*map, destination);

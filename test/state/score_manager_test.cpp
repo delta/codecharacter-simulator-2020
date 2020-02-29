@@ -65,8 +65,8 @@ class ScoreManagerTest : public Test {
 
         // Creating bots for each player
         auto speed = 5;
-        auto map = make_unique<Map>(test_map, map_size);
-        path_planner = make_unique<PathPlanner>(std::move(map));
+        auto map = new Map(test_map, map_size);
+        path_planner = make_unique<PathPlanner>(map);
         for (int64_t bot_index = 0; bot_index < 5; ++bot_index) {
             auto bot = new state::Bot(
                 Actor::getNextActorId(), PlayerId::PLAYER1, 100, 100,

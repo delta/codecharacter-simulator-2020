@@ -207,7 +207,6 @@ struct Tower : _Actor, _Blaster {
 inline ostream &operator<<(ostream &os, const Tower &tower) {
     os << "Tower(id: " << tower.id << ") {" << endl;
     os << "   hp: " << tower.hp << endl;
-    os << "   position: " << tower.position << endl;
     os << "   state: " << tower.state << endl;
     os << "}" << endl;
     return os;

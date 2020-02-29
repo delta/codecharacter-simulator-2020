@@ -18,7 +18,7 @@ class PathPlanner : public IPathPlanner {
      * Not changed during game, acts as a reference for the original terrain of
      * a given offset
      */
-    std::unique_ptr<Map> map;
+    Map *map;
 
     /**
      * PathGraph class handles all path calculations
@@ -68,7 +68,7 @@ class PathPlanner : public IPathPlanner {
     std::vector<Vec2D> getAdjoiningOffsets(DoubleVec2D position);
 
   public:
-    PathPlanner(std::unique_ptr<Map> p_map);
+    PathPlanner(Map *p_map);
 
     /**
      * Check if a given offset is blocked and cannot be traversed

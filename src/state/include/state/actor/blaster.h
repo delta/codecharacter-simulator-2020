@@ -90,6 +90,20 @@ class STATE_EXPORT Blaster {
                            DoubleVec2D position);
 
     /**
+     * Sets the Blast Range of the blaster
+     *
+     * @param blast_range
+     */
+    void setBlastRange(size_t blast_range);
+
+    /**
+     * Sets the Blast damage of a blaster
+     *
+     * @param damage_points
+     */
+    void setBlastDamage(size_t damage_points);
+
+    /**
      *  Get the Blast Range value
      *
      * @return size_t blast_range

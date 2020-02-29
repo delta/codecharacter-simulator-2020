@@ -41,8 +41,8 @@ class PathPlannerTest : public testing::Test {
              {L, L, L, W, W, W, L, L, L, L, L, L, L, L, L, L, L, L, L, L}} // 19
         };
 
-        auto map = make_unique<Map>(map_matrix, MAP_SIZE);
-        path_planner = make_unique<PathPlanner>(std::move(map));
+        auto map = new Map(map_matrix, MAP_SIZE);
+        path_planner = make_unique<PathPlanner>(map);
         path_planner->recomputePathGraph();
     }
 };
