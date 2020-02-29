@@ -36,6 +36,10 @@ class STATE_EXPORT State : public ICommandTaker {
      */
     std::unique_ptr<PathPlanner> path_planner;
 
+    Bot model_bot;
+
+    Tower model_tower;
+
     /**
      * A list of bots indexed by player
      */
@@ -53,22 +57,6 @@ class STATE_EXPORT State : public ICommandTaker {
         transform_requests;
 
     /**
-     * Function to check whether the opponent is also requesting to change to
-     * a tower at the same position
-     *
-     * @param[in] position		Position which is looked for in the
-     * opponents build requests
-     * @param[in] enemy_id		id of the enemy
-     *
-     */
-    bool isPositionOccupied(Vec2D position, size_t enemy_id);
-
-    /**
-     * Compute scores for this turn, and record them
-     */
-    void updateScores();
-
-    /**
      * Returns the Actor By Id of the actor
      *
      * @param player_id
@@ -77,15 +65,6 @@ class STATE_EXPORT State : public ICommandTaker {
      * @return Nullptr
      */
     Actor *getActorById(ActorId actor_id);
-
-    /**
-     * Returns the actor at given position if an actor exists at given point
-     *
-     * @param position
-     * @return Actor* if actor exists in given position
-     * @return Nullptr If no actor is at position
-     */
-    Actor *getActorByPosition(DoubleVec2D position);
 
     /**
      * Returns an offset from position
@@ -125,18 +104,11 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * Constructors
      */
-    State();
-
-    State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
-          std::unique_ptr<PathPlanner> path_planner);
-
-    /**
-     * @see ICommandTaker#MoveBot
-     */
     State(std::unique_ptr<Map> map, std::unique_ptr<ScoreManager> score_manager,
           std::unique_ptr<PathPlanner> path_planner,
           std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
-          std::array<std::vector<std::unique_ptr<Tower>>, 2> towers);
+          std::array<std::vector<std::unique_ptr<Tower>>, 2> towers,
+          Bot model_bot, Tower model_tower);
 
     /**
      * @see ICommandTaker#moveBot

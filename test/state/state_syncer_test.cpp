@@ -57,9 +57,8 @@ class StateSyncerTest : public Test {
         command_giver = u_command_giver.get();
         score_manager = make_unique<ScoreManager>();
 
-        state_syncer = make_unique<StateSyncer>(std::move(u_state),
-                                                std::move(u_command_giver),
-                                                std::move(u_logger));
+        state_syncer = make_unique<StateSyncer>(
+            std::move(u_state), std::move(u_command_giver), u_logger.get());
 
         // Creating the player and state map
         map_size = 5;

@@ -9,9 +9,9 @@ StateSyncer::StateSyncer() {}
 
 StateSyncer::StateSyncer(std::unique_ptr<ICommandTaker> state,
                          std::unique_ptr<ICommandGiver> command_giver,
-                         std::unique_ptr<logger::ILogger> logger)
+                         logger::ILogger *logger)
     : command_giver(std::move(command_giver)), state(std::move(state)),
-      logger(std::move(logger)) {}
+      logger(logger) {}
 
 void StateSyncer::updateMainState(
     std::array<player_state::State, 2> &player_states,

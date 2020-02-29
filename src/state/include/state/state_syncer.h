@@ -28,7 +28,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
     /**
      * Instance of logger to log every turn and to log errors
      */
-    std::unique_ptr<logger::ILogger> logger;
+    logger::ILogger *logger;
 
     /**
      * Flips a given bots position
@@ -63,7 +63,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
 
     StateSyncer(std::unique_ptr<ICommandTaker> state,
                 std::unique_ptr<ICommandGiver> command_giver,
-                std::unique_ptr<logger::ILogger> logger);
+                logger::ILogger *logger);
 
     /**
      * @see IStateSyncer #UpdateMainState

@@ -39,6 +39,11 @@ class StateTest : public Test {
                 bot_damage_points = 30;
         bot_max_hp = 100;
 
+        auto model_bot =
+            Bot(1, PlayerId::PLAYER1, bot_hp, bot_max_hp, DoubleVec2D(1, 1),
+                speed, bot_blast_range, bot_damage_points, score_manager.get(),
+                path_planner.get(), BlastCallback{}, ConstructTowerCallback{});
+
         auto state_bots = array<vector<unique_ptr<Bot>>, 2>{};
         auto state_towers = array<vector<unique_ptr<Tower>>, 2>{};
 
@@ -54,6 +59,11 @@ class StateTest : public Test {
         int64_t tower_hp = 250, tower_blast_range = 5, tower_damage_points = 50;
         tower_max_hp = 250;
 
+        auto model_tower =
+            Tower(PlayerId::PLAYER1, tower_hp, tower_max_hp, DoubleVec2D(0, 0),
+                  tower_damage_points, tower_blast_range, score_manager.get(),
+                  BlastCallback{});
+
         state_towers[0].push_back(make_unique<Tower>(
             PlayerId::PLAYER1, tower_hp, tower_max_hp, DoubleVec2D(0, 0),
             tower_damage_points, tower_blast_range, score_manager.get(),
@@ -65,7 +75,8 @@ class StateTest : public Test {
 
         state = make_unique<State>(move(map), move(score_manager),
                                    move(path_planner), move(state_bots),
-                                   move(state_towers));
+                                   move(state_towers), move(model_bot),
+                                   move(model_tower));
     }
 };
 
