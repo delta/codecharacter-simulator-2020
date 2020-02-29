@@ -73,10 +73,10 @@ function(build_player_code TARGET_NAME)
 
   instrument_and_install_lib(${TARGET_NAME}_code)
 
-  # target_include_directories(${TARGET_NAME}_code PUBLIC
-  # $<INSTALL_INTERFACE:include>)
+  target_include_directories(${TARGET_NAME}_code
+                             PUBLIC $<INSTALL_INTERFACE:include>)
 
-  # install(EXPORT ${TARGET_NAME}_code_config DESTINATION lib)
+  install(EXPORT ${TARGET_NAME}_code_config DESTINATION lib)
 
 endfunction(build_player_code)
 
