@@ -3,27 +3,132 @@
 namespace player_state {
 // Adding player state helper functions
 
-void Print(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map) {
-    std::cerr << "\n PRINTING MAP \n";
+ostream &operator<<(ostream &os,
+                    array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map) {
+    os << "\n MAP \n";
     for (int x = 0; x < MAP_SIZE; ++x) {
         for (int y = 0; y < MAP_SIZE; ++y) {
-            switch (map[x][y].getTerrain()) {
+            auto type = map[x][y].getTerrain();
+            switch (type) {
             case TerrainType::FLAG:
-                std::cerr << "F";
+                os << "F";
                 break;
             case TerrainType::LAND:
-                std::cerr << "L";
+                os << "L";
                 break;
             case TerrainType::WATER:
-                std::cerr << "W";
+                os << "W";
                 break;
             case TerrainType::TOWER:
-                std::cerr << "T";
+                os << "T";
                 break;
             }
         }
-        std::cerr << "\n";
+        os << "\n";
     }
+}
+
+ostream &operator<<(ostream &os, const TowerState &tower_state) {
+    switch (tower_state) {
+    case TowerState::IDLE:
+        os << "IDLE";
+        break;
+    case TowerState::BLAST:
+        os << "BLAST";
+        break;
+    case TowerState::DEAD:
+        os << "DEAD";
+        break;
+    }
+
+    return os;
+}
+
+ostream &operator<<(ostream &os, const Tower &tower) {
+    os << "Tower(id: " << tower.id << ") {" << endl;
+    os << "   hp: " << tower.hp << endl;
+    os << "   state: " << tower.state << endl;
+    os << "}" << endl;
+    return os;
+}
+
+ostream &operator<<(ostream &os, const Bot &bot) {
+    os << "Bot(id: " << bot.id << ") {" << endl;
+    os << "   hp: " << bot.hp << endl;
+    os << "   position: " << bot.position << endl;
+    os << "   state: " << bot.state << endl;
+    os << "}" << endl;
+    return os;
+}
+
+ostream &operator<<(ostream &os, const BotState &bot_state) {
+    switch (bot_state) {
+    case BotState::IDLE:
+        os << "IDLE";
+        break;
+    case BotState::MOVE:
+        os << "MOVE";
+        break;
+    case BotState::BLAST:
+        os << "BLAST";
+        break;
+    case BotState::TRANSFORM:
+        os << "TRANSFORM";
+        break;
+    case BotState::DEAD:
+        os << "DEAD";
+        break;
+    }
+
+    return os;
+}
+
+ostream &operator<<(ostream &os, const State &state) {
+    os << "Map:" << endl;
+    for (auto const &row : state.map) {
+        for (auto const &elem : row) {
+            switch (elem.type) {
+            case TerrainType::LAND:
+                os << "L ";
+                break;
+            case TerrainType::WATER:
+                os << "W ";
+                break;
+            case TerrainType::FLAG:
+                os << "F ";
+                break;
+            case TerrainType::TOWER:
+                os << "T ";
+                break;
+            }
+        }
+        os << endl;
+    }
+
+    os << "-- Bots --" << endl;
+    for (auto const &bot : state.bots) {
+        os << bot << endl;
+    }
+
+    os << "-- Enemy Bots --" << endl;
+    for (auto const &enemy_bot : state.enemy_bots) {
+        os << enemy_bot << endl;
+    }
+
+    os << "-- Towers --" << endl;
+    for (auto const &tower : state.towers) {
+        os << tower << endl;
+    }
+
+    os << "-- Enemy Towers --" << endl;
+    for (auto const &enemy_tower : state.enemy_towers) {
+        os << enemy_tower << endl;
+    }
+
+    os << "-- Score --" << endl;
+    os << state.score << endl;
+
+    return os;
 }
 
 Vec2D findNearestFlagLocation(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,

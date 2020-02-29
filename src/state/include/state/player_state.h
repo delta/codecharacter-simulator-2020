@@ -32,28 +32,6 @@ enum class BotState : int8_t {
     DEAD
 };
 
-inline ostream &operator<<(ostream &os, const BotState &bot_state) {
-    switch (bot_state) {
-    case BotState::IDLE:
-        os << "IDLE";
-        break;
-    case BotState::MOVE:
-        os << "MOVE";
-        break;
-    case BotState::BLAST:
-        os << "BLAST";
-        break;
-    case BotState::TRANSFORM:
-        os << "TRANSFORM";
-        break;
-    case BotState::DEAD:
-        os << "DEAD";
-        break;
-    }
-
-    return os;
-}
-
 enum class TowerState : int8_t {
     // Tower is doing nothing
     IDLE,
@@ -62,22 +40,6 @@ enum class TowerState : int8_t {
     // Tower is dead
     DEAD
 };
-
-inline ostream &operator<<(ostream &os, const TowerState &tower_state) {
-    switch (tower_state) {
-    case TowerState::IDLE:
-        os << "IDLE";
-        break;
-    case TowerState::BLAST:
-        os << "BLAST";
-        break;
-    case TowerState::DEAD:
-        os << "DEAD";
-        break;
-    }
-
-    return os;
-}
 
 struct _Actor {
     int64_t id;
@@ -181,15 +143,6 @@ struct Bot : _Unit, _Blaster {
     virtual ~Bot() {}
 };
 
-inline ostream &operator<<(ostream &os, const Bot &bot) {
-    os << "Bot(id: " << bot.id << ") {" << endl;
-    os << "   hp: " << bot.hp << endl;
-    os << "   position: " << bot.position << endl;
-    os << "   state: " << bot.state << endl;
-    os << "}" << endl;
-    return os;
-}
-
 struct Tower : _Actor, _Blaster {
     TowerState state;
 
@@ -205,14 +158,6 @@ struct Tower : _Actor, _Blaster {
 
     Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
 };
-
-inline ostream &operator<<(ostream &os, const Tower &tower) {
-    os << "Tower(id: " << tower.id << ") {" << endl;
-    os << "   hp: " << tower.hp << endl;
-    os << "   state: " << tower.state << endl;
-    os << "}" << endl;
-    return os;
-}
 
 struct MapElement {
     TerrainType type;
@@ -253,60 +198,23 @@ struct State {
           num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), score(0) {}
 };
 
-inline ostream &operator<<(ostream &os, const State &state) {
-    os << "Map:" << endl;
-    for (auto const &row : state.map) {
-        for (auto const &elem : row) {
-            switch (elem.type) {
-            case TerrainType::LAND:
-                os << "L ";
-                break;
-            case TerrainType::WATER:
-                os << "W ";
-                break;
-            case TerrainType::FLAG:
-                os << "F ";
-                break;
-            case TerrainType::TOWER:
-                os << "T ";
-                break;
-            }
-        }
-        os << endl;
-    }
-
-    os << "-- Bots --" << endl;
-    for (auto const &bot : state.bots) {
-        os << bot << endl;
-    }
-
-    os << "-- Enemy Bots --" << endl;
-    for (auto const &enemy_bot : state.enemy_bots) {
-        os << enemy_bot << endl;
-    }
-
-    os << "-- Towers --" << endl;
-    for (auto const &tower : state.towers) {
-        os << tower << endl;
-    }
-
-    os << "-- Enemy Towers --" << endl;
-    for (auto const &enemy_tower : state.enemy_towers) {
-        os << enemy_tower << endl;
-    }
-
-    os << "-- Score --" << endl;
-    os << state.score << endl;
-
-    return os;
-}
-
+// Defining function prototypes
 void Print(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map);
 
-// Defining prototypes for helper functions
 Vec2D findNearestFlagLocation(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
                               Vec2D position);
 
 Vec2D findNearestBuildableOffset(
     array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position);
+
+ostream &operator<<(ostream &os, const TowerState &tower_state);
+
+ostream &operator<<(ostream &os, const Tower &tower);
+
+ostream &operator<<(ostream &os, const Bot &bot);
+
+ostream &operator<<(ostream &os, const BotState &bot_state);
+
+ostream &operator<<(ostream &os, const State &state);
+
 } // namespace player_state
