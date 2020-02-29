@@ -211,6 +211,7 @@ void Bot::lateUpdate() {
         }
 
         clearNewPosition();
+        return;
     }
 
     if (getHp() > 0 && isTransforming()) {

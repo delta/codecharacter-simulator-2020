@@ -73,35 +73,35 @@ TEST_F(StateTest, GetActors) {
     auto bots = state->getBots();
     auto towers = state->getTowers();
 
-    ASSERT_EQ(bots[0].size(), 1);
-    ASSERT_EQ(bots[1].size(), 1);
-    ASSERT_EQ(towers[0].size(), 1);
-    ASSERT_EQ(towers[1].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(towers[0].size(), 1);
+    EXPECT_EQ(towers[1].size(), 1);
 }
 
 TEST_F(StateTest, GetMap) {
     auto map = state->getMap();
-    ASSERT_EQ(!map, false);
+    EXPECT_EQ(!map, false);
 
     size_t map_size = map->getSize();
-    ASSERT_EQ(map_size, 5);
+    EXPECT_EQ(map_size, 5);
     size_t p1 = 0, p2 = 3;
-    ASSERT_EQ(map->getTerrainType(p1, p1), TerrainType::LAND);
-    ASSERT_EQ(map->getTerrainType(p2, p2), TerrainType::FLAG);
+    EXPECT_EQ(map->getTerrainType(p1, p1), TerrainType::LAND);
+    EXPECT_EQ(map->getTerrainType(p2, p2), TerrainType::FLAG);
 }
 
 TEST_F(StateTest, MoveBotTest) {
     auto bots = state->getBots();
     auto bot = bots[0][0];
-    ASSERT_EQ(bot->isDestinationSet(), false);
+    EXPECT_EQ(bot->isDestinationSet(), false);
 
     // Calling move bot in state and checking if bots destination is set
     state->moveBot(1, DoubleVec2D(2, 2));
 
     // Getting PLAYER1's first bot and checking if his destination is set
     DoubleVec2D bot_destination = bot->getDestination();
-    ASSERT_EQ(bot->isDestinationSet(), true);
-    ASSERT_EQ(bot_destination, DoubleVec2D(2, 2));
+    EXPECT_EQ(bot->isDestinationSet(), true);
+    EXPECT_EQ(bot_destination, DoubleVec2D(2, 2));
 }
 
 TEST_F(StateTest, CreateTowerTest) {
@@ -114,8 +114,8 @@ TEST_F(StateTest, CreateTowerTest) {
     int64_t hp = 50;
     bot->setHp(50);
 
-    ASSERT_EQ(bots[0].size(), 1);
-    ASSERT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(bots[1].size(), 1);
 
     bot->setDestination(DoubleVec2D(3.5, 3.5));
     bot->update();
@@ -123,7 +123,7 @@ TEST_F(StateTest, CreateTowerTest) {
 
     // Checking initial number of bots on flags
     auto bot_counts = score_manager->getBotCounts();
-    ASSERT_EQ(bot_counts[1], 1);
+    EXPECT_EQ(bot_counts[1], 1);
 
     // Calling create tower on this bot
     state->createTower(bot);
@@ -133,24 +133,24 @@ TEST_F(StateTest, CreateTowerTest) {
 
     // Checking to see if the bot was removed from state and if a tower was
     // added to state
-    ASSERT_EQ(bots[1].size(), 1);
-    ASSERT_EQ(towers[1].size(), 2);
+    EXPECT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(towers[1].size(), 2);
 
     // Checking to see if the tower has the same id as the bot
     auto tower = towers[1][1];
-    ASSERT_EQ(tower->getActorId(), bot_id);
+    EXPECT_EQ(tower->getActorId(), bot_id);
 
     // Check if the tower HP has been scaled correctly
     double hp_ratio = double(tower_max_hp) / double(bot_max_hp);
 
     int64_t tower_hp = hp * hp_ratio;
-    ASSERT_EQ(tower->getHp(), tower_hp);
+    EXPECT_EQ(tower->getHp(), tower_hp);
 
     // Checking score_manager counts because the bot was on a FLAG
     bot_counts = score_manager->getBotCounts();
     auto tower_counts = score_manager->getTowerCounts();
-    ASSERT_EQ(tower_counts[1], 1);
-    ASSERT_EQ(bot_counts[1], 0);
+    EXPECT_EQ(tower_counts[1], 1);
+    EXPECT_EQ(bot_counts[1], 0);
 }
 
 TEST_F(StateTest, TransformRequestTest) {
@@ -161,28 +161,40 @@ TEST_F(StateTest, TransformRequestTest) {
     auto position = bot->getPosition();
 
     auto transform_requests = state->getTransformRequests();
-    ASSERT_EQ(transform_requests[0].size(), 0);
-    ASSERT_EQ(transform_requests[1].size(), 0);
+    EXPECT_EQ(transform_requests[0].size(), 0);
+    EXPECT_EQ(transform_requests[1].size(), 0);
 
     state->transformBot(player_id, actor_id, position);
 
     transform_requests = state->getTransformRequests();
-    ASSERT_EQ(transform_requests[0].size(), 1);
+    EXPECT_EQ(transform_requests[0].size(), 1);
 
     auto transform_request = transform_requests[0][0];
-    ASSERT_EQ(transform_request->getPlayerId(), player_id);
-    ASSERT_EQ(transform_request->getBotId(), actor_id);
-    ASSERT_EQ(transform_request->getPosition(), position);
+    EXPECT_EQ(transform_request->getPlayerId(), player_id);
+    EXPECT_EQ(transform_request->getBotId(), actor_id);
+    EXPECT_EQ(transform_request->getPosition(), position);
 }
 
 TEST_F(StateTest, BlastBotTest) {
     auto bots = state->getBots();
     auto bot = bots[0][0];
+    auto blast_bot_callback =
+        std::bind(&State::damageEnemyActors, state.get(), placeholders::_1,
+                  placeholders::_2, placeholders::_3);
 
     // Checking if the bot's final destination is set after calling blastBot
-    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
-    state->blastBot(bot->getActorId(), DoubleVec2D(3, 2));
-    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D(3, 2));
+    bot->setBlastCallback(blast_bot_callback);
+    EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    state->blastBot(bot->getActorId(), DoubleVec2D(4, 1));
+    EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D(4, 1));
+
+    while (bot->getState() != BotStateName::DEAD) {
+        bot->update();
+        bot->lateUpdate();
+    }
+
+    EXPECT_EQ(bot->getHp(), 0);
+    EXPECT_EQ(bot->getState(), BotStateName::DEAD);
 }
 
 TEST_F(StateTest, BlastTowerTest) {
@@ -196,9 +208,9 @@ TEST_F(StateTest, BlastTowerTest) {
 
     // Checking if the tower's blasting property is set after calling blastTower
     tower->setBlastCallback(blast_tower_callback);
-    ASSERT_EQ(tower->isBlasting(), false);
+    EXPECT_EQ(tower->isBlasting(), false);
     state->blastTower(tower->getActorId());
-    ASSERT_EQ(tower->isBlasting(), true);
+    EXPECT_EQ(tower->isBlasting(), true);
 
     // Updating state and removing dead actors to check if the tower is removed
     // from state
@@ -206,7 +218,7 @@ TEST_F(StateTest, BlastTowerTest) {
     state->removeDeadActors();
 
     towers = state->getTowers();
-    ASSERT_EQ(towers[0].size(), 0);
+    EXPECT_EQ(towers[0].size(), 0);
 }
 
 TEST_F(StateTest, RemoveDeadActors) {
@@ -214,20 +226,20 @@ TEST_F(StateTest, RemoveDeadActors) {
     auto bots = state->getBots();
     auto towers = state->getTowers();
 
-    ASSERT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
 
     auto bot = bots[0][0];
     bot->setHp(0);
     bot->update();
 
-    ASSERT_EQ(bot->getState(), BotStateName::DEAD);
+    EXPECT_EQ(bot->getState(), BotStateName::DEAD);
 
-    ASSERT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(bots[1].size(), 1);
     auto tower = towers[1][0];
     tower->setHp(0);
     tower->update();
 
-    ASSERT_EQ(tower->getState(), TowerStateName::DEAD);
+    EXPECT_EQ(tower->getState(), TowerStateName::DEAD);
 
     // Removing dead actors from state
     state->removeDeadActors();
@@ -235,8 +247,8 @@ TEST_F(StateTest, RemoveDeadActors) {
     bots = state->getBots();
     towers = state->getTowers();
 
-    ASSERT_EQ(bots[0].size(), 0);
-    ASSERT_EQ(towers[1].size(), 0);
+    EXPECT_EQ(bots[0].size(), 0);
+    EXPECT_EQ(towers[1].size(), 0);
 }
 
 TEST_F(StateTest, SpawnNewBots) {
@@ -244,15 +256,15 @@ TEST_F(StateTest, SpawnNewBots) {
     // the number of bot increases by bot frequency
     auto bots = state->getBots();
 
-    ASSERT_EQ(bots[0].size(), 1);
-    ASSERT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(bots[1].size(), 1);
 
     state->spawnNewBots();
 
     bots = state->getBots();
 
-    ASSERT_EQ(bots[0].size(), 2);
-    ASSERT_EQ(bots[1].size(), 2);
+    EXPECT_EQ(bots[0].size(), 2);
+    EXPECT_EQ(bots[1].size(), 2);
 }
 
 TEST_F(StateTest, DamageEnemyActorsTest) {
@@ -295,9 +307,9 @@ TEST_F(StateTest, DamageEnemyActorsTest) {
     uint64_t damage_incurred_bot = normalized_bot_distance * damage_points;
     uint64_t damage_incurred_tower = normalized_tower_distance * damage_points;
 
-    ASSERT_EQ(towers[0][0]->getDamageIncurred(), 0);
-    ASSERT_EQ(bots[1][0]->getDamageIncurred(), damage_incurred_bot);
-    ASSERT_EQ(towers[1][0]->getDamageIncurred(), damage_incurred_tower);
+    EXPECT_EQ(towers[0][0]->getDamageIncurred(), 0);
+    EXPECT_EQ(bots[1][0]->getDamageIncurred(), damage_incurred_bot);
+    EXPECT_EQ(towers[1][0]->getDamageIncurred(), damage_incurred_tower);
 }
 
 TEST_F(StateTest, GetAffectedActorsTest) {
@@ -318,9 +330,9 @@ TEST_F(StateTest, GetAffectedActorsTest) {
 
     auto affected_actors = state->getAffectedActors(
         bot->getPlayerId(), bot_position, bot->getBlastRange());
-    ASSERT_EQ(affected_actors.size(), 1);
+    EXPECT_EQ(affected_actors.size(), 1);
     auto affected_actor = affected_actors[0];
-    ASSERT_EQ(affected_actor->getActorId(), towers[1][0]->getActorId());
+    EXPECT_EQ(affected_actor->getActorId(), towers[1][0]->getActorId());
 }
 
 TEST_F(StateTest, RejectTransformRequestTest) {
@@ -345,12 +357,12 @@ TEST_F(StateTest, RejectTransformRequestTest) {
     auto towers = state->getTowers();
 
     // Checking to see that the bots haven't been killed
-    ASSERT_EQ(bots[0].size(), 1);
-    ASSERT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(bots[1].size(), 1);
 
     // Checking to see that no towers are added
-    ASSERT_EQ(towers[0].size(), 1);
-    ASSERT_EQ(towers[1].size(), 1);
+    EXPECT_EQ(towers[0].size(), 1);
+    EXPECT_EQ(towers[1].size(), 1);
 
     // Making both the bots stand on the same offset but only one bot tries to
     // transform
@@ -366,8 +378,8 @@ TEST_F(StateTest, RejectTransformRequestTest) {
 
     // Checking to see that the bot isn't killed and no tower is added to the
     // bot
-    ASSERT_EQ(bots[0].size(), 1);
-    ASSERT_EQ(towers[0].size(), 1);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(towers[0].size(), 1);
 }
 
 TEST_F(StateTest, AcknowledgeTransformRequest) {
@@ -384,9 +396,9 @@ TEST_F(StateTest, AcknowledgeTransformRequest) {
     bots = state->getBots();
     auto towers = state->getTowers();
 
-    ASSERT_EQ(bots[0][0]->getState(), BotStateName::DEAD);
-    ASSERT_EQ(bots[1].size(), 1);
+    EXPECT_EQ(bots[0][0]->getState(), BotStateName::DEAD);
+    EXPECT_EQ(bots[1].size(), 1);
 
-    ASSERT_EQ(towers[0].size(), 2);
-    ASSERT_EQ(towers[1].size(), 1);
+    EXPECT_EQ(towers[0].size(), 2);
+    EXPECT_EQ(towers[1].size(), 1);
 }
