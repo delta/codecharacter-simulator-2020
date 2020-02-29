@@ -6,7 +6,7 @@ set(PLAYER_ID
     CACHE STRING "Specifies the player ID. Should be between 1
     and NUM_PLAYERS to build as that player, 0 to build as all players")
 
-set(SOURCE_FILES src/player_code.cpp)
+file(GLOB SOURCE_FILES src/*.cpp)
 
 set(INCLUDE_PATH include)
 
@@ -21,6 +21,7 @@ if((NOT BUILD_PROJECT STREQUAL "all") AND (NOT BUILD_PROJECT STREQUAL "no_tests"
   include(${CMAKE_INSTALL_PREFIX}/lib/logger_config.cmake)
   include(${CMAKE_INSTALL_PREFIX}/lib/player_wrapper_config.cmake)
   include(${CMAKE_INSTALL_PREFIX}/lib/drivers_config.cmake)
+  include(${CMAKE_INSTALL_PREFIX}/lib/game_config.cmake)
 endif()
 
 if(BUILD_PROJECT STREQUAL "player_code")
