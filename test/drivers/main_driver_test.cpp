@@ -33,7 +33,7 @@ class MainDriverTest : public testing::Test {
 
     // Returns a new mock main driver
     static unique_ptr<MainDriver>
-    CreateMockMainDriver(unique_ptr<StateSyncerMock> state_syncer_mock,
+    createMockMainDriver(unique_ptr<StateSyncerMock> state_syncer_mock,
                          unique_ptr<LoggerMock> v_logger) {
         vector<unique_ptr<SharedMemoryMain>> shms;
 
@@ -88,7 +88,7 @@ TEST_F(MainDriverTest, CleanRunByScore) {
     EXPECT_CALL(*v_logger, logFinalGameParams(_, _)).Times(1);
     EXPECT_CALL(*v_logger, writeGame(_)).Times(1);
 
-    driver = CreateMockMainDriver(move(state_syncer_mock), move(v_logger));
+    driver = createMockMainDriver(move(state_syncer_mock), move(v_logger));
 
     // Start main driver on new thread
     GameResult game_result{};
@@ -136,14 +136,14 @@ TEST_F(MainDriverTest, EarlyPlayerExit) {
     // Get Scores WILL NOT be called
     EXPECT_CALL(*state_syncer_mock, getScores()).Times(0);
 
-    // Logger called num_turns/2 + 1 times before the driver exits
+    // Logger called num_turns / 2 times before the driver exits
     auto v_logger = make_unique<LoggerMock>();
     EXPECT_CALL(*v_logger, logInstructionCount(PlayerId::PLAYER1, _))
         .Times(num_turns / 2);
     EXPECT_CALL(*v_logger, logInstructionCount(PlayerId::PLAYER2, _))
         .Times(num_turns / 2);
 
-    driver = CreateMockMainDriver(move(state_syncer_mock), move(v_logger));
+    driver = createMockMainDriver(move(state_syncer_mock), move(v_logger));
 
     GameResult game_result{};
     thread main_runner([this, &game_result] { game_result = driver->start(); });
@@ -164,6 +164,8 @@ TEST_F(MainDriverTest, EarlyPlayerExit) {
         runner.join();
     }
 
+    // Main driver waits for players to run for num_turns, but times out since
+    // player drivers never run beyond (num_turns / 2)
     main_runner.join();
 
     EXPECT_EQ(game_result.winner, GameResult::Winner::NONE);
@@ -175,8 +177,8 @@ TEST_F(MainDriverTest, EarlyPlayerExit) {
     }
 }
 
-// Test for when a player exceeds game instruction limit
-// Main driver should mark the player as having exceeded instruction limit
+// Test for when both players exceeds game instruction limit in same turn
+// Main driver should mark the players as having exceeded instruction limit
 TEST_F(MainDriverTest, InstructionLimitReached) {
     auto state_syncer_mock = make_unique<StateSyncerMock>();
 
@@ -196,7 +198,7 @@ TEST_F(MainDriverTest, InstructionLimitReached) {
     EXPECT_CALL(*v_logger, logFinalGameParams(_, _)).Times(1);
     EXPECT_CALL(*v_logger, writeGame(_)).Times(1);
 
-    driver = CreateMockMainDriver(move(state_syncer_mock), move(v_logger));
+    driver = createMockMainDriver(move(state_syncer_mock), move(v_logger));
 
     GameResult game_result{};
     thread main_runner([this, &game_result] { game_result = driver->start(); });
@@ -277,7 +279,7 @@ TEST_F(MainDriverTest, InstructionLimitReachedSinglePlayer) {
     EXPECT_CALL(*v_logger, logFinalGameParams(_, _)).Times(1);
     EXPECT_CALL(*v_logger, writeGame(_)).Times(1);
 
-    driver = CreateMockMainDriver(move(state_syncer_mock), move(v_logger));
+    driver = createMockMainDriver(move(state_syncer_mock), move(v_logger));
 
     GameResult game_result{};
     thread main_runner([this, &game_result] { game_result = driver->start(); });
@@ -363,7 +365,7 @@ TEST_F(MainDriverTest, Cancellation) {
     EXPECT_CALL(*v_logger, logFinalGameParams(_, _)).Times(1);
     EXPECT_CALL(*v_logger, writeGame(_)).Times(1);
 
-    driver = CreateMockMainDriver(move(state_syncer_mock), move(v_logger));
+    driver = createMockMainDriver(move(state_syncer_mock), move(v_logger));
 
     GameResult game_result{};
     thread main_runner([this, &game_result] { game_result = driver->start(); });
