@@ -42,6 +42,7 @@ TEST(TimerTest, NormalRunTest) {
     this_thread::sleep_for(Timer::Interval(timer_duration - grace_period));
     EXPECT_FALSE(time_limit_exceeded);
 
+    // Wait for the timer to finish
     this_thread::sleep_for(Timer::Interval(2 * grace_period));
 }
 
