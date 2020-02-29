@@ -26,7 +26,7 @@ class PlayerStateTest : public Test {
         // Creating a map of type MapElement from terrain
         for (int x = 0; x < MAP_SIZE; ++x) {
             for (int y = 0; y < MAP_SIZE; ++y) {
-                player_map[x][y].setTerrain(L);
+                player_map[x][y].setTerrain(W);
             }
         }
 
