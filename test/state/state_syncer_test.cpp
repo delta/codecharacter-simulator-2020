@@ -73,7 +73,7 @@ class StateSyncerTest : public Test {
          * Map Diagram : (Player 1 perspective)
          *
          * W L L L T
-         * L W L L L
+         * L W L F L
          * L L F L L
          * L L L W L
          * T L L L W
@@ -104,6 +104,7 @@ class StateSyncerTest : public Test {
 
         // Assigning the flag locations
         test_map[2][2] = state::TerrainType::FLAG;
+        test_map[3][3] = state::TerrainType::FLAG;
 
         // Assigning tower locations
         for (int64_t player_id = 0; player_id < 2; ++player_id) {
@@ -151,10 +152,10 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     manageStateExpectations(new_bots2, state_towers);
     this->state_syncer->updatePlayerStates(player_states);
 
-    ASSERT_EQ(player_states[0].bots.size(), 2);
-    ASSERT_EQ(player_states[0].num_bots, 2);
-    ASSERT_EQ(player_states[1].enemy_bots.size(), 2);
-    ASSERT_EQ(player_states[1].num_enemy_bots, 2);
+    EXPECT_EQ(player_states[0].bots.size(), 2);
+    EXPECT_EQ(player_states[0].num_bots, 2);
+    EXPECT_EQ(player_states[1].enemy_bots.size(), 2);
+    EXPECT_EQ(player_states[1].num_enemy_bots, 2);
 
     // Erasing a bot to check removal of bot
     auto new_bots3 = new_bots2;
@@ -165,15 +166,15 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     manageStateExpectations(new_bots3, state_towers);
     this->state_syncer->updatePlayerStates(player_states);
 
-    ASSERT_EQ(player_states[1].bots.size(), 0);
-    ASSERT_EQ(player_states[1].num_bots, 0);
-    ASSERT_EQ(player_states[0].enemy_bots.size(), 0);
-    ASSERT_EQ(player_states[0].num_enemy_bots, 0);
-    ASSERT_EQ(player_states[0].bots.size(), 2);
-    ASSERT_EQ(player_states[0].num_bots, 2);
-    ASSERT_EQ(player_states[1].enemy_bots.size(), 2);
-    ASSERT_EQ(player_states[1].num_enemy_bots, 2);
-    ASSERT_EQ(player_states[0].bots[1].position, DoubleVec2D(3, 3));
+    EXPECT_EQ(player_states[1].bots.size(), 0);
+    EXPECT_EQ(player_states[1].num_bots, 0);
+    EXPECT_EQ(player_states[0].enemy_bots.size(), 0);
+    EXPECT_EQ(player_states[0].num_enemy_bots, 0);
+    EXPECT_EQ(player_states[0].bots.size(), 2);
+    EXPECT_EQ(player_states[0].num_bots, 2);
+    EXPECT_EQ(player_states[1].enemy_bots.size(), 2);
+    EXPECT_EQ(player_states[1].num_enemy_bots, 2);
+    EXPECT_EQ(player_states[0].bots[1].position, DoubleVec2D(3, 3));
 
     // Adding a new tower
     auto new_towers2 = state_towers;
@@ -186,49 +187,57 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     manageStateExpectations(state_bots, new_towers2);
     this->state_syncer->updatePlayerStates(player_states);
 
-    ASSERT_EQ(player_states[1].towers.size(), 2);
-    ASSERT_EQ(player_states[1].num_towers, 2);
-    ASSERT_EQ(player_states[0].enemy_towers.size(), 2);
-    ASSERT_EQ(player_states[0].num_enemy_towers, 2);
-    ASSERT_EQ(player_states[1].towers[1].position, DoubleVec2D(1, 2));
-    ASSERT_EQ(player_states[0].enemy_towers[1].position, DoubleVec2D(4, 3));
+    EXPECT_EQ(player_states[1].towers.size(), 2);
+    EXPECT_EQ(player_states[1].num_towers, 2);
+    EXPECT_EQ(player_states[0].enemy_towers.size(), 2);
+    EXPECT_EQ(player_states[0].num_enemy_towers, 2);
+    EXPECT_EQ(player_states[1].towers[1].position, DoubleVec2D(1, 2));
+    EXPECT_EQ(player_states[0].enemy_towers[1].position, DoubleVec2D(4, 3));
 
     // Checking for bots and tower's new states
     manageStateExpectations(state_bots, state_towers);
     this->state_syncer->updatePlayerStates(player_states);
 
-    ASSERT_EQ(player_states[0].map[2][2].getTerrain(), F);
-    ASSERT_EQ(player_states[1].map[2][2].getTerrain(), F);
+    EXPECT_EQ(player_states[0].map[2][2].getTerrain(), F);
+    EXPECT_EQ(player_states[1].map[2][2].getTerrain(), F);
 
-    ASSERT_EQ(player_states[0].map[0][4].getTerrain(), W);
-    ASSERT_EQ(player_states[1].map[4][0].getTerrain(), W);
+    EXPECT_EQ(player_states[0].map[0][4].getTerrain(), W);
+    EXPECT_EQ(player_states[1].map[4][0].getTerrain(), W);
 
-    ASSERT_EQ(player_states[0].map[4][4].getTerrain(), T);
-    ASSERT_EQ(player_states[1].map[0][0].getTerrain(), T);
+    EXPECT_EQ(player_states[0].map[4][4].getTerrain(), T);
+    EXPECT_EQ(player_states[1].map[0][0].getTerrain(), T);
 
-    ASSERT_EQ(player_states[0].map[0][2].getTerrain(), L);
-    ASSERT_EQ(player_states[1].map[4][2].getTerrain(), L);
+    EXPECT_EQ(player_states[0].map[0][2].getTerrain(), L);
+    EXPECT_EQ(player_states[1].map[4][2].getTerrain(), L);
+
+    // Checking where the flag locations are added for PLAYER1 and PLAYER2
+    EXPECT_EQ(player_states[0].flag_offsets.size(), 2);
+    EXPECT_EQ(player_states[1].flag_offsets.size(), 2);
+    EXPECT_EQ(player_states[0].flag_offsets[0], Vec2D(2, 2));
+    EXPECT_EQ(player_states[1].flag_offsets[0], Vec2D(2, 2));
+    EXPECT_EQ(player_states[0].flag_offsets[1], Vec2D(3, 3));
+    EXPECT_EQ(player_states[1].flag_offsets[1], Vec2D(1, 1));
 
     // Checking bots and towers
-    ASSERT_EQ(player_states[0].bots[0].id, 0);
-    ASSERT_EQ(player_states[0].bots[0].hp, 100);
-    ASSERT_EQ(player_states[0].bots[0].position, DoubleVec2D(1, 1));
-    ASSERT_EQ(player_states[1].enemy_bots[0].position, DoubleVec2D(4, 4));
-    ASSERT_EQ(player_states[0].bots[0].state, player_state::BotState::IDLE);
-    ASSERT_EQ(player_states[1].enemy_bots[0].id, 0);
+    EXPECT_EQ(player_states[0].bots[0].id, 0);
+    EXPECT_EQ(player_states[0].bots[0].hp, 100);
+    EXPECT_EQ(player_states[0].bots[0].position, DoubleVec2D(1, 1));
+    EXPECT_EQ(player_states[1].enemy_bots[0].position, DoubleVec2D(4, 4));
+    EXPECT_EQ(player_states[0].bots[0].state, player_state::BotState::IDLE);
+    EXPECT_EQ(player_states[1].enemy_bots[0].id, 0);
 
-    ASSERT_EQ(player_states[1].bots[0].id, 1);
-    ASSERT_EQ(player_states[1].bots[0].hp, 100);
-    ASSERT_EQ(player_states[1].bots[0].position, DoubleVec2D(1, 1));
-    ASSERT_EQ(player_states[1].bots[0].state, player_state::BotState::IDLE);
+    EXPECT_EQ(player_states[1].bots[0].id, 1);
+    EXPECT_EQ(player_states[1].bots[0].hp, 100);
+    EXPECT_EQ(player_states[1].bots[0].position, DoubleVec2D(1, 1));
+    EXPECT_EQ(player_states[1].bots[0].state, player_state::BotState::IDLE);
 
-    ASSERT_EQ(player_states[0].towers[0].id, 2);
-    ASSERT_EQ(player_states[0].towers[0].hp, 100);
-    ASSERT_EQ(player_states[0].towers[0].position, DoubleVec2D(0, 0));
-    ASSERT_EQ(player_states[0].towers[0].state, player_state::TowerState::IDLE);
+    EXPECT_EQ(player_states[0].towers[0].id, 2);
+    EXPECT_EQ(player_states[0].towers[0].hp, 100);
+    EXPECT_EQ(player_states[0].towers[0].position, DoubleVec2D(0, 0));
+    EXPECT_EQ(player_states[0].towers[0].state, player_state::TowerState::IDLE);
 
-    ASSERT_EQ(player_states[1].towers[0].id, 3);
-    ASSERT_EQ(player_states[1].towers[0].hp, 100);
-    ASSERT_EQ(player_states[1].towers[0].position, DoubleVec2D(1, 1));
-    ASSERT_EQ(player_states[1].towers[0].state, player_state::TowerState::IDLE);
+    EXPECT_EQ(player_states[1].towers[0].id, 3);
+    EXPECT_EQ(player_states[1].towers[0].hp, 100);
+    EXPECT_EQ(player_states[1].towers[0].position, DoubleVec2D(1, 1));
+    EXPECT_EQ(player_states[1].towers[0].state, player_state::TowerState::IDLE);
 }
