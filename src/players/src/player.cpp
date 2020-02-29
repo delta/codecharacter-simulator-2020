@@ -24,7 +24,7 @@ const std::string debug_logs_truncate_message =
 const int64_t max_debug_logs_turn_length = 10000;
 
 std::unique_ptr<PlayerDriver>
-BuildPlayerDriver(const std::string &shm_name,
+buildPlayerDriver(const std::string &shm_name,
                   const std::string &player_debug_log_file) {
     auto shm_player = std::make_unique<SharedMemoryPlayer>(shm_name);
 
@@ -38,14 +38,14 @@ BuildPlayerDriver(const std::string &shm_name,
         max_debug_logs_turn_length);
 }
 
-std::string GetKeyFromFile(const std::string &file_name) {
+std::string getKeyFromFile(const std::string &file_name) {
     std::ifstream key_file(file_name, std::ifstream::in);
     std::string read_buffer;
     getline(key_file, read_buffer);
     return read_buffer;
 }
 
-bool FileExists(const std::string &name) {
+bool fileExists(const std::string &name) {
     std::ifstream f(name.c_str());
     return f.good();
 }
@@ -58,18 +58,18 @@ int main(int argc, char *argv[]) {
 
     // Read the SHM file to get the SHM name
     auto shm_file_name = SHM_FILE_NAMES[player_number - 1];
-    if (not FileExists(shm_file_name)) {
+    if (not fileExists(shm_file_name)) {
         std::cerr << "Could not find SHM file. Aborting...\n";
         return EXIT_FAILURE;
     }
 
-    std::string shm_name(GetKeyFromFile(shm_file_name));
+    std::string shm_name(getKeyFromFile(shm_file_name));
 
     // We've read the SHM file name, remove the file
     std::remove(shm_file_name.c_str());
 
     std::cout << "Running " << argv[0] << " ..." << std::endl;
-    auto driver = BuildPlayerDriver(shm_name, std::string(argv[0]) +
+    auto driver = buildPlayerDriver(shm_name, std::string(argv[0]) +
                                                   player_debug_log_ext);
 
     driver->start();
