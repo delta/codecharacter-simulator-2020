@@ -12,7 +12,7 @@ namespace bp = boost::process;
 Game::Game(std::unique_ptr<drivers::MainDriver> main_driver)
     : main_driver(std::move(main_driver)) {}
 
-std::string Game::GenerateRandomString(const std::string::size_type length) {
+std::string Game::generateRandomString(const std::string::size_type length) {
     using namespace std;
     static string chars = "0123456789"
                           "abcdefghijklmnopqrstuvwxyz"
@@ -30,7 +30,7 @@ std::string Game::GenerateRandomString(const std::string::size_type length) {
     return s;
 }
 
-drivers::GameResult Game::Start() {
+drivers::GameResult Game::start() {
     // Launching player child processes
     std::vector<bp::child> player_processes;
     std::vector<std::error_code> player_process_errors(2);

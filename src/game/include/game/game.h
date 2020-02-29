@@ -50,12 +50,12 @@ class GAME_EXPORT Game {
      * @param length Desired length of the string
      * @return std::string Result random string
      */
-    static std::string GenerateRandomString(std::string::size_type length);
+    static std::string generateRandomString(std::string::size_type length);
 
     /**
      * Creates and starts the main driver
      *
      * @return GameResult object with winner, win type, and player results
      */
-    drivers::GameResult Start();
+    drivers::GameResult start();
 };
