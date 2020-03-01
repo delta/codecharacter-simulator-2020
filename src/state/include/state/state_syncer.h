@@ -56,7 +56,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      * @param position Position to be flipped
      * @return Vec2D Flipped tower position
      */
-    static Vec2D flipTowerPosition(const Map &map, Vec2D position);
+    static DoubleVec2D flipTowerPosition(const Map &map, DoubleVec2D position);
 
   public:
     StateSyncer();
@@ -129,7 +129,7 @@ class STATE_EXPORT StateSyncer : public IStateSyncer {
      * @param position Bot position
      * @return Vec2D Tower position
      */
-    Vec2D changeBotToTowerPosition(DoubleVec2D position);
+    DoubleVec2D changeBotToTowerPosition(DoubleVec2D position);
 };
 
 } // namespace state

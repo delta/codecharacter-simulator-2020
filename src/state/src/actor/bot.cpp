@@ -191,14 +191,15 @@ void Bot::lateUpdate() {
     // perform a move
     if (isNewPostitionSet()) {
         DoubleVec2D previous_position = getPosition();
-        TerrainType previous_terrain =
-            path_planner->getTerrainType(previous_position);
+        TerrainType previous_terrain = path_planner->getTerrainType(
+            previous_position, this->getPlayerId());
 
         setPosition(getNewPosition());
 
         // Checking if the bot is has moved out of a flag from inside a flag
         DoubleVec2D position = getPosition();
-        TerrainType terrain = path_planner->getTerrainType(position);
+        TerrainType terrain =
+            path_planner->getTerrainType(position, this->getPlayerId());
         if (previous_terrain == TerrainType::FLAG &&
             terrain != TerrainType::FLAG) {
             score_manager->actorExitedFlagArea(getActorType(), getPlayerId());
@@ -225,8 +226,8 @@ void Bot::setConstructTowerCallback(ConstructTowerCallback construct_tower) {
 
 void Bot::update() {
     // get new state based on bot properties
-    auto new_state = state->update();
 
+    auto new_state = state->update();
     // until no state transitions occur, in a single frame
     while (new_state != nullptr) {
         // state transition occurred

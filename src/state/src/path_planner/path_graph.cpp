@@ -19,8 +19,8 @@ PathGraph::PathGraph(size_t p_map_size,
 
 void PathGraph::setValidTerrain(
     std::vector<std::vector<bool>> p_valid_terrain) {
-    valid_terrain = std::move(p_valid_terrain);
 
+    valid_terrain = std::move(p_valid_terrain);
     recomputeWaypointGraph();
 }
 

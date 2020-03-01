@@ -55,13 +55,19 @@ std::array<std::vector<T *>, 2> getRawPtrsFromUniquePtrs(
     return ret_actors;
 }
 
-Vec2D State::getOffsetFromPosition(DoubleVec2D position) {
-    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
-
-    return {pos_x, pos_y};
+Vec2D State::getOffsetFromPosition(DoubleVec2D position, PlayerId player_id) {
+    if (player_id == PlayerId::PLAYER1) {
+        int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+        return {pos_x, pos_y};
+    } else {
+        int64_t pos_x = std::ceil(position.x) - 1,
+                pos_y = std::ceil(position.y) - 1;
+        return {pos_x, pos_y};
+    }
 }
 
 void State::handleTransformRequests() {
+
     // Creating a count array of bots in each position
     // Only if position counts of each position is 1 for each build request, we
     // can approve the build request
@@ -70,13 +76,19 @@ void State::handleTransformRequests() {
 
     std::array<std::array<int64_t, Constants::Map::MAP_SIZE>,
                Constants::Map::MAP_SIZE>
-        position_counts;
+        position_counts{};
 
     for (int64_t id = 0; id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
          ++id) {
         for (const auto &bot : bots[id]) {
             DoubleVec2D bot_position = bot->getPosition();
-            Vec2D offset = getOffsetFromPosition(bot_position);
+            Vec2D offset = getOffsetFromPosition(bot_position, (PlayerId) id);
+            position_counts[offset.x][offset.y]++;
+        }
+
+        for (const auto &tower : towers[id]) {
+            DoubleVec2D tower_position = tower->getPosition();
+            Vec2D offset = getOffsetFromPosition(tower_position, (PlayerId) id);
             position_counts[offset.x][offset.y]++;
         }
     }
@@ -89,12 +101,11 @@ void State::handleTransformRequests() {
             int64_t bot_id = request->getBotId();
             auto bot = getBotById(bot_id);
             DoubleVec2D bot_position = bot->getPosition();
-            Vec2D offset = getOffsetFromPosition(bot_position);
-
+            Vec2D offset = getOffsetFromPosition(bot_position, (PlayerId) id);
             // Checking if only one actor is in the offset position where
             // transforming is requested
             if (position_counts[offset.x][offset.y] == 1) {
-                createTower(bot);
+                produceTower(bot);
             }
         }
     }
@@ -111,12 +122,10 @@ void State::moveBot(ActorId actor_id, DoubleVec2D position) {
     bot->move(position);
 }
 
-void State::transformBot(PlayerId player_id, ActorId bot_id,
-                         DoubleVec2D position) {
+void State::transformBot(ActorId bot_id, DoubleVec2D position) {
     // Adding a transform request to build a tower
-    int64_t id = static_cast<int64_t>(player_id);
-    transform_requests[id].push_back(
-        std::make_unique<TransformRequest>(player_id, bot_id, position));
+    auto bot = getBotById(bot_id);
+    bot->setTransformDestination(position);
 }
 
 std::vector<Actor *> State::getAffectedActors(PlayerId player_id,
@@ -186,7 +195,7 @@ void State::spawnNewBots() {
 
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
-    auto create_tower = std::bind(&State::createTower, this, _1);
+    auto create_tower = std::bind(&State::constructTowerCallback, this, _1);
 
     // Number of bots to spawn for player 1, bots should be less than max num
     // bots
@@ -198,7 +207,7 @@ void State::spawnNewBots() {
 
     for (size_t bot_index = 0; bot_index < num_spawn_bots_1; ++bot_index) {
         bots[0].push_back(
-            make_unique<Bot>(PlayerId::PLAYER1, BOT_MAX_HP, BOT_MAX_HP,
+            make_unique<Bot>(PlayerId::PLAYER1, MAX_BOT_HP, MAX_BOT_HP,
                              Constants::Map::PLAYER1_BASE_POSITION, BOT_SPEED,
                              BOT_BLAST_IMPACT_RADIUS, BOT_BLAST_DAMAGE_POINTS,
                              score_manager.get(), path_planner.get(),
@@ -208,7 +217,7 @@ void State::spawnNewBots() {
     // Player2 spawns
     for (size_t bot_index = 0; bot_index < num_spawn_bots_2; ++bot_index) {
         bots[1].push_back(
-            make_unique<Bot>(PlayerId::PLAYER2, BOT_MAX_HP, BOT_MAX_HP,
+            make_unique<Bot>(PlayerId::PLAYER2, MAX_BOT_HP, MAX_BOT_HP,
                              Constants::Map::PLAYER2_BASE_POSITION, BOT_SPEED,
                              BOT_BLAST_IMPACT_RADIUS, BOT_BLAST_DAMAGE_POINTS,
                              score_manager.get(), path_planner.get(),
@@ -217,6 +226,9 @@ void State::spawnNewBots() {
 }
 
 void State::update() {
+    // Recalculate paths based on current obstacles
+    path_planner->recomputePathGraph();
+
     // Update actors
     for (int64_t player_id = 0;
          player_id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
@@ -261,47 +273,92 @@ void State::update() {
     spawnNewBots();
 }
 
-void State::createTower(Bot *bot) {
+void State::constructTowerCallback(Bot *bot) {
+    transform_requests[(int) bot->getPlayerId()].push_back(
+        std::make_unique<TransformRequest>(
+            bot->getPlayerId(), bot->getActorId(), bot->getPosition()));
+}
+
+void State::produceBot(PlayerId player_id) {
+    using namespace std::placeholders;
+    ConstructTowerCallback construct_tower_callback =
+        std::bind(&State::constructTowerCallback, this, _1);
+    BlastCallback blast_callback =
+        std::bind(&State::damageEnemyActors, this, _1, _2, _3);
+
+    auto bot = std::make_unique<Bot>(
+        player_id, model_bot.getHp(), model_bot.getMaxHp(),
+        PLAYER_BASE_POSITIONS[(int) player_id], model_bot.getSpeed(),
+        model_bot.getBlastRange(), model_bot.getBlastDamage(),
+        model_bot.getScoreManager(), model_bot.getPathPlanner(), blast_callback,
+        construct_tower_callback);
+
+    bots[(int) player_id].push_back(move(bot));
+}
+
+void State::produceTower(Bot *bot) {
     // Build a tower in given position with the same actor id as the bot and
     // transition the bot into dead state
     auto player_id = bot->getPlayerId();
     auto id = static_cast<int64_t>(player_id);
     auto bot_id = bot->getActorId();
 
-    DoubleVec2D bot_position = bot->getPosition();
-    if (path_planner->getTerrainType(bot_position) == TerrainType::FLAG) {
+    DoubleVec2D bot_offset =
+        getOffsetFromPosition(bot->getPosition(), player_id);
+
+    if (path_planner->getTerrainType(bot_offset, player_id) ==
+        TerrainType::FLAG) {
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
 
     // Finding ratio of hps of tower and bot to scale
-    double hp_ratio = (double) (Constants::Actor::TOWER_MAX_HP) /
-                      (double) (Constants::Actor::BOT_MAX_HP);
-
-    // Transitioning the bot into the dead state
-    bot->setState(BotStateName::DEAD);
+    double hp_ratio = (double) (Constants::Actor::MAX_TOWER_HP) /
+                      (double) (Constants::Actor::MAX_BOT_HP);
 
     // Creating a new tower for this player with the same actor id as the bot
     int64_t bot_hp = bot->getHp();
     int64_t tower_hp = std::floor(hp_ratio * bot_hp);
-    DoubleVec2D tower_position = getOffsetFromPosition(bot_position);
+    DoubleVec2D tower_position = bot_offset;
+
+    // Add the tower obstacle in map
+    path_planner->buildTower(bot_offset, PlayerId::PLAYER1);
 
     // Making the tower position as the center of the offset
     tower_position.x += 0.5;
     tower_position.y += 0.5;
+
+    // Transitioning the bot into the dead state
+    // Move the bot to the new tower's position
+    bot->setState(BotStateName::DEAD);
+    bot->setPosition(tower_position);
 
     using namespace std::placeholders;
 
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
     towers[id].push_back(make_unique<Tower>(
-        bot_id, player_id, tower_hp, Constants::Actor::TOWER_MAX_HP,
+        bot_id, player_id, tower_hp, Constants::Actor::MAX_TOWER_HP,
         tower_position, Constants::Actor::TOWER_BLAST_DAMAGE_POINTS,
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
 
-    if (path_planner->getTerrainType(tower_position) == TerrainType::FLAG) {
+    if (path_planner->getTerrainType(tower_position, player_id) ==
+        TerrainType::FLAG) {
         score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
     }
+}
+
+void State::produceTower(PlayerId player_id) {
+    using namespace std::placeholders;
+    BlastCallback blast_callback =
+        std::bind(&State::damageEnemyActors, this, _1, _2, _3);
+
+    auto tower = std::make_unique<Tower>(
+        player_id, model_tower.getHp(), model_tower.getMaxHp(),
+        PLAYER_BASE_POSITIONS[(int) player_id], model_bot.getBlastDamage(),
+        model_bot.getBlastRange(), model_bot.getScoreManager(), blast_callback);
+
+    towers[(int) player_id].push_back(move(tower));
 }
 
 void State::blastBot(ActorId actor_id, DoubleVec2D position) {
@@ -323,6 +380,17 @@ void State::removeDeadActors() {
 
         // Delete the dead bots
         state_bots.erase(partition_point, state_bots.end());
+    }
+
+    for (auto &state_towers : towers) {
+        for (auto &tower : state_towers) {
+            if (tower->getState() == TowerStateName::DEAD) {
+                auto tower_position = tower->getPosition();
+                tower_position.x -= 0.5;
+                tower_position.y -= 0.5;
+                path_planner->destroyTower(tower_position);
+            }
+        }
     }
 
     for (auto &state_towers : towers) {

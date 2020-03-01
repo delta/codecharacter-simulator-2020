@@ -72,7 +72,7 @@ class STATE_EXPORT State : public ICommandTaker {
      * @param position Position for which offset is requested
      * @return Vec2D Offset
      */
-    Vec2D getOffsetFromPosition(DoubleVec2D position);
+    Vec2D getOffsetFromPosition(DoubleVec2D position, PlayerId player_id);
 
     /**
      * Get the Blaster By Id
@@ -133,8 +133,7 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#transformBot
      */
-    void transformBot(PlayerId player_id, ActorId bot_id,
-                      DoubleVec2D position) override;
+    void transformBot(ActorId bot_id, DoubleVec2D position) override;
 
     /**
      * @see ICommandTaker#blastBot
@@ -169,11 +168,32 @@ class STATE_EXPORT State : public ICommandTaker {
                            DoubleVec2D position);
 
     /**
+     * Taking model bot as reference, create new bot and add to list of player
+     * bots
+     * @param player_id Player to whom the bot belongs
+     */
+    void produceBot(PlayerId player_id);
+
+    /**
      * Create a transform request for a given position
      *
      * @param bot Bot that is transforming into a tower
      */
-    void createTower(Bot *bot);
+    void constructTowerCallback(Bot *bot);
+
+    /**
+     * Convert a bot to tower, add to player tower list and kill bot
+     *
+     * @param bot Bot that is transforming into a tower
+     */
+    void produceTower(Bot *bot);
+
+    /**
+     * Overloaded function, which produces tower taking model_tower as reference
+     * and adds it to player list
+     * @param player_id Player to whom the tower belongs
+     */
+    void produceTower(PlayerId player_id);
 
     /**
      * @see ICommandTaker#getMap

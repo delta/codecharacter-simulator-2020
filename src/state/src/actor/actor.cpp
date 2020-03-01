@@ -24,7 +24,7 @@ Actor::Actor(PlayerId player_id, ActorType actor_type, size_t hp, size_t max_hp,
 
 ActorId Actor::getActorId() const { return id; }
 
-ActorId Actor::getNextActorId() { return next_actor_id++; }
+ActorId Actor::getNextActorId() { return ++next_actor_id; }
 
 PlayerId Actor::getPlayerId() const { return player_id; }
 

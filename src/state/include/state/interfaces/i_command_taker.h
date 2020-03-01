@@ -43,15 +43,13 @@ class STATE_EXPORT ICommandTaker {
     /**
      * Handles bot transform
      *
-     * @param[in]  player_id     Player to act upon
-     * @param[in]  bot_id    Bot to act upon
+     * @param[in] bot_id    Bot to act upon
      * @param[in] position Position on which the bot should transform into a
      * tower
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void transformBot(PlayerId player_id, ActorId bot_id,
-                              DoubleVec2D position) = 0;
+    virtual void transformBot(ActorId bot_id, DoubleVec2D position) = 0;
 
     /**
      * Blasts a bot and destroy units nearby

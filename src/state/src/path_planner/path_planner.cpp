@@ -33,7 +33,7 @@ bool PathPlanner::isOffsetBlocked(const Vec2D &position) const {
 }
 
 bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
-                               ActorType actor_type) {
+                               ActorType actor_type) const {
     if (position.x < 0 || position.y < 0 || position.x > map->getSize() ||
         position.y > map->getSize()) {
         return false;
@@ -62,7 +62,7 @@ bool PathPlanner::isInMapRange(DoubleVec2D position, state::PlayerId player_id,
 }
 
 Vec2D PathPlanner::getOffset(const DoubleVec2D &position,
-                             const PlayerId &player_id) {
+                             const PlayerId &player_id) const {
     if (!isInMapRange(position, player_id, ActorType::TOWER)) {
         return Vec2D::null;
     }
@@ -85,7 +85,7 @@ Vec2D PathPlanner::getOffset(const DoubleVec2D &position,
     }
 
     default:
-        return Vec2D ::null;
+        return Vec2D::null;
     }
 }
 
@@ -197,16 +197,18 @@ DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
     return (point_a + unit_vector * distance);
 }
 
-TerrainType PathPlanner::getTerrainType(DoubleVec2D position) const {
+TerrainType PathPlanner::getTerrainType(DoubleVec2D position,
+                                        PlayerId player_id) const {
     // FIX ME : Type resolution to be done with better clarity
-    size_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    auto offset = getOffset(position, player_id);
     size_t map_size = map->getSize();
 
-    if (pos_x < 0 || pos_y < 0 || pos_x >= map_size || pos_y >= map_size) {
+    if (offset.x < 0 || offset.y < 0 || offset.x >= map_size ||
+        offset.y >= map_size) {
         throw std::invalid_argument("Position is not within the map\n");
     }
 
-    return map->getTerrainType(pos_x, pos_y);
+    return map->getTerrainType(offset);
 }
 
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,

@@ -59,20 +59,17 @@ unique_ptr<Map> buildMap() {
         case 'L':
             map_row.push_back(TerrainType::LAND);
             break;
-
         case 'W':
             map_row.push_back(TerrainType::WATER);
             break;
-
         case 'F':
             map_row.push_back(TerrainType::FLAG);
             break;
-
         case ' ':
             // Ignore all whitespaces
             break;
-
         case '\n':
+            // Ensure that size of the row matches MAP_SIZE
             if (map_row.size() != MAP_SIZE) {
                 std::cerr << "Bad map file! Match MAP_SIZE " << MAP_SIZE
                           << '\n';
@@ -82,12 +79,10 @@ unique_ptr<Map> buildMap() {
             map_elements.push_back(map_row);
             map_row.clear();
             break;
-
         default:
-            std::cerr << "Bad map file! Invalid character " << character
-                      << '\n';
+            std::cerr << "Bad map file! Invalid character: " << character
+                      << "\n";
             exit(EXIT_FAILURE);
-            break;
         }
     }
     map_file.close();
@@ -113,14 +108,14 @@ unique_ptr<PathPlanner> buildPathPlanner(Map *map) {
 unique_ptr<Bot> buildBot(PlayerId player_id, PathPlanner *path_planner,
                          ScoreManager *score_manager) {
     return make_unique<Bot>(
-        player_id, BOT_MAX_HP, BOT_MAX_HP,
+        player_id, MAX_BOT_HP, MAX_BOT_HP,
         PLAYER_BASE_POSITIONS[static_cast<int>(player_id)], BOT_SPEED,
         BOT_BLAST_IMPACT_RADIUS, BOT_BLAST_DAMAGE_POINTS, score_manager,
         path_planner, BlastCallback{}, ConstructTowerCallback{});
 }
 
 Bot buildModelBot(PathPlanner *path_planner, ScoreManager *score_manager) {
-    return Bot(PlayerId::PLAYER1, BOT_MAX_HP, BOT_MAX_HP,
+    return Bot(PlayerId::PLAYER1, MAX_BOT_HP, MAX_BOT_HP,
                PLAYER_BASE_POSITIONS[0], BOT_SPEED, BOT_BLAST_IMPACT_RADIUS,
                BOT_BLAST_DAMAGE_POINTS, score_manager, path_planner,
                BlastCallback{}, ConstructTowerCallback{});
@@ -128,14 +123,14 @@ Bot buildModelBot(PathPlanner *path_planner, ScoreManager *score_manager) {
 
 unique_ptr<Tower> buildTower(PlayerId player_id, ScoreManager *score_manager) {
     return make_unique<Tower>(
-        player_id, TOWER_MAX_HP, TOWER_MAX_HP,
+        player_id, MAX_TOWER_HP, MAX_TOWER_HP,
         PLAYER_BASE_POSITIONS[static_cast<size_t>(player_id)],
         TOWER_BLAST_DAMAGE_POINTS, TOWER_BLAST_IMPACT_RADIUS, score_manager,
         BlastCallback{});
 }
 
 Tower buildModelTower(ScoreManager *score_manager) {
-    return Tower(PlayerId::PLAYER1, TOWER_MAX_HP, TOWER_MAX_HP,
+    return Tower(PlayerId::PLAYER1, MAX_TOWER_HP, MAX_TOWER_HP,
                  PLAYER_BASE_POSITIONS[0], TOWER_BLAST_DAMAGE_POINTS,
                  TOWER_BLAST_IMPACT_RADIUS, score_manager, BlastCallback{});
 }
@@ -151,21 +146,18 @@ unique_ptr<State> buildState() {
     auto bots = array<vector<unique_ptr<Bot>>, 2>{};
     auto towers = array<vector<unique_ptr<Tower>>, 2>{};
 
+    auto state = make_unique<State>(
+        move(map), move(score_manager), move(path_planner), move(bots),
+        move(towers), move(model_bot), move(model_tower));
+
     // Initialize bots list
     for (int player_id = 0; player_id < 2; ++player_id) {
-        auto &player_bots = bots[(int) player_id];
-        player_bots.reserve(NUM_BOTS_START);
-
         for (size_t i = 0; i < NUM_BOTS_START; ++i) {
-            player_bots.push_back(buildBot(static_cast<PlayerId>(player_id),
-                                           path_planner.get(),
-                                           score_manager.get()));
+            state->produceBot((PlayerId) player_id);
         }
     }
 
-    return make_unique<State>(move(map), move(score_manager),
-                              move(path_planner), move(bots), move(towers),
-                              move(model_bot), move(model_tower));
+    return state;
 }
 
 unique_ptr<MainDriver> buildMainDriver() {

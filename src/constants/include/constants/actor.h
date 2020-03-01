@@ -18,43 +18,37 @@ namespace Constants::Actor {
 const uint64_t MAX_BOT_HP = 200;
 
 // Maximum number of bots per player
-const size_t MAX_NUM_BOTS = 50;
+const size_t MAX_NUM_BOTS = 250;
 
 // Number of bots that each player starts with
 const size_t NUM_BOTS_START = 20;
 
 // Blast impact radius around the bot
-const uint64_t BOT_BLAST_IMPACT_RADIUS = 3;
+const uint64_t BOT_BLAST_IMPACT_RADIUS = 2;
 
 // Blast damage of a bot
-const size_t BOT_BLAST_DAMAGE_POINTS = 5;
+const size_t BOT_BLAST_DAMAGE_POINTS = 50;
 
 // Speed of a bot in manhattan distance per turn
-const uint64_t BOT_SPEED = 2;
+const uint64_t BOT_SPEED = 6;
 
-// Frequency at which bots spawn at home base per turn
+// Number of bots spawning at home base per turn
 const uint64_t BOT_SPAWN_FREQUENCY = 1;
 
 // Maximum HP of Tower actor
-const uint64_t MAX_TOWER_HP = 500;
+const uint64_t MAX_TOWER_HP = 600;
 
 // Maximum number of towers per player
-const size_t MAX_NUM_TOWERS = 50;
+const size_t MAX_NUM_TOWERS = 150;
 
 // Blast impact radius around the tower
-const uint64_t TOWER_BLAST_IMPACT_RADIUS = 3;
+const uint64_t TOWER_BLAST_IMPACT_RADIUS = 6;
 
 // Blast damage of a bot
-const size_t TOWER_BLAST_DAMAGE_POINTS = 10;
+const size_t TOWER_BLAST_DAMAGE_POINTS = 500;
 
 // Minimum number of turns tower must be alive to be able to blast
-const uint64_t TOWER_MIN_BLAST_AGE = 5;
-
-// Maximum HP of a bot
-const size_t BOT_MAX_HP = 100;
-
-// Maximum HP of a tower
-const size_t TOWER_MAX_HP = 250;
+const uint64_t TOWER_MIN_BLAST_AGE = 3;
 
 } // namespace Constants::Actor
 

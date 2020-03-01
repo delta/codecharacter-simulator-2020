@@ -78,6 +78,9 @@ GameResult MainDriver::start() {
             transfer_state::ConvertToTransferState(player_states[i]);
     }
 
+    // Create turn 0 state in log
+    logger->logState();
+
     // Start a timer. Game is invalid if it does not complete within the timer
     // limit
     this->is_game_timed_out = false;
@@ -184,8 +187,15 @@ GameResult MainDriver::run() {
                 if (process_pids[cur_player_id] != 0) {
                     kill(process_pids[cur_player_id], SIGTERM);
                 }
-                return GameResult{GameResult::Winner::NONE,
-                                  GameResult::WinType::TIMEOUT, player_results};
+
+                if (cur_player_id == 0) {
+                    winner = GameResult::Winner::PLAYER2;
+                } else {
+                    winner = GameResult::Winner::PLAYER1;
+                }
+
+                return GameResult{winner, GameResult::WinType::TIMEOUT,
+                                  player_results};
             }
 
             // Check for instruction counter to see if player has
@@ -268,5 +278,6 @@ void MainDriver::cancel() {
     auto end_time = std::chrono::system_clock::now() + wait_time;
     while (std::chrono::system_clock::now() < end_time)
         ;
+    this->cancel_flag = false;
 }
 } // namespace drivers

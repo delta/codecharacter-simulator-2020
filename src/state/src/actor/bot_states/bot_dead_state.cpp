@@ -17,7 +17,8 @@ void BotDeadState::enter() {
     auto path_planner = bot->getPathPlanner();
     auto score_manager = bot->getScoreManager();
 
-    if (path_planner->getTerrainType(position) == TerrainType::FLAG) {
+    if (path_planner->getTerrainType(position, bot->getPlayerId()) ==
+        TerrainType::FLAG) {
         score_manager->actorExitedFlagArea(ActorType::BOT, bot->getPlayerId());
     }
 }

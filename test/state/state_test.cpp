@@ -137,7 +137,7 @@ TEST_F(StateTest, CreateTowerTest) {
     EXPECT_EQ(bot_counts[1], 1);
 
     // Calling create tower on this bot
-    state->createTower(bot);
+    state->produceTower(bot);
 
     bots = state->getBots();
     auto towers = state->getTowers();
@@ -175,7 +175,7 @@ TEST_F(StateTest, TransformRequestTest) {
     EXPECT_EQ(transform_requests[0].size(), 0);
     EXPECT_EQ(transform_requests[1].size(), 0);
 
-    state->transformBot(player_id, actor_id, position);
+    state->transformBot(actor_id, position);
 
     transform_requests = state->getTransformRequests();
     EXPECT_EQ(transform_requests[0].size(), 1);
@@ -355,10 +355,8 @@ TEST_F(StateTest, RejectTransformRequestTest) {
     bot1->setPosition(DoubleVec2D(2.5, 2.3));
     bot2->setPosition(DoubleVec2D(2.2, 2.7));
 
-    state->transformBot(bot1->getPlayerId(), bot1->getActorId(),
-                        bot1->getPosition());
-    state->transformBot(bot2->getPlayerId(), bot2->getActorId(),
-                        bot2->getPosition());
+    state->transformBot(bot1->getActorId(), bot1->getPosition());
+    state->transformBot(bot2->getActorId(), bot2->getPosition());
 
     // Calling handleTransformRequests and checking to assert that no tower is
     // built
@@ -377,8 +375,7 @@ TEST_F(StateTest, RejectTransformRequestTest) {
 
     // Making both the bots stand on the same offset but only one bot tries to
     // transform
-    state->transformBot(bot1->getPlayerId(), bot1->getActorId(),
-                        bot1->getPosition());
+    state->transformBot(bot1->getActorId(), bot1->getPosition());
 
     // Calling handleTransformRequests and checking to assert that no tower is
     // built
@@ -398,8 +395,7 @@ TEST_F(StateTest, AcknowledgeTransformRequest) {
     auto bots = state->getBots();
     auto bot = bots[0][0];
 
-    state->transformBot(bot->getPlayerId(), bot->getActorId(),
-                        bot->getPosition());
+    state->transformBot(bot->getActorId(), bot->getPosition());
 
     // Calling handle transform requests to see whether a tower is built
     state->handleTransformRequests();
