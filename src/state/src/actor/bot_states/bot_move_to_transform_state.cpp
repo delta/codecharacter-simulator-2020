@@ -42,7 +42,7 @@ std::unique_ptr<IActorState> BotMoveToTransformState::update() const {
         return make_unique<BotIdleState>(bot);
     }
 
-    // bot ready to transform
+    // Bot ready to transform
     if (bot->getPosition() == bot->getTransformDestination()) {
         bot->setTransforming(true);
         return make_unique<BotTransformState>(bot);

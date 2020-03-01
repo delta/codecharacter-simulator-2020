@@ -123,6 +123,9 @@ void Logger::logState() {
         logs->set_inst_limit_turn(this->player_instruction_limit_turn);
         logs->set_inst_limit_game(this->player_instruction_limit_game);
         logs->set_bot_speed(Constants::Actor::BOT_SPEED);
+        logs->set_tower_blast_range(
+            Constants::Actor::TOWER_BLAST_IMPACT_RADIUS);
+        logs->set_bot_blast_range(Constants::Actor::BOT_BLAST_IMPACT_RADIUS);
     }
 
     // Log player bots

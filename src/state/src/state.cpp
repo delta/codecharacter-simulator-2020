@@ -302,11 +302,12 @@ void State::produceTower(Bot *bot) {
     auto player_id = bot->getPlayerId();
     auto id = static_cast<int64_t>(player_id);
     auto bot_id = bot->getActorId();
+    auto bot_position = bot->getPosition();
 
     DoubleVec2D bot_offset =
         getOffsetFromPosition(bot->getPosition(), player_id);
 
-    if (path_planner->getTerrainType(bot_offset, player_id) ==
+    if (path_planner->getTerrainType(bot_position, player_id) ==
         TerrainType::FLAG) {
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
     }
@@ -321,7 +322,7 @@ void State::produceTower(Bot *bot) {
     DoubleVec2D tower_position = bot_offset;
 
     // Add the tower obstacle in map
-    path_planner->buildTower(bot_offset, PlayerId::PLAYER1);
+    path_planner->buildTower(bot_position, player_id);
 
     // Making the tower position as the center of the offset
     tower_position.x += 0.5;
