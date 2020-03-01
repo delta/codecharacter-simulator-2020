@@ -8,7 +8,7 @@
 
 namespace state {
 
-PathPlanner::PathPlanner(Map *p_map) : map(p_map) {
+PathPlanner::PathPlanner(Map *p_map) : map(std::move(p_map)) {
     auto map_size = map->getSize();
     auto valid_terrain = std::vector<std::vector<bool>>(
         map_size, std::vector<bool>(map_size, true));

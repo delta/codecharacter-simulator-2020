@@ -4,24 +4,20 @@
  */
 
 #include "state/state.h"
+using namespace Constants::Actor;
+using namespace Constants::Map;
 
 namespace state {
-State::State() {}
-
-State::State(std::unique_ptr<Map> map,
-             std::unique_ptr<ScoreManager> score_manager,
-             std::unique_ptr<PathPlanner> path_planner)
-    : map(std::move(map)), score_manager(std::move(score_manager)),
-      path_planner(std::move(path_planner)) {}
-
 State::State(std::unique_ptr<Map> map,
              std::unique_ptr<ScoreManager> score_manager,
              std::unique_ptr<PathPlanner> path_planner,
              std::array<std::vector<std::unique_ptr<Bot>>, 2> bots,
-             std::array<std::vector<std::unique_ptr<Tower>>, 2> towers)
+             std::array<std::vector<std::unique_ptr<Tower>>, 2> towers,
+             Bot model_bot, Tower model_tower)
     : map(std::move(map)), score_manager(std::move(score_manager)),
       path_planner(std::move(path_planner)), bots(std::move(bots)),
-      towers(std::move(towers)) {}
+      towers(std::move(towers)), model_bot(std::move(model_bot)),
+      model_tower(std::move(model_tower)) {}
 
 Map *State::getMap() const { return map.get(); }
 
@@ -191,7 +187,16 @@ void State::spawnNewBots() {
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
     auto create_tower = std::bind(&State::createTower, this, _1);
-    for (size_t bot_index = 0; bot_index < BOT_SPAWN_FREQUENCY; ++bot_index) {
+
+    // Number of bots to spawn for player 1, bots should be less than max num
+    // bots
+    auto num_spawn_bots_1 =
+        std::min(BOT_SPAWN_FREQUENCY, MAX_NUM_BOTS - bots[0].size());
+    // Number of bots to spawn for player 2
+    auto num_spawn_bots_2 =
+        std::min(BOT_SPAWN_FREQUENCY, MAX_NUM_BOTS - bots[1].size());
+
+    for (size_t bot_index = 0; bot_index < num_spawn_bots_1; ++bot_index) {
         bots[0].push_back(
             make_unique<Bot>(PlayerId::PLAYER1, BOT_MAX_HP, BOT_MAX_HP,
                              Constants::Map::PLAYER1_BASE_POSITION, BOT_SPEED,
@@ -201,7 +206,7 @@ void State::spawnNewBots() {
     }
 
     // Player2 spawns
-    for (size_t bot_index = 0; bot_index < BOT_SPAWN_FREQUENCY; ++bot_index) {
+    for (size_t bot_index = 0; bot_index < num_spawn_bots_2; ++bot_index) {
         bots[1].push_back(
             make_unique<Bot>(PlayerId::PLAYER2, BOT_MAX_HP, BOT_MAX_HP,
                              Constants::Map::PLAYER2_BASE_POSITION, BOT_SPEED,

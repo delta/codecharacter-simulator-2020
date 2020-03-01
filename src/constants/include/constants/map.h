@@ -16,7 +16,7 @@
 namespace Constants::Map {
 
 // Size of the map
-const size_t MAP_SIZE = 100;
+const size_t MAP_SIZE = 30;
 
 // Position of home bases of players
 // Player 2 base position is flipped position of player 1

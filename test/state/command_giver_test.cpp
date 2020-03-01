@@ -43,14 +43,11 @@ class CommandGiverTest : public Test {
 
     CommandGiverTest() {
         // Creating the mock classes
-        auto u_state = make_unique<StateMock>();
-        auto u_logger = make_unique<LoggerMock>();
-        auto u_state_syncer = make_unique<StateSyncerMock>();
-        state = u_state.get();
-        logger = u_logger.get();
-        state_syncer = u_state_syncer.get();
-        command_giver =
-            make_unique<CommandGiver>(move(u_state), move(u_logger));
+        // TODO: Change to unique_ptr
+        state = new StateMock();
+        logger = new LoggerMock();
+        state_syncer = new StateSyncerMock();
+        command_giver = make_unique<CommandGiver>(state, logger);
         array<size_t, 2> scores = {0, 0};
         score_manager = make_unique<ScoreManager>(scores);
 
@@ -228,6 +225,12 @@ class CommandGiverTest : public Test {
 
         state_bots = {{{state_bot1}, {state_bot2}}};
         state_towers = {{{state_tower1}, {state_tower2}}};
+    }
+
+    ~CommandGiverTest() {
+        delete state;
+        delete state_syncer;
+        delete logger;
     }
 };
 

@@ -18,13 +18,13 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     /**
      * Instance of overall state that player can't modify
      */
-    std::unique_ptr<ICommandTaker> state;
+    ICommandTaker *state;
 
     /**
      * Instance of logger to log whenever the user makes invalid state
      * transitions
      */
-    std::unique_ptr<logger::ILogger> logger;
+    logger::ILogger *logger;
 
     /**
      * Helper function to validate blast request by a bot and make
@@ -134,8 +134,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
   public:
     CommandGiver();
 
-    CommandGiver(std::unique_ptr<ICommandTaker> state,
-                 std::unique_ptr<logger::ILogger> logger);
+    CommandGiver(ICommandTaker *state, logger::ILogger *logger);
 
     /**
      * @see ICommandGiver#runCommands

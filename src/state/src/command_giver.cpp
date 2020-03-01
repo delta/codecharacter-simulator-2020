@@ -9,9 +9,8 @@
 namespace state {
 CommandGiver::CommandGiver() = default;
 
-CommandGiver::CommandGiver(std::unique_ptr<ICommandTaker> state,
-                           std::unique_ptr<logger::ILogger> logger)
-    : state(std::move(state)), logger(std::move(logger)) {}
+CommandGiver::CommandGiver(ICommandTaker *state, logger::ILogger *logger)
+    : state(state), logger(logger) {}
 
 void CommandGiver::blastBot(ActorId actor_id, DoubleVec2D position) {
     state->blastBot(actor_id, position);
