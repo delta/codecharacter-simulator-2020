@@ -93,12 +93,12 @@ TEST_F(PlayerStateTest, GetBotByIdTest) {
     EXPECT_EQ(Bot::null, getBotById(player_states[0], -50));
 }
 
-TEST_F(PlayerStateTest, GetTowerByIdTest){
-    // Chanding tower properties and 
+TEST_F(PlayerStateTest, GetTowerByIdTest) {
+    // Chanding tower properties and
     auto &tower1 = player_states[0].towers[5];
     tower1.id = 64;
     tower1.hp = 300;
-    
+
     auto &tower2 = player_states[1].towers[2];
     tower2.id = 4040;
     tower2.state = TowerState::DEAD;

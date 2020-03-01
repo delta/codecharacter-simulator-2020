@@ -144,7 +144,7 @@ struct Bot : _Unit, _Blaster {
         this->state = reference_bot.state;
     }
 
-    bool operator == (const Bot &bot) const {
+    bool operator==(const Bot &bot) const {
         return (bot.id == id && bot.state == state && bot.hp == hp &&
                 bot.final_destination == final_destination &&
                 bot.destination == destination &&
@@ -179,7 +179,7 @@ struct Tower : _Actor, _Blaster {
         this->blasting = reference_tower.blasting;
     }
 
-    bool operator == (const Tower &tower) const {
+    bool operator==(const Tower &tower) const {
         return (tower.id == id && tower.hp == hp && tower.state == state &&
                 tower.position == position && tower.blasting == blasting);
     }
