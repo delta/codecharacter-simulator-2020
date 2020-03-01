@@ -200,6 +200,7 @@ void Bot::lateUpdate() {
         DoubleVec2D position = getPosition();
         TerrainType terrain =
             path_planner->getTerrainType(position, this->getPlayerId());
+
         if (previous_terrain == TerrainType::FLAG &&
             terrain != TerrainType::FLAG) {
             score_manager->actorExitedFlagArea(getActorType(), getPlayerId());

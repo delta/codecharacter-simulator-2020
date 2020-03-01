@@ -113,9 +113,9 @@ void StateSyncer::updatePlayerStates(
                     // Flipping the position and assigning the map on the basis
                     // of the flipped position
                     Vec2D position = Vec2D(i, j);
-                    Vec2D flipped_position = flipOffset(*map, position);
                     player_states[player_id].map[i][j] =
-                        player_map[flipped_position.y][flipped_position.x];
+                        player_map[map_size - 1 - position.x]
+                                  [map_size - 1 - position.y];
                 }
             }
         }

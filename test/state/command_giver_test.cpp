@@ -98,7 +98,7 @@ class CommandGiverTest : public Test {
 
         // Assigning the tower positions and bot positions for later use and
         // reference
-        tower_positions = {{1.5, 1.5}, {4.5, 4.5}};
+        tower_positions = {{0.5, 0.5}, {4.5, 4.5}};
         bot_positions = {{1, 1}, {4, 4}};
 
         // Assigning the flag locations

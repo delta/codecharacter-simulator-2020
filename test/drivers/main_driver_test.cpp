@@ -96,6 +96,7 @@ TEST_F(MainDriverTest, CleanRunByScore) {
 
     // Player states is updated num_turns times when running and once before
     // running
+    EXPECT_CALL(*logger_mock, logState());
     EXPECT_CALL(*state_syncer_mock, updateMainState(_, _)).Times(num_turns);
     EXPECT_CALL(*state_syncer_mock, updatePlayerStates(_)).Times(num_turns + 1);
 
@@ -147,6 +148,7 @@ TEST_F(MainDriverTest, CleanRunByScore) {
 // Main driver should simply time out and exit cleanly
 TEST_F(MainDriverTest, EarlyPlayerExit) {
     // Expect only half the number of turns to be run
+    EXPECT_CALL(*logger_mock, logState());
     EXPECT_CALL(*state_syncer_mock, updateMainState(_, _)).Times(num_turns / 2);
     EXPECT_CALL(*state_syncer_mock, updatePlayerStates(_))
         .Times(num_turns / 2 + 1);
@@ -183,7 +185,9 @@ TEST_F(MainDriverTest, EarlyPlayerExit) {
     // player drivers never run beyond (num_turns / 2)
     main_runner.join();
 
-    EXPECT_EQ(game_result.winner, GameResult::Winner::NONE);
+    // Note : The first player to timeout will lose the game. Hence, PLAYER2
+    // wins this game
+    EXPECT_EQ(game_result.winner, GameResult::Winner::PLAYER2);
     EXPECT_EQ(game_result.win_type, GameResult::WinType::TIMEOUT);
 
     // Results are undefined as game didn't complete
@@ -196,6 +200,7 @@ TEST_F(MainDriverTest, EarlyPlayerExit) {
 // Main driver should mark the players as having exceeded instruction limit
 TEST_F(MainDriverTest, InstructionLimitReached) {
     // Expect only half the turns to run
+    EXPECT_CALL(*logger_mock, logState());
     EXPECT_CALL(*state_syncer_mock, updateMainState(_, _)).Times(num_turns / 2);
     EXPECT_CALL(*state_syncer_mock, updatePlayerStates(_))
         .Times(num_turns / 2 + 1);
@@ -273,6 +278,7 @@ TEST_F(MainDriverTest, InstructionLimitReached) {
 TEST_F(MainDriverTest, InstructionLimitReachedSinglePlayer) {
 
     // Expect only half the turns to run
+    EXPECT_CALL(*logger_mock, logState());
     EXPECT_CALL(*state_syncer_mock, updateMainState(_, _)).Times(num_turns / 2);
     EXPECT_CALL(*state_syncer_mock, updatePlayerStates(_))
         .Times(num_turns / 2 + 1);
@@ -357,6 +363,7 @@ TEST_F(MainDriverTest, InstructionLimitReachedSinglePlayer) {
 // Simulate a turn and then check if cancelling works
 TEST_F(MainDriverTest, Cancellation) {
     // Expect only one turn to run
+    EXPECT_CALL(*logger_mock, logState());
     EXPECT_CALL(*state_syncer_mock, updateMainState(_, _)).Times(1);
     EXPECT_CALL(*state_syncer_mock, updatePlayerStates(_)).Times(2);
 
