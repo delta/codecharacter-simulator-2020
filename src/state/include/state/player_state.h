@@ -10,6 +10,7 @@
 #include "state/utilities.h"
 
 #include <array>
+#include <functional>
 #include <queue>
 
 using namespace std;
@@ -47,6 +48,7 @@ struct _Actor {
     DoubleVec2D position;
 
     _Actor() : id(0), hp(100), position(DoubleVec2D{0, 0}){};
+    _Actor(int64_t id) : id(id), hp(100), position(DoubleVec2D{0, 0}){};
 };
 
 struct _Blaster {
@@ -74,9 +76,16 @@ struct _Unit : _Actor {
     _Unit()
         : _Actor(), destination(DoubleVec2D::null),
           speed(Constants::Actor::BOT_SPEED){};
+
+    _Unit(int64_t id)
+        : _Actor(id), destination(DoubleVec2D::null),
+          speed(Constants::Actor::BOT_SPEED) {}
 };
 
 struct Bot : _Unit, _Blaster {
+    // A static member to represent a null bot or an invalid bot
+    static Bot null;
+
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
@@ -135,15 +144,29 @@ struct Bot : _Unit, _Blaster {
         this->state = reference_bot.state;
     }
 
+    bool operator == (const Bot &bot) const {
+        return (bot.id == id && bot.state == state && bot.hp == hp &&
+                bot.final_destination == final_destination &&
+                bot.destination == destination &&
+                bot.transform_destination == transform_destination &&
+                bot.transforming == transforming && bot.blasting == blasting);
+    }
+
     Bot()
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
+          transform_destination(DoubleVec2D::null), transforming(false){};
+
+    Bot(int64_t id)
+        : _Unit(id), _Blaster(), final_destination(DoubleVec2D::null),
           transform_destination(DoubleVec2D::null), transforming(false){};
 
     virtual ~Bot() {}
 };
 
 struct Tower : _Actor, _Blaster {
+    static Tower null;
+
     TowerState state;
 
     void blast_tower() { blast(); }
@@ -156,7 +179,13 @@ struct Tower : _Actor, _Blaster {
         this->blasting = reference_tower.blasting;
     }
 
-    Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
+    bool operator == (const Tower &tower) const {
+        return (tower.id == id && tower.hp == hp && tower.state == state &&
+                tower.position == position && tower.blasting == blasting);
+    }
+
+    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
+    Tower(int64_t id) : _Actor(id), _Blaster(), state(TowerState::IDLE){};
 };
 
 struct MapElement {
@@ -199,13 +228,18 @@ struct State {
 };
 
 // Defining function prototypes
-void Print(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map);
-
-Vec2D findNearestFlagLocation(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
-                              Vec2D position);
+Vec2D findNearestFlagOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
+                            Vec2D position);
 
 Vec2D findNearestBuildableOffset(
     array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position);
+
+Vec2D findNearestOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
+                        Vec2D position, std::function<bool(TerrainType type)>);
+
+Bot getBotById(State state, int64_t bot_id);
+
+Tower getTowerById(State state, int64_t tower_id);
 
 ostream &operator<<(ostream &os, const TowerState &tower_state);
 

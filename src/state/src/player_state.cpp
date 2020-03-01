@@ -1,11 +1,15 @@
 #include "state/player_state.h"
 
 namespace player_state {
-// Adding player state helper functions
 
+// Assinging the null values
+Bot Bot::null = {-1};
+Tower Tower::null = {-1};
+
+// Adding player state helper functions
 ostream &operator<<(ostream &os,
                     array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map) {
-    os << "\Map{";
+    os << "Map{";
     for (int x = 0; x < MAP_SIZE; ++x) {
         os << "{";
         for (int y = 0; y < MAP_SIZE; ++y) {
@@ -133,56 +137,61 @@ ostream &operator<<(ostream &os, const State &state) {
     return os;
 }
 
-Vec2D findNearestFlagLocation(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
-                              Vec2D position) {
-    // Creating a queue to implement BFS
-    queue<Vec2D> visit_next;
-    visit_next.push(position);
-
-    // Creating a visited array to not revisit the same position twice
-    array<array<bool, MAP_SIZE>, MAP_SIZE> visited;
-
-    for (size_t x = 0; x < MAP_SIZE; ++x) {
-        for (size_t y = 0; y < MAP_SIZE; ++y) {
-            visited[x][y] = false;
+Bot getBotById(State state, int64_t bot_id) {
+    for (const auto &bot : state.bots) {
+        if (bot.id == bot_id) {
+            return bot;
         }
     }
 
-    // A helper function to check if positions are within the map
-    size_t map_size = MAP_SIZE;
-    auto is_position_valid = [map_size](Vec2D position) {
-        return (position.x >= 0 && position.y >= 0 && position.x < map_size &&
-                position.y < map_size);
+    for (const auto &bot : state.enemy_bots) {
+        if (bot.id == bot_id) {
+            return bot;
+        }
+    }
+
+    return Bot::null;
+}
+
+Tower getTowerById(State state, int64_t tower_id) {
+    for (const auto &tower : state.towers) {
+        if (tower.id == tower_id) {
+            return tower;
+        }
+    }
+
+    for (const auto &tower : state.enemy_towers) {
+        if (tower.id == tower_id) {
+            return tower;
+        }
+    }
+
+    return Tower::null;
+}
+
+Vec2D findNearestFlagOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
+                            Vec2D position) {
+    // Making a lambda function to check whether the terrain type is a flag and
+    // passing it to findNearestOffset
+    auto is_flag = [](TerrainType terrain) -> bool {
+        return (terrain == TerrainType::FLAG);
     };
 
-    vector<pair<int, int>> delta_changes = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-    while (!visit_next.empty()) {
-        Vec2D position = visit_next.front();
-        visit_next.pop();
-
-        if (map[position.x][position.y].getTerrain() == TerrainType::FLAG) {
-            return position;
-        }
-
-        visited[position.x][position.y] = true;
-
-        // Adding neighbours of position which haven't already been visited
-        for (const auto &delta_change : delta_changes) {
-            auto new_x = position.x + delta_change.first;
-            auto new_y = position.y + delta_change.second;
-            Vec2D new_position = Vec2D(new_x, new_y);
-            if (is_position_valid(new_position) && !visited[new_x][new_y]) {
-                visit_next.push(new_position);
-            }
-        }
-    }
-
-    return Vec2D::null;
+    return findNearestOffset(map, position, is_flag);
 }
 
 Vec2D findNearestBuildableOffset(
     array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position) {
+    auto is_buildable = [](TerrainType terrain) -> bool {
+        return (terrain == TerrainType::FLAG || terrain == TerrainType::LAND);
+    };
+
+    return findNearestOffset(map, position, is_buildable);
+}
+
+Vec2D findNearestOffset(
+    array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position,
+    std::function<bool(TerrainType terrain)> match_position) {
     // Creating a queue to implement BFS
     queue<Vec2D> visit_next;
     visit_next.push(position);
@@ -210,7 +219,7 @@ Vec2D findNearestBuildableOffset(
         visit_next.pop();
         TerrainType terrain = map[position.x][position.y].getTerrain();
 
-        if (terrain == TerrainType::FLAG || terrain == TerrainType::LAND) {
+        if (match_position(terrain)) {
             return position;
         }
 
