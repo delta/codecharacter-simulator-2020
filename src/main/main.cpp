@@ -103,7 +103,6 @@ unique_ptr<Map> buildMap() {
 }
 
 unique_ptr<ScoreManager> buildScoreManager() {
-    using namespace Constants::Score;
     return make_unique<ScoreManager>(std::array<uint64_t, 2>{0, 0});
 }
 
