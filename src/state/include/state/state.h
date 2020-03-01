@@ -138,12 +138,12 @@ class STATE_EXPORT State : public ICommandTaker {
     /**
      * @see ICommandTaker#blastBot
      */
-    void blastBot(ActorId actor_id, DoubleVec2D position) override;
+    void blast(ActorId actor_id, DoubleVec2D position) override;
 
     /**
      * @see ICommandTaker#blastTower
      */
-    void blastTower(ActorId actor_id) override;
+    void blast(ActorId actor_id) override;
 
     /**
      * Get the actors who get damage from position

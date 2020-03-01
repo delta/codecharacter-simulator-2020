@@ -10,9 +10,10 @@ using namespace state;
 class StateMock : public ICommandTaker {
   public:
     MOCK_METHOD2(moveBot, void(ActorId bot_id, DoubleVec2D position));
-    MOCK_METHOD2(transformBot, void(ActorId bot_id, DoubleVec2D position));
-    MOCK_METHOD2(blastBot, void(ActorId bot_id, DoubleVec2D position));
-    MOCK_METHOD1(blastTower, void(ActorId bot_id));
+    MOCK_METHOD3(transformBot, void(PlayerId player_id, ActorId bot_id,
+                                    DoubleVec2D position));
+    MOCK_METHOD2(blast, void(ActorId bot_id, DoubleVec2D position));
+    MOCK_METHOD1(blast, void(ActorId bot_id));
     MOCK_CONST_METHOD0(getScores, array<uint64_t, 2>());
     MOCK_METHOD1(isGameOver, bool(PlayerId &winner));
     MOCK_METHOD0(getBots, array<vector<state::Bot *>, 2>());

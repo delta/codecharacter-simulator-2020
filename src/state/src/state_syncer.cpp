@@ -140,6 +140,12 @@ void StateSyncer::updatePlayerStates(
             player_states[player_id].flag_offsets = std::move(flag_offsets);
         }
     }
+
+    // Updating the player's scores
+    auto scores = state->getScores();
+    std::copy(scores.begin(), scores.end(), player_states[0].scores.begin());
+    swap(scores[0], scores[1]);
+    std::copy(scores.begin(), scores.end(), player_states[1].scores.begin());
 }
 
 DoubleVec2D StateSyncer::flipBotPosition(const Map &map, DoubleVec2D position) {
