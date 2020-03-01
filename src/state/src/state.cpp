@@ -304,12 +304,12 @@ void State::createTower(Bot *bot) {
     }
 }
 
-void State::blastBot(ActorId actor_id, DoubleVec2D position) {
+void State::blast(ActorId actor_id, DoubleVec2D position) {
     auto bot = getBotById(actor_id);
     bot->setFinalDestination(position);
 }
 
-void State::blastTower(ActorId actor_id) {
+void State::blast(ActorId actor_id) {
     auto tower = getTowerById(actor_id);
     tower->setBlasting(true);
 }

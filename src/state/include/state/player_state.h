@@ -237,7 +237,7 @@ struct State {
     int64_t num_towers;
     int64_t num_enemy_towers;
 
-    int64_t score;
+    array<int64_t, 2> scores;
 
     State()
         : map(), bots(Constants::Actor::MAX_NUM_BOTS),
@@ -247,7 +247,7 @@ struct State {
           towers(Constants::Actor::MAX_NUM_TOWERS),
           enemy_towers(Constants::Actor::MAX_NUM_TOWERS),
           num_towers(Constants::Actor::MAX_NUM_TOWERS),
-          num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), score(0) {}
+          num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), scores({0, 0}) {}
 };
 
 inline ostream &operator<<(ostream &os, const State &state) {
@@ -293,7 +293,7 @@ inline ostream &operator<<(ostream &os, const State &state) {
     }
 
     os << "-- Score --" << endl;
-    os << state.score << endl;
+    os << "{" << state.scores[0] << ", " << state.scores[1] << "}" << endl;
 
     return os;
 }

@@ -37,7 +37,7 @@ struct State {
     size_t num_towers;
     size_t num_enemy_towers;
 
-    int64_t score;
+    array<uint64_t, 2> scores;
 };
 
 template <typename T, size_t _>
@@ -68,7 +68,7 @@ ConvertToPlayerState(const transfer_state::State &ts) {
     ps.enemy_towers = arrayToVector(ts.enemy_towers, ts.num_enemy_towers);
 
     // Copy score
-    ps.score = ts.score;
+    std::copy(ts.scores.begin(), ts.scores.end(), ps.scores.begin());
 
     return ps;
 }
@@ -96,7 +96,7 @@ ConvertToTransferState(const player_state::State &ps) {
     ts.enemy_towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.enemy_towers);
 
     // Copy score
-    ts.score = ps.score;
+    std::copy(ps.scores.begin(), ps.scores.end(), ts.scores.begin());
 
     // Copy sizes
     ts.num_bots = ps.bots.size();

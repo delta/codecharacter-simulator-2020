@@ -196,7 +196,7 @@ TEST_F(StateTest, BlastBotTest) {
     // Checking if the bot's final destination is set after calling blastBot
     bot->setBlastCallback(blast_bot_callback);
     EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
-    state->blastBot(bot->getActorId(), DoubleVec2D(4, 1));
+    state->blast(bot->getActorId(), DoubleVec2D(4, 1));
     EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D(4, 1));
 
     while (bot->getState() != BotStateName::DEAD) {
@@ -217,10 +217,10 @@ TEST_F(StateTest, BlastTowerTest) {
         std::bind(&State::damageEnemyActors, state.get(), placeholders::_1,
                   placeholders::_2, placeholders::_3);
 
-    // Checking if the tower's blasting property is set after calling blastTower
+    // Checking if the tower's blasting property is set after calling blast
     tower->setBlastCallback(blast_tower_callback);
     EXPECT_EQ(tower->isBlasting(), false);
-    state->blastTower(tower->getActorId());
+    state->blast(tower->getActorId());
     EXPECT_EQ(tower->isBlasting(), true);
 
     // Updating state and removing dead actors to check if the tower is removed

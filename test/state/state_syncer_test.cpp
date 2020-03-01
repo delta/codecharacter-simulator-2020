@@ -44,6 +44,8 @@ class StateSyncerTest : public Test {
         EXPECT_CALL(*this->state, getMap)
             .Times(9)
             .WillRepeatedly(Return(map.get()));
+        array<uint64_t, 2> scores{};
+        EXPECT_CALL(*this->state, getScores).WillOnce(Return(scores));
     }
 
     StateSyncerTest() {
