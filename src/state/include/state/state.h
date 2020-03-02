@@ -157,6 +157,14 @@ class STATE_EXPORT State : public ICommandTaker {
                                            size_t impact_range);
 
     /**
+     * Returns the neighbouring points of a given position
+     *
+     * @param position Postion for which neighbouring points are returned
+     * @return std::vector<Vec2D> Neighbouring points
+     */
+    std::vector<Vec2D> getNeighbouringPoints(DoubleVec2D position);
+
+    /**
      * Callback passed to all blasters to damage neighbouring actors given a
      * position
      *
