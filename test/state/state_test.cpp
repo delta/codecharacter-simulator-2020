@@ -8,7 +8,6 @@ using namespace state;
 const auto L = state::TerrainType::LAND;
 const auto W = state::TerrainType::WATER;
 const auto F = state::TerrainType::FLAG;
-const auto T = state::TerrainType::TOWER;
 
 class StateTest : public Test {
   public:
