@@ -103,6 +103,7 @@ void Logger::logState() {
     auto bots = state->getBots();
     auto towers = state->getTowers();
     auto scores = state->getScores();
+    auto score_manager = state->getScoreManager();
 
     // Things logged only in first turn
     if (turn_count == 1) {
@@ -188,6 +189,20 @@ void Logger::logState() {
         inst_count = 0;
     }
 
+    // Log turn winners
+    auto turn_winner = score_manager->getTurnWinner();
+    switch(turn_winner){
+        case PlayerId::PLAYER1:
+            game_state->set_turn_winner(proto::Winner::PLAYER1);
+        break;
+        case PlayerId::PLAYER2:
+            game_state->set_turn_winner(proto::Winner::PLAYER2);
+        break;
+        case PlayerId::PLAYER_NULL:
+            game_state->set_turn_winner(proto::Winner::TIE);
+        break;
+    }
+    
     // Log the errors, clear the error vectors
     for (auto &player_errors : errors) {
         auto player_error_struct = game_state->add_player_errors();

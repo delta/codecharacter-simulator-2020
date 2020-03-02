@@ -34,6 +34,11 @@ class STATE_EXPORT ScoreManager {
     std::array<size_t, 2> num_towers;
 
     /**
+     * Stores the player with more actor value in a given turn
+     */
+    PlayerId turn_winner;
+
+    /**
      * Get points based on number of bots and towers owned by the player
      *
      * @param player_id
@@ -95,5 +100,12 @@ class STATE_EXPORT ScoreManager {
      * @return std::array<size_t, 2>
      */
     std::array<size_t, 2> getBotCounts() const;
+
+    /**
+     * Returns the winner of the turn
+     * 
+     * @return PlayerId 
+     */
+    PlayerId getTurnWinner() const;
 };
 } // namespace state
