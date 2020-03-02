@@ -224,7 +224,7 @@ DoubleVec2D findNearestFreePosition(const State &state, DoubleVec2D position) {
 }
 
 Vec2D findNearestOffset(
-    const const State &state, Vec2D position,
+    const State &state, Vec2D position,
     std::function<bool(TerrainType terrain, uint64_t position_count)>
         match_position) {
     // Creating a visited array to not revisit the same position twice
