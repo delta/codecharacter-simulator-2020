@@ -130,6 +130,7 @@ void StateSyncer::updatePlayerStates(
         size_t total_flag_offsets = flag_offsets.size();
         player_states[player_id].flag_offsets.clear();
         player_states[player_id].flag_offsets.resize(total_flag_offsets);
+        player_states[player_id].num_flags = total_flag_offsets;
 
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             std::copy(flag_offsets.begin(), flag_offsets.end(),

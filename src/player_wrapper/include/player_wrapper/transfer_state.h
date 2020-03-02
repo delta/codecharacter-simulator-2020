@@ -26,6 +26,8 @@ using namespace Constants;
 
 struct State {
     std::array<std::array<MapElement, Map::MAP_SIZE>, Map::MAP_SIZE> map;
+    std::array<DoubleVec2D, Map::MAP_SIZE * Map::MAP_SIZE> flag_offsets;
+    size_t num_flags;
 
     std::array<Bot, Actor::MAX_NUM_BOTS> bots;
     std::array<Bot, Actor::MAX_NUM_BOTS> enemy_bots;
@@ -67,6 +69,10 @@ ConvertToPlayerState(const transfer_state::State &ts) {
     ps.enemy_towers.clear();
     ps.enemy_towers = arrayToVector(ts.enemy_towers, ts.num_enemy_towers);
 
+    // Copy flag offset positions
+    ps.flag_offsets.clear();
+    ps.flag_offsets = arrayToVector(ts.flag_offsets, ts.num_flags);
+
     // Copy score
     std::copy(ts.scores.begin(), ts.scores.end(), ps.scores.begin());
 
@@ -95,6 +101,10 @@ ConvertToTransferState(const player_state::State &ps) {
     ts.towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.towers);
     ts.enemy_towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.enemy_towers);
 
+    // Copy flag offsets
+    ts.flag_offsets =
+        vectorToArray<Map::MAP_SIZE * Map::MAP_SIZE>(ps.flag_offsets);
+
     // Copy score
     std::copy(ps.scores.begin(), ps.scores.end(), ts.scores.begin());
 
@@ -103,6 +113,7 @@ ConvertToTransferState(const player_state::State &ps) {
     ts.num_enemy_bots = ps.enemy_bots.size();
     ts.num_towers = ps.towers.size();
     ts.num_enemy_towers = ps.enemy_towers.size();
+    ts.num_flags = ps.flag_offsets.size();
 
     return ts;
 }
