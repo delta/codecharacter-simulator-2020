@@ -9,10 +9,12 @@
 namespace state {
 
 ScoreManager::ScoreManager()
-    : scores({0, 0}), num_bots({0, 0}), num_towers({0, 0}), turn_winner(PlayerId::PLAYER_NULL) {}
+    : scores({0, 0}), num_bots({0, 0}), num_towers({0, 0}),
+      turn_winner(PlayerId::PLAYER_NULL) {}
 
 ScoreManager::ScoreManager(std::array<size_t, 2> scores)
-    : scores(scores), num_bots({0, 0}), num_towers({0, 0}), turn_winner(PlayerId::PLAYER_NULL) {}
+    : scores(scores), num_bots({0, 0}), num_towers({0, 0}),
+      turn_winner(PlayerId::PLAYER_NULL) {}
 
 double ScoreManager::getPlayerPoints(PlayerId player_id) const {
     using namespace Constants::Score;
@@ -61,18 +63,15 @@ void ScoreManager::updateScores() {
     auto points_1 = getPlayerPoints(PlayerId::PLAYER1);
     auto points_2 = getPlayerPoints(PlayerId::PLAYER2);
 
-    if (points_1 == points_2){
+    if (points_1 == points_2) {
         turn_winner = PlayerId::PLAYER_NULL;
         return;
     }
-    turn_winner =
-        points_1 > points_2 ? PlayerId::PLAYER1 : PlayerId::PLAYER2;
+    turn_winner = points_1 > points_2 ? PlayerId::PLAYER1 : PlayerId::PLAYER2;
     scores[static_cast<size_t>(turn_winner)]++;
 }
 
-PlayerId ScoreManager::getTurnWinner() const{
-    return turn_winner;
-}
+PlayerId ScoreManager::getTurnWinner() const { return turn_winner; }
 
 std::array<size_t, 2> ScoreManager::getScores() const { return scores; }
 } // namespace state

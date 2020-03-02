@@ -103,8 +103,8 @@ class STATE_EXPORT ScoreManager {
 
     /**
      * Returns the winner of the turn
-     * 
-     * @return PlayerId 
+     *
+     * @return PlayerId
      */
     PlayerId getTurnWinner() const;
 };

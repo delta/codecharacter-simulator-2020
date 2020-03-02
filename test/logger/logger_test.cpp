@@ -141,11 +141,12 @@ TEST_F(LoggerTest, WriteReadTest) {
 
     std::array<uint64_t, 2> scores1 = {100, 100};
     std::array<uint64_t, 2> scores2 = {300, 200};
-    EXPECT_CALL(*state, getScoreManager()).Times(4).WillRepeatedly(Return(score_manager.get()));
+    EXPECT_CALL(*state, getScoreManager())
+        .Times(4)
+        .WillRepeatedly(Return(score_manager.get()));
     EXPECT_CALL(*state, getScores())
         .WillOnce(Return(scores1))
         .WillRepeatedly(Return(scores2));
-
 
     vector<int64_t> inst_counts = {123456, 654321};
     logger->logInstructionCount(PlayerId::PLAYER1, inst_counts[0]);
@@ -210,7 +211,8 @@ TEST_F(LoggerTest, WriteReadTest) {
     ASSERT_EQ(game->states(0).player_errors(1).errors_size(), 2);
     ASSERT_EQ(game->states(0).player_errors(1).errors(0), 2);
     ASSERT_EQ(game->states(0).player_errors(1).errors(1), 3);
-    ASSERT_EQ(game->states[0].player)
+
+    EXPECT_EQ(game->states(0).turn_winner(), proto::Winner::TIE);
 
     // Check if the mapping got set and the message string matches
     auto error_map = *game->mutable_error_map();

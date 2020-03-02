@@ -191,18 +191,18 @@ void Logger::logState() {
 
     // Log turn winners
     auto turn_winner = score_manager->getTurnWinner();
-    switch(turn_winner){
-        case PlayerId::PLAYER1:
-            game_state->set_turn_winner(proto::Winner::PLAYER1);
+    switch (turn_winner) {
+    case PlayerId::PLAYER1:
+        game_state->set_turn_winner(proto::Winner::PLAYER1);
         break;
-        case PlayerId::PLAYER2:
-            game_state->set_turn_winner(proto::Winner::PLAYER2);
+    case PlayerId::PLAYER2:
+        game_state->set_turn_winner(proto::Winner::PLAYER2);
         break;
-        case PlayerId::PLAYER_NULL:
-            game_state->set_turn_winner(proto::Winner::TIE);
+    case PlayerId::PLAYER_NULL:
+        game_state->set_turn_winner(proto::Winner::TIE);
         break;
     }
-    
+
     // Log the errors, clear the error vectors
     for (auto &player_errors : errors) {
         auto player_error_struct = game_state->add_player_errors();
