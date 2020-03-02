@@ -190,7 +190,7 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     ASSERT_EQ(player_states[1].num_towers, 2);
     ASSERT_EQ(player_states[0].enemy_towers.size(), 2);
     ASSERT_EQ(player_states[0].num_enemy_towers, 2);
-    ASSERT_EQ(player_states[1].towers[1].position, DoubleVec2D(0, 1));
+    ASSERT_EQ(player_states[1].towers[1].position, DoubleVec2D(1, 2));
     ASSERT_EQ(player_states[0].enemy_towers[1].position, DoubleVec2D(4, 3));
 
     // Checking for bots and tower's new states
@@ -199,9 +199,6 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
 
     ASSERT_EQ(player_states[0].map[2][2].getTerrain(), F);
     ASSERT_EQ(player_states[1].map[2][2].getTerrain(), F);
-
-    ASSERT_EQ(player_states[0].map[0][0].getTerrain(), T);
-    ASSERT_EQ(player_states[1].map[4][4].getTerrain(), T);
 
     ASSERT_EQ(player_states[0].map[0][4].getTerrain(), W);
     ASSERT_EQ(player_states[1].map[4][0].getTerrain(), W);
@@ -232,6 +229,6 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
 
     ASSERT_EQ(player_states[1].towers[0].id, 3);
     ASSERT_EQ(player_states[1].towers[0].hp, 100);
-    ASSERT_EQ(player_states[1].towers[0].position, DoubleVec2D(0, 0));
+    ASSERT_EQ(player_states[1].towers[0].position, DoubleVec2D(1, 1));
     ASSERT_EQ(player_states[1].towers[0].state, player_state::TowerState::IDLE);
 }

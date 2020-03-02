@@ -91,24 +91,27 @@ drivers::GameResult Game::start() {
     if (any_player_failed) {
         main_driver->cancel();
         main_runner.join();
-        for (int player_id = 0; player_id < 2; ++player_id) {
-            if (players_failed[player_id]) {
-                result.player_results[player_id].status =
-                    drivers::PlayerResult::Status::RUNTIME_ERROR;
-                result.win_type = drivers::GameResult::WinType::RUNTIME_ERROR;
+        if (result.win_type != drivers::GameResult::WinType::TIMEOUT) {
+            for (int player_id = 0; player_id < 2; ++player_id) {
+                if (players_failed[player_id]) {
+                    result.player_results[player_id].status =
+                        drivers::PlayerResult::Status::RUNTIME_ERROR;
+                    result.win_type =
+                        drivers::GameResult::WinType::RUNTIME_ERROR;
+                }
+            }
+
+            // Assign winner
+            if (players_failed[0] && players_failed[1]) {
+                // This case is currently impossible. Driver quits on Player1
+                // Error
+                result.winner = drivers::GameResult::Winner::TIE;
+            } else if (players_failed[0]) {
+                result.winner = drivers::GameResult::Winner::PLAYER2;
+            } else if (players_failed[1]) {
+                result.winner = drivers::GameResult::Winner::PLAYER1;
             }
         }
-
-        // Assign winner
-        if (players_failed[0] && players_failed[1]) {
-            // This case is currently impossible. Driver quits on Player1 Error
-            result.winner = drivers::GameResult::Winner::TIE;
-        } else if (players_failed[0]) {
-            result.winner = drivers::GameResult::Winner::PLAYER2;
-        } else if (players_failed[1]) {
-            result.winner = drivers::GameResult::Winner::PLAYER1;
-        }
-
     } else {
         main_runner.join();
     }

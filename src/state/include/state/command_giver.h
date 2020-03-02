@@ -44,7 +44,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * Helper function to validate transform request and make command_taker call
      * TransformBot internally
      */
-    void transformBot(PlayerId player_id, ActorId bot_id, DoubleVec2D position);
+    void transformBot(ActorId bot_id, DoubleVec2D position);
 
     /**
      * Helper function to make command_taker call MoveBot internally
@@ -67,7 +67,7 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position to be flipped
      * @return Vec2D Flipped position
      */
-    static Vec2D flipTowerPosition(const Map &map, Vec2D position);
+    static DoubleVec2D flipTowerPosition(const Map &map, DoubleVec2D position);
 
     /**
      * Helper function to check if given bot position is within the map
@@ -86,7 +86,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @param position Position
      * @return Vec2D Offset
      */
-    static Vec2D getOffset(const Map &map, DoubleVec2D position);
+    static Vec2D getOffset(const Map &map, DoubleVec2D position,
+                           PlayerId player_id);
 
     /**
      * Helper function to check if given tower position is within the map
@@ -96,7 +97,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true    Position is a valid position inside the map
      * @return false   Position is not a valid position in the map
      */
-    static bool isValidTowerPosition(const Map &map, DoubleVec2D position);
+    static bool isValidTowerPosition(const Map &map, DoubleVec2D position,
+                                     PlayerId player_id);
 
     /**
      * Helper function to check if the player has changed the bot state or not
@@ -129,7 +131,8 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
      * @return true Position is a spawn position
      * @return false Position is not a spawn position
      */
-    static bool isSpawnOffset(const Map &map, DoubleVec2D position);
+    static bool isSpawnOffset(const Map &map, DoubleVec2D position,
+                              PlayerId player_id);
 
   public:
     CommandGiver();

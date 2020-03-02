@@ -50,7 +50,7 @@ class PathPlanner : public IPathPlanner {
      *         False, otherwise
      */
     bool isInMapRange(DoubleVec2D position, PlayerId player_id,
-                      ActorType actor_type);
+                      ActorType actor_type) const;
 
     /**
      * Given a position, return the offset
@@ -58,7 +58,8 @@ class PathPlanner : public IPathPlanner {
      * @param player_id
      * @return position of base
      */
-    Vec2D getOffset(const DoubleVec2D &position, const PlayerId &player_id);
+    Vec2D getOffset(const DoubleVec2D &position,
+                    const PlayerId &player_id) const;
 
     /**
      * Given a position, get all offsets which the position intersects with
@@ -102,7 +103,7 @@ class PathPlanner : public IPathPlanner {
      *
      * @throw      std::invalid_argument      If position is not within map
      */
-    TerrainType getTerrainType(DoubleVec2D position) const;
+    TerrainType getTerrainType(DoubleVec2D position, PlayerId player_id) const;
 
     /**
      * Build a new tower at given position

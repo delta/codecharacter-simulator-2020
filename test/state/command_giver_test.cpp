@@ -26,7 +26,7 @@ class CommandGiverTest : public Test {
     array<player_state::State, 2> player_states;
     array<vector<state::Bot *>, 2> state_bots;
     array<vector<state::Tower *>, 2> state_towers;
-    vector<Vec2D> bot_positions, tower_positions;
+    vector<DoubleVec2D> bot_positions, tower_positions;
 
   public:
     void
@@ -96,17 +96,17 @@ class CommandGiverTest : public Test {
             test_map.push_back(map_row);
         }
 
-        // Assinging the tower positions and bot positions for later use and
+        // Assigning the tower positions and bot positions for later use and
         // reference
-        tower_positions = {{0, 0}, {4, 4}};
+        tower_positions = {{0.5, 0.5}, {4.5, 4.5}};
         bot_positions = {{1, 1}, {4, 4}};
 
-        // Assinging the flag locations
+        // Assigning the flag locations
         test_map[2][2] = state::TerrainType::FLAG;
         player_states[0].map[2][2].setTerrain(F);
         player_states[1].map[2][2].setTerrain(F);
 
-        // Assinging tower locations
+        // Assigning tower locations
         test_map[tower_positions[0].y][tower_positions[0].x] =
             state::TerrainType::TOWER;
         test_map[tower_positions[1].y][tower_positions[1].x] =
@@ -149,7 +149,7 @@ class CommandGiverTest : public Test {
             int enemy_id =
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);
 
-            // Assinging bot positions
+            // Assigning bot positions
             DoubleVec2D position = bot_positions[0];
             DoubleVec2D flipped_position =
                 DoubleVec2D(map_size - position.x, map_size - position.y);
@@ -178,10 +178,10 @@ class CommandGiverTest : public Test {
             player_states[player_id].num_towers = 1;
             player_states[player_id].num_enemy_towers = 1;
 
-            // Assinging bot positions
+            // Assigning bot positions
             DoubleVec2D position = tower_positions[0];
-            DoubleVec2D flipped_position = DoubleVec2D(
-                map_size - 1 - position.x, map_size - 1 - position.y);
+            DoubleVec2D flipped_position =
+                DoubleVec2D(map_size - position.x, map_size - position.y);
 
             int enemy_id =
                 (player_id + 1) % static_cast<size_t>(PlayerId::PLAYER_COUNT);

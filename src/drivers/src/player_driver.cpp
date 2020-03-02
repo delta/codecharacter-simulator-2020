@@ -68,6 +68,7 @@ void PlayerDriver::run() {
         instruction_count = 0;
         auto logs = this->player_code_wrapper->update(
             this->shared_buffer->transfer_state);
+
         this->player_debug_logs << this->debug_logs_turn_prefix
                                 << logs.substr(0, max_debug_logs_turn_length);
 

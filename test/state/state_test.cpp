@@ -57,7 +57,7 @@ class StateTest : public Test {
             path_planner.get(), BlastCallback{}, ConstructTowerCallback{}));
 
         int64_t tower_hp = 250, tower_blast_range = 5, tower_damage_points = 50;
-        tower_max_hp = 250;
+        tower_max_hp = 300;
 
         auto model_tower =
             Tower(PlayerId::PLAYER1, tower_hp, tower_max_hp, DoubleVec2D(0, 0),
@@ -118,7 +118,7 @@ TEST_F(StateTest, MoveBotTest) {
 TEST_F(StateTest, CreateTowerTest) {
     // Transforming the first bot of PLAYER2 into a tower
     auto bots = state->getBots();
-    auto bot = bots[1][0];
+    auto bot = bots[0][0];
     auto score_manager = state->getScoreManager();
 
     int64_t bot_id = bot->getActorId();
@@ -133,22 +133,23 @@ TEST_F(StateTest, CreateTowerTest) {
     bot->lateUpdate();
 
     // Checking initial number of bots on flags
+    ASSERT_EQ(bot->getPosition(), DoubleVec2D(3.5, 3.5));
     auto bot_counts = score_manager->getBotCounts();
-    EXPECT_EQ(bot_counts[1], 1);
+    EXPECT_EQ(bot_counts[0], 1);
 
     // Calling create tower on this bot
-    state->createTower(bot);
+    state->produceTower(bot);
 
     bots = state->getBots();
     auto towers = state->getTowers();
 
     // Checking to see if the bot was removed from state and if a tower was
     // added to state
-    EXPECT_EQ(bots[1].size(), 1);
-    EXPECT_EQ(towers[1].size(), 2);
+    EXPECT_EQ(bots[0].size(), 1);
+    EXPECT_EQ(towers[0].size(), 2);
 
     // Checking to see if the tower has the same id as the bot
-    auto tower = towers[1][1];
+    auto tower = towers[0][1];
     EXPECT_EQ(tower->getActorId(), bot_id);
 
     // Check if the tower HP has been scaled correctly
@@ -160,8 +161,8 @@ TEST_F(StateTest, CreateTowerTest) {
     // Checking score_manager counts because the bot was on a FLAG
     bot_counts = score_manager->getBotCounts();
     auto tower_counts = score_manager->getTowerCounts();
-    EXPECT_EQ(tower_counts[1], 1);
-    EXPECT_EQ(bot_counts[1], 0);
+    EXPECT_EQ(tower_counts[0], 1);
+    EXPECT_EQ(bot_counts[0], 0);
 }
 
 TEST_F(StateTest, TransformRequestTest) {
@@ -170,12 +171,18 @@ TEST_F(StateTest, TransformRequestTest) {
     auto actor_id = bot->getActorId();
     auto player_id = bot->getPlayerId();
     auto position = bot->getPosition();
+    using namespace std::placeholders;
+    auto construct_tower_callback =
+        std::bind(&State::constructTowerCallback, state.get(), _1);
+    bot->setConstructTowerCallback(construct_tower_callback);
 
     auto transform_requests = state->getTransformRequests();
     EXPECT_EQ(transform_requests[0].size(), 0);
     EXPECT_EQ(transform_requests[1].size(), 0);
 
-    state->transformBot(player_id, actor_id, position);
+    state->transformBot(actor_id, position);
+    bot->update();
+    bot->lateUpdate();
 
     transform_requests = state->getTransformRequests();
     EXPECT_EQ(transform_requests[0].size(), 1);
@@ -355,10 +362,8 @@ TEST_F(StateTest, RejectTransformRequestTest) {
     bot1->setPosition(DoubleVec2D(2.5, 2.3));
     bot2->setPosition(DoubleVec2D(2.2, 2.7));
 
-    state->transformBot(bot1->getPlayerId(), bot1->getActorId(),
-                        bot1->getPosition());
-    state->transformBot(bot2->getPlayerId(), bot2->getActorId(),
-                        bot2->getPosition());
+    state->transformBot(bot1->getActorId(), bot1->getPosition());
+    state->transformBot(bot2->getActorId(), bot2->getPosition());
 
     // Calling handleTransformRequests and checking to assert that no tower is
     // built
@@ -377,8 +382,7 @@ TEST_F(StateTest, RejectTransformRequestTest) {
 
     // Making both the bots stand on the same offset but only one bot tries to
     // transform
-    state->transformBot(bot1->getPlayerId(), bot1->getActorId(),
-                        bot1->getPosition());
+    state->transformBot(bot1->getActorId(), bot1->getPosition());
 
     // Calling handleTransformRequests and checking to assert that no tower is
     // built
@@ -397,9 +401,14 @@ TEST_F(StateTest, AcknowledgeTransformRequest) {
     // Making PLAYER1 bot transform
     auto bots = state->getBots();
     auto bot = bots[0][0];
+    using namespace std::placeholders;
+    auto construct_tower_callback =
+        std::bind(&State::constructTowerCallback, state.get(), _1);
+    bot->setConstructTowerCallback(construct_tower_callback);
 
-    state->transformBot(bot->getPlayerId(), bot->getActorId(),
-                        bot->getPosition());
+    state->transformBot(bot->getActorId(), bot->getPosition());
+    bot->update();
+    bot->lateUpdate();
 
     // Calling handle transform requests to see whether a tower is built
     state->handleTransformRequests();

@@ -18,9 +18,8 @@ void CommandGiver::blastBot(ActorId actor_id, DoubleVec2D position) {
 
 void CommandGiver::blastTower(ActorId actor_id) { state->blastTower(actor_id); }
 
-void CommandGiver::transformBot(PlayerId player_id, ActorId bot_id,
-                                DoubleVec2D position) {
-    state->transformBot(player_id, bot_id, position);
+void CommandGiver::transformBot(ActorId bot_id, DoubleVec2D position) {
+    state->transformBot(bot_id, position);
 }
 
 void CommandGiver::moveBot(ActorId bot_id, DoubleVec2D position) {
@@ -33,9 +32,10 @@ DoubleVec2D CommandGiver::flipBotPosition(const Map &map,
     return {map_size - position.x, map_size - position.y};
 }
 
-Vec2D CommandGiver::flipTowerPosition(const Map &map, Vec2D position) {
+DoubleVec2D CommandGiver::flipTowerPosition(const Map &map,
+                                            DoubleVec2D position) {
     size_t map_size = map.getSize();
-    return {(long) map_size - 1 - position.x, (long) map_size - 1 - position.y};
+    return {(double) map_size - position.x, (double) map_size - position.y};
 }
 
 bool CommandGiver::isValidBotPosition(const Map &map, DoubleVec2D position) {
@@ -53,10 +53,12 @@ bool CommandGiver::isValidBotPosition(const Map &map, DoubleVec2D position) {
     return (type == TerrainType::FLAG || type == TerrainType::LAND);
 }
 
-bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position) {
-    size_t x = std::floor(position.x), y = std::floor(position.y);
+bool CommandGiver::isValidTowerPosition(const Map &map, DoubleVec2D position,
+                                        PlayerId player_id) {
+    auto tower_offset = getOffset(map, position, player_id);
     size_t map_size = map.getSize();
-    return (x < map_size && x >= 0 && y < map_size && y >= 0);
+    return (tower_offset.x < map_size && tower_offset.x >= 0 &&
+            tower_offset.y < map_size && tower_offset.y >= 0);
 }
 
 bool CommandGiver::hasBotStateChanged(
@@ -101,25 +103,28 @@ bool CommandGiver::hasTowerStateChanged(
     return false;
 }
 
-bool CommandGiver::isSpawnOffset(const Map &map, DoubleVec2D position) {
-    Vec2D position_offset = getOffset(map, position);
-    Vec2D player_1_base = getOffset(map, Constants::Map::PLAYER1_BASE_POSITION);
-    Vec2D player_2_base = getOffset(map, Constants::Map::PLAYER2_BASE_POSITION);
+bool CommandGiver::isSpawnOffset(const Map &map, DoubleVec2D position,
+                                 PlayerId player_id) {
+    Vec2D position_offset = getOffset(map, position, player_id);
+    Vec2D player_1_base =
+        getOffset(map, Constants::Map::PLAYER1_BASE_POSITION, player_id);
+    Vec2D player_2_base =
+        getOffset(map, Constants::Map::PLAYER2_BASE_POSITION, player_id);
     return (position_offset == player_1_base ||
             position_offset == player_2_base);
 }
 
-Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position) {
+Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position,
+                              PlayerId player_id) {
     // FIXME : resolve type conflicts
-    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
-    size_t map_size = map.getSize();
-
-    if (pos_x == map_size)
-        --pos_x;
-    if (pos_y == map_size)
-        --pos_y;
-
-    return {pos_x, pos_y};
+    if (player_id == PlayerId::PLAYER1) {
+        int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+        return {pos_x, pos_y};
+    } else {
+        int64_t pos_x = std::ceil(position.x) - 1,
+                pos_y = std::ceil(position.y) - 1;
+        return {pos_x, pos_y};
+    }
 }
 
 void CommandGiver::runCommands(
@@ -189,7 +194,6 @@ void CommandGiver::runCommands(
                                  "Cannot alter bot's hp");
                 continue;
             } else if (player_bot_position != state_bot->getPosition()) {
-
                 logger->logError(player_id,
                                  logger::ErrorType::NO_ALTER_BOT_PROPERTY,
                                  "Cannot alter bot's position");
@@ -225,14 +229,14 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                if (isSpawnOffset(*map, player_bot_position)) {
+                if (isSpawnOffset(*map, player_bot_position, (PlayerId) id)) {
                     logger->logError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform in a spawn position");
                     continue;
                 }
-                transformBot(player_id, player_bot.id, player_bot_position);
+                transformBot(player_bot.id, player_bot_position);
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
                 DoubleVec2D final_destination = player_bot.final_destination;
@@ -256,7 +260,8 @@ void CommandGiver::runCommands(
                     transform_destination =
                         flipBotPosition(*map, transform_destination);
                 }
-                if (!isValidTowerPosition(*map, transform_destination)) {
+                if (!isValidTowerPosition(*map, transform_destination,
+                                          player_id)) {
                     logger->logError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
@@ -271,14 +276,14 @@ void CommandGiver::runCommands(
                                      "number of towers");
                     continue;
                 }
-                if (isSpawnOffset(*map, transform_destination)) {
+                if (isSpawnOffset(*map, transform_destination, (PlayerId) id)) {
                     logger->logError(
                         player_id,
                         logger::ErrorType::INVALID_TRANSFORM_POSITION,
                         "Cannot transform in a spawn position");
                     continue;
                 }
-                transformBot(player_id, player_bot.id, transform_destination);
+                transformBot(player_bot.id, transform_destination);
             } else if (is_moving) {
                 // Validates the position that the player has requested to
                 // move onto
@@ -307,7 +312,7 @@ void CommandGiver::runCommands(
             continue;
         }
 
-        // Iterating through the towers and assinging tasks
+        // Iterating through the towers and assigning tasks
         for (size_t tower_index = 0; tower_index < state_towers[id].size();
              ++tower_index) {
             // Getting the player state towers and the state towers
