@@ -13,10 +13,10 @@ CommandGiver::CommandGiver(ICommandTaker *state, logger::ILogger *logger)
     : state(state), logger(logger) {}
 
 void CommandGiver::blastBot(ActorId actor_id, DoubleVec2D position) {
-    state->blast(actor_id, position);
+    state->blastBot(actor_id, position);
 }
 
-void CommandGiver::blastTower(ActorId actor_id) { state->blast(actor_id); }
+void CommandGiver::blastTower(ActorId actor_id) { state->blastTower(actor_id); }
 
 void CommandGiver::transformBot(ActorId bot_id, DoubleVec2D position) {
     state->transformBot(bot_id, position);

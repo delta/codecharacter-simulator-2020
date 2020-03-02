@@ -102,13 +102,13 @@ struct Bot : _Unit, _Blaster {
         _Blaster::reset();
     }
 
-    void blast_bot() {
+    void blast() {
         reset();
-        blast();
+        _Blaster::blast();
     }
 
     // move to a target position and blast
-    void blast_bot(DoubleVec2D target_position) {
+    void blast(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
             blast();
@@ -117,12 +117,12 @@ struct Bot : _Unit, _Blaster {
         }
     }
 
-    void transform_bot() {
+    void transform() {
         reset();
         transforming = true;
     }
 
-    void transform_bot(DoubleVec2D target_position) {
+    void transform(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
             transforming = true;
@@ -169,7 +169,7 @@ struct Tower : _Actor, _Blaster {
 
     TowerState state;
 
-    void blast_tower() { blast(); }
+    void blast() { _Blaster::blast(); }
 
     Tower(const Tower &reference_tower) {
         this->id = reference_tower.id;
@@ -243,6 +243,7 @@ array<array<uint64_t, MAP_SIZE>, MAP_SIZE> getActorCounts(const State &state);
  * @return DoubleVec2D The center of the nearest flag offset
  */
 DoubleVec2D findNearestFlagPosition(const State &state, DoubleVec2D position);
+
 /**
  * Finds the nearest free position where a tower can be built
  *

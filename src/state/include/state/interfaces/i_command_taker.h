@@ -59,14 +59,14 @@ class STATE_EXPORT ICommandTaker {
      *
      * @throw      std::exception  if the operation was not possible
      */
-    virtual void blast(ActorId actor_id, DoubleVec2D position) = 0;
+    virtual void blastBot(ActorId actor_id, DoubleVec2D position) = 0;
 
     /**
      * Blasts a tower and destroy units nearby
      *
      * @param actor_id
      */
-    virtual void blast(ActorId actor_id) = 0;
+    virtual void blastTower(ActorId actor_id) = 0;
 
     /**
      * Get map from state
