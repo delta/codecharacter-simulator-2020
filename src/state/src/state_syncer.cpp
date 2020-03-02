@@ -148,8 +148,7 @@ void StateSyncer::assignBots(int64_t id,
     auto map = state->getMap();
     size_t player_id = getPlayerId(id, is_enemy);
     std::vector<player_state::Bot> new_bots;
-    size_t num_state_bots = state_bots[id].size(),
-           num_player_bots = player_bots.size();
+    size_t num_state_bots = state_bots[id].size();
 
     for (size_t bot_index = 0; bot_index < num_state_bots; ++bot_index) {
         // Creating a new bot with select properties of the player state bot if
@@ -233,15 +232,13 @@ void StateSyncer::assignTowers(int64_t id,
     size_t player_id = getPlayerId(id, is_enemy);
     auto map = state->getMap();
     std::vector<player_state::Tower> new_towers;
-    size_t num_state_towers = state_towers[id].size(),
-           num_player_towers = player_towers.size();
+    size_t num_state_towers = state_towers[id].size();
 
     for (size_t tower_index = 0; tower_index < num_state_towers;
          ++tower_index) {
         player_state::Tower new_tower;
         // Copying select properties of the player state tower into the new
         // player state tower
-
         auto state_tower = state_towers[id][tower_index];
         new_tower.id = state_tower->getActorId();
         new_tower.hp = state_tower->getHp();

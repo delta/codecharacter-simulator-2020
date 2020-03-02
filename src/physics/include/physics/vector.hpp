@@ -13,6 +13,9 @@ namespace physics {
 /**
  * 2D Vector class
  */
+
+const double_t EPS = 0.0001;
+
 template <typename T> class Vector {
   public:
     Vector();
@@ -177,7 +180,7 @@ Vector<T>::Vector(const Vector<T2> &rhs) {
 
 template <typename T> bool Vector<T>::operator==(const Vector<T> &rhs) const {
     if (std::is_same<T, double>::value) {
-        return (std::abs(x - rhs.x) <= 0.0001 && std::abs(y - rhs.y) <= 0.0001);
+        return (std::abs(x - rhs.x) <= EPS && std::abs(y - rhs.y) <= EPS);
     }
 
     return (x == rhs.x && y == rhs.y);
@@ -185,7 +188,7 @@ template <typename T> bool Vector<T>::operator==(const Vector<T> &rhs) const {
 
 template <typename T> bool Vector<T>::operator!=(const Vector<T> &rhs) const {
     if (std::is_same<T, double>::value) {
-        return (std::abs(x - rhs.x) > 0.0001 || std::abs(y - rhs.y) > 0.0001);
+        return (std::abs(x - rhs.x) > EPS || std::abs(y - rhs.y) > EPS);
     }
 
     return (x != rhs.x || y != rhs.y);
@@ -193,8 +196,8 @@ template <typename T> bool Vector<T>::operator!=(const Vector<T> &rhs) const {
 
 template <typename T> bool Vector<T>::operator<(const Vector<T> &rhs) const {
     if (std::is_same<T, double>::value) {
-        if (std::abs(x - rhs.x) <= 0.0001) {
-            if (std::abs(y - rhs.y) <= 0.0001) {
+        if (std::abs(x - rhs.x) <= EPS) {
+            if (std::abs(y - rhs.y) <= EPS) {
                 return false;
             }
             return y < rhs.y;
@@ -209,8 +212,8 @@ template <typename T> bool Vector<T>::operator<(const Vector<T> &rhs) const {
 
 template <typename T> bool Vector<T>::operator>(const Vector<T> &rhs) const {
     if (std::is_same<T, double>::value) {
-        if (std::abs(x - rhs.x) <= 0.0001) {
-            if (std::abs(y - rhs.y) <= 0.0001) {
+        if (std::abs(x - rhs.x) <= EPS) {
+            if (std::abs(y - rhs.y) <= EPS) {
                 return false;
             }
             return y > rhs.y;

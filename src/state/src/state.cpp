@@ -387,8 +387,6 @@ void State::removeDeadActors() {
         for (auto &tower : state_towers) {
             if (tower->getState() == TowerStateName::DEAD) {
                 auto tower_position = tower->getPosition();
-                tower_position.x -= 0.5;
-                tower_position.y -= 0.5;
                 path_planner->destroyTower(tower_position);
             }
         }
