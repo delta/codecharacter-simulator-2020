@@ -48,6 +48,10 @@ Vec2D StateSyncer::flipOffset(const Map &map, Vec2D position) {
     return flipTowerPosition(map, position);
 }
 
+DoubleVec2D StateSyncer::flipPosition(const Map &map, DoubleVec2D position) {
+    return flipBotPosition(map, position);
+}
+
 void StateSyncer::updatePlayerStates(
     std::array<player_state::State, 2> &player_states) {
     // Getting all the state information
@@ -57,7 +61,7 @@ void StateSyncer::updatePlayerStates(
     std::array<std::array<player_state::MapElement, Constants::Map::MAP_SIZE>,
                Constants::Map::MAP_SIZE>
         player_map{};
-    std::vector<Vec2D> flag_offsets{};
+    std::vector<DoubleVec2D> flag_offsets{};
 
     // Creating a map of player_state map type
     for (size_t i = 0; i < map->getSize(); ++i) {
@@ -69,7 +73,7 @@ void StateSyncer::updatePlayerStates(
                 break;
             case TerrainType::FLAG:
                 map_element.type = player_state::TerrainType::FLAG;
-                flag_offsets.push_back(Vec2D(i, j));
+                flag_offsets.push_back(DoubleVec2D(i + 0.5, j + 0.5));
                 break;
             case TerrainType::WATER:
                 map_element.type = player_state::TerrainType::WATER;
@@ -135,7 +139,7 @@ void StateSyncer::updatePlayerStates(
             // flag_offset positions as they won't be asked for again
             for_each(flag_offsets.begin(), flag_offsets.end(),
                      [map](auto &flag_offset) {
-                         flag_offset = flipOffset(*map, flag_offset);
+                         flag_offset = flipPosition(*map, flag_offset);
                      });
             player_states[player_id].flag_offsets = std::move(flag_offsets);
         }

@@ -8,11 +8,11 @@ Tower Tower::null = {-1};
 
 // Adding player state helper functions
 ostream &operator<<(ostream &os,
-                    array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map) {
-    os << "Map{";
-    for (int x = 0; x < MAP_SIZE; ++x) {
+                    const array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map) {
+    os << "Map {";
+    for (size_t x = 0; x < MAP_SIZE; ++x) {
         os << "{";
-        for (int y = 0; y < MAP_SIZE; ++y) {
+        for (size_t y = 0; y < MAP_SIZE; ++y) {
             auto type = map[x][y].getTerrain();
             switch (type) {
             case TerrainType::FLAG:
@@ -32,6 +32,8 @@ ostream &operator<<(ostream &os,
         os << "}\n";
     }
     os << "}";
+
+    return os;
 }
 
 ostream &operator<<(ostream &os, const TowerState &tower_state) {
@@ -91,25 +93,7 @@ ostream &operator<<(ostream &os, const BotState &bot_state) {
 
 ostream &operator<<(ostream &os, const State &state) {
     os << "Map:" << endl;
-    for (auto const &row : state.map) {
-        for (auto const &elem : row) {
-            switch (elem.type) {
-            case TerrainType::LAND:
-                os << "L ";
-                break;
-            case TerrainType::WATER:
-                os << "W ";
-                break;
-            case TerrainType::FLAG:
-                os << "F ";
-                break;
-            case TerrainType::TOWER:
-                os << "T ";
-                break;
-            }
-        }
-        os << endl;
-    }
+    os << state.map << endl;
 
     os << "-- Bots --" << endl;
     for (auto const &bot : state.bots) {
@@ -132,19 +116,48 @@ ostream &operator<<(ostream &os, const State &state) {
     }
 
     os << "-- Score --" << endl;
-    os << state.score << endl;
+    os << "{" << state.scores[0] << ", " << state.scores[1] << endl;
 
     return os;
 }
 
-Bot getBotById(State state, int64_t bot_id) {
-    for (const auto &bot : state.bots) {
+array<array<uint64_t, MAP_SIZE>, MAP_SIZE> getActorCounts(const State &state) {
+    array<array<uint64_t, MAP_SIZE>, MAP_SIZE> actor_counts{};
+
+    for (auto bot : state.bots) {
+        DoubleVec2D bot_position = bot.position;
+        actor_counts[std::floor(bot_position.x)][std::floor(bot_position.y)]++;
+    }
+
+    for (auto enemy_bot : state.enemy_bots) {
+        DoubleVec2D enemy_bot_position = enemy_bot.position;
+        actor_counts[std::floor(enemy_bot_position.x)]
+                    [std::floor(enemy_bot_position.y)]++;
+    }
+
+    for (auto tower : state.towers) {
+        DoubleVec2D tower_position = tower.position;
+        actor_counts[std::floor(tower_position.x)]
+                    [std::floor(tower_position.y)]++;
+    }
+
+    for (auto enemy_tower : state.enemy_towers) {
+        DoubleVec2D enemy_tower_position = enemy_tower.position;
+        actor_counts[std::floor(enemy_tower_position.x)]
+                    [std::floor(enemy_tower_position.y)]++;
+    }
+
+    return actor_counts;
+}
+
+Bot &getBotById(State &state, int64_t bot_id) {
+    for (auto &bot : state.bots) {
         if (bot.id == bot_id) {
             return bot;
         }
     }
 
-    for (const auto &bot : state.enemy_bots) {
+    for (auto &bot : state.enemy_bots) {
         if (bot.id == bot_id) {
             return bot;
         }
@@ -153,14 +166,14 @@ Bot getBotById(State state, int64_t bot_id) {
     return Bot::null;
 }
 
-Tower getTowerById(State state, int64_t tower_id) {
-    for (const auto &tower : state.towers) {
+Tower &getTowerById(State &state, int64_t tower_id) {
+    for (auto &tower : state.towers) {
         if (tower.id == tower_id) {
             return tower;
         }
     }
 
-    for (const auto &tower : state.enemy_towers) {
+    for (auto &tower : state.enemy_towers) {
         if (tower.id == tower_id) {
             return tower;
         }
@@ -169,33 +182,51 @@ Tower getTowerById(State state, int64_t tower_id) {
     return Tower::null;
 }
 
-Vec2D findNearestFlagOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
-                            Vec2D position) {
-    // Making a lambda function to check whether the terrain type is a flag and
-    // passing it to findNearestOffset
-    auto is_flag = [](TerrainType terrain) -> bool {
+DoubleVec2D findNearestFlagPosition(const State &state, DoubleVec2D position) {
+    // The nearest flag location only depends upon the terrain type being flag
+    // and not the position count
+    auto is_flag = [](TerrainType terrain, uint64_t position_count) -> bool {
         return (terrain == TerrainType::FLAG);
     };
 
-    return findNearestOffset(map, position, is_flag);
+    Vec2D position_offset =
+        Vec2D(std::floor(position.x), std::floor(position.y));
+    Vec2D nearest_offset = findNearestOffset(state, position_offset, is_flag);
+    if (nearest_offset == Vec2D::null) {
+        return DoubleVec2D::null;
+    }
+    DoubleVec2D center_position =
+        DoubleVec2D(nearest_offset.x + 0.5, nearest_offset.y + 0.5);
+    return center_position;
 }
 
-Vec2D findNearestBuildableOffset(
-    array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position) {
-    auto is_buildable = [](TerrainType terrain) -> bool {
-        return (terrain == TerrainType::FLAG || terrain == TerrainType::LAND);
+DoubleVec2D findNearestFreePosition(const State &state, DoubleVec2D position) {
+    // For a position to be buildable, we need both the terrain to be of type
+    // FLAG or LAND and the position should be occupied by on actors
+    auto is_buildable = [](TerrainType terrain,
+                           uint64_t position_count) -> bool {
+        return (
+            (terrain == TerrainType::FLAG || terrain == TerrainType::LAND) &&
+            position_count == 0);
     };
 
-    return findNearestOffset(map, position, is_buildable);
+    Vec2D position_offset =
+        Vec2D(std::floor(position.x), std::floor(position.y));
+    Vec2D nearest_offset =
+        findNearestOffset(state, position_offset, is_buildable);
+    if (nearest_offset == Vec2D::null) {
+        return DoubleVec2D::null;
+    }
+
+    DoubleVec2D center_position =
+        DoubleVec2D(nearest_offset.x + 0.5, nearest_offset.y + 0.5);
+    return center_position;
 }
 
 Vec2D findNearestOffset(
-    array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position,
-    std::function<bool(TerrainType terrain)> match_position) {
-    // Creating a queue to implement BFS
-    queue<Vec2D> visit_next;
-    visit_next.push(position);
-
+    const const State &state, Vec2D position,
+    std::function<bool(TerrainType terrain, uint64_t position_count)>
+        match_position) {
     // Creating a visited array to not revisit the same position twice
     array<array<bool, MAP_SIZE>, MAP_SIZE> visited;
 
@@ -205,33 +236,49 @@ Vec2D findNearestOffset(
         }
     }
 
+    // Creating a count array of each actor in the map
+    auto actor_counts = getActorCounts(state);
+
     // A helper function to check if positions are within the map
-    size_t map_size = MAP_SIZE;
-    auto is_position_valid = [map_size](Vec2D position) {
+    long map_size = MAP_SIZE;
+    auto position_valid = [map_size](Vec2D position) {
         return (position.x >= 0 && position.y >= 0 && position.x < map_size &&
                 position.y < map_size);
     };
 
+    // If the given position is outside the map, we simply return Vec2D::NULL
+    if (!position_valid(position)) {
+        return Vec2D::null;
+    }
+
+    // Storing all directions in which the position can consider as neighbours
+    // of unit distance
     vector<pair<int, int>> delta_changes = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    // Creating a queue to implement BFS
+    auto &map = state.map;
+    queue<Vec2D> visit_next;
+    visit_next.push(position);
+    visited[position.x][position.y] = true;
 
     while (!visit_next.empty()) {
         Vec2D position = visit_next.front();
         visit_next.pop();
+
         TerrainType terrain = map[position.x][position.y].getTerrain();
 
-        if (match_position(terrain)) {
+        if (match_position(terrain, actor_counts[position.x][position.y])) {
             return position;
         }
-
-        visited[position.x][position.y] = true;
 
         // Adding neighbours of position which haven't already been visited
         for (const auto &delta_change : delta_changes) {
             auto new_x = position.x + delta_change.first;
             auto new_y = position.y + delta_change.second;
             Vec2D new_position = Vec2D(new_x, new_y);
-            if (is_position_valid(new_position) && !visited[new_x][new_y]) {
+            if (position_valid(new_position) && !visited[new_x][new_y]) {
                 visit_next.push(new_position);
+                visited[new_x][new_y] = true;
             }
         }
     }

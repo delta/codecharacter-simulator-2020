@@ -215,10 +215,10 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     // Checking where the flag locations are added for PLAYER1 and PLAYER2
     EXPECT_EQ(player_states[0].flag_offsets.size(), 2);
     EXPECT_EQ(player_states[1].flag_offsets.size(), 2);
-    EXPECT_EQ(player_states[0].flag_offsets[0], Vec2D(2, 2));
-    EXPECT_EQ(player_states[1].flag_offsets[0], Vec2D(2, 2));
-    EXPECT_EQ(player_states[0].flag_offsets[1], Vec2D(3, 3));
-    EXPECT_EQ(player_states[1].flag_offsets[1], Vec2D(1, 1));
+    EXPECT_EQ(player_states[0].flag_offsets[0], DoubleVec2D(2.5, 2.5));
+    EXPECT_EQ(player_states[1].flag_offsets[0], DoubleVec2D(2.5, 2.5));
+    EXPECT_EQ(player_states[0].flag_offsets[1], DoubleVec2D(3.5, 3.5));
+    EXPECT_EQ(player_states[1].flag_offsets[1], DoubleVec2D(1.5, 1.5));
 
     // Checking bots and towers
     EXPECT_EQ(player_states[0].bots[0].id, 0);

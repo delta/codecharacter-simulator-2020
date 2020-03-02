@@ -191,7 +191,7 @@ struct Tower : _Actor, _Blaster {
 struct MapElement {
     TerrainType type;
     void setTerrain(TerrainType p_type) { type = p_type; }
-    TerrainType getTerrain() { return type; }
+    TerrainType getTerrain() const { return type; }
 };
 
 /**
@@ -200,7 +200,7 @@ struct MapElement {
 struct State {
     array<array<MapElement, Constants::Map::MAP_SIZE>, Constants::Map::MAP_SIZE>
         map;
-    vector<Vec2D> flag_offsets;
+    vector<DoubleVec2D> flag_offsets;
 
     vector<Bot> bots;
     vector<Bot> enemy_bots;
@@ -227,19 +227,63 @@ struct State {
           num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), scores({0, 0}) {}
 };
 
-// Defining function prototypes
-Vec2D findNearestFlagOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
-                            Vec2D position);
+/**
+ * Returns the actor counts in each offset
+ *
+ * @param state Reference to the player state
+ * @return array<array<uint64_t, MAP_SIZE>, MAP_SIZE>
+ */
+array<array<uint64_t, MAP_SIZE>, MAP_SIZE> getActorCounts(const State &state);
 
-Vec2D findNearestBuildableOffset(
-    array<array<MapElement, MAP_SIZE>, MAP_SIZE> map, Vec2D position);
+/**
+ * Finds the nearest flag offset from a given position
+ *
+ * @param state Reference to the player state
+ * @param position Position from which nearest flag position is calculated
+ * @return DoubleVec2D The center of the nearest flag offset
+ */
+DoubleVec2D findNearestFlagPosition(const State &state, DoubleVec2D position);
+/**
+ * Finds the nearest free position where a tower can be built
+ *
+ * @param state Reference to the player state
+ * @param position Position from which nearest free position is calculated
+ * @return DoubleVec2D The center of the nearest free offset
+ */
+DoubleVec2D findNearestFreePosition(const State &state, DoubleVec2D position);
 
-Vec2D findNearestOffset(array<array<MapElement, MAP_SIZE>, MAP_SIZE> map,
-                        Vec2D position, std::function<bool(TerrainType type)>);
+/**
+ * Helper function to find nearest offset given condition
+ *
+ * @param map Reference to player state map
+ * @param position Position from which nearest offset is calculated
+ * @return Vec2D Nearest offset satisfying condition
+ */
+Vec2D findNearestOffset(
+    const State &state, Vec2D position,
+    std::function<bool(TerrainType type, uint64_t position_count)>);
 
-Bot getBotById(State state, int64_t bot_id);
+/**
+ * Returns a bot reference given the bot id
+ *
+ * @param state Reference to player state
+ * @param bot_id Id of bot to be found
+ * @return Bot& Reference to bot with given bot id if it exists, else Bot::null
+ */
+Bot &getBotById(State &state, int64_t bot_id);
 
-Tower getTowerById(State state, int64_t tower_id);
+/**
+ * Returns a tower reference given the tower id
+ *
+ * @param state Reference to player state
+ * @param tower_id Id of tower to be found
+ * @return Tower& Reference to tower with given tower id if it exists, else
+ * Tower::null
+ */
+Tower &getTowerById(State &state, int64_t tower_id);
+
+ostream &operator<<(ostream &os,
+                    const array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map);
 
 ostream &operator<<(ostream &os, const TowerState &tower_state);
 

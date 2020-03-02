@@ -17,9 +17,9 @@ class PlayerStateTest : public Test {
 
     PlayerStateTest() {
         // Creating a basic map and player state
-        vector<vector<player_state::TerrainType>> map = {{L, L, L, W, W},
-                                                         {L, W, W, W, W},
-                                                         {L, F, F, W, W},
+        vector<vector<player_state::TerrainType>> map = {{L, L, L, L, L},
+                                                         {L, W, F, W, L},
+                                                         {L, F, F, F, L},
                                                          {L, W, F, W, L},
                                                          {L, L, L, L, L}};
 
@@ -38,44 +38,37 @@ class PlayerStateTest : public Test {
 
         int64_t actor_id = 1;
         for (int64_t player_id = 0; player_id < 2; ++player_id) {
+            player_states[player_id].bots.clear();
+            player_states[player_id].enemy_bots.clear();
+
             for (int64_t bot_index = 0; bot_index < 10; ++bot_index) {
                 player_states[player_id].bots.push_back(
                     player_state::Bot(actor_id++));
             }
+
+            player_states[player_id].towers.clear();
+            player_states[player_id].enemy_towers.clear();
             for (int64_t tower_index = 0; tower_index < 10; ++tower_index) {
                 player_states[player_id].towers.push_back(
                     player_state::Tower(actor_id++));
             }
+
+            player_states[player_id].map = player_map;
         }
     }
 };
 
-TEST_F(PlayerStateTest, FindNearestFlagTest) {
-    // Finding the nearest flags
-    Vec2D pos1(0, 0);
-    Vec2D pos2(2, 2);
-    Vec2D pos3(4, 4);
-    Vec2D nearest_point1 = findNearestFlagOffset(player_map, pos1);
-    Vec2D nearest_point2 = findNearestFlagOffset(player_map, pos2);
-    Vec2D nearest_point3 = findNearestFlagOffset(player_map, pos3);
+TEST_F(PlayerStateTest, GetActorCountsTest) {
+    auto actor_counts = getActorCounts(player_states[0]);
+    EXPECT_EQ(actor_counts[0][0], 20);
 
-    EXPECT_EQ(nearest_point1, Vec2D(2, 1));
-    EXPECT_EQ(nearest_point2, Vec2D(2, 2));
-    EXPECT_EQ(nearest_point3, Vec2D(3, 2));
-}
+    player_states[0].bots[0].position = DoubleVec2D(3.5, 4.5);
+    player_states[0].towers[0].position = DoubleVec2D(2.5, 3.5);
 
-TEST_F(PlayerStateTest, FindNearestOffset) {
-    // Finding the nearest buildable offsets
-    Vec2D pos1(0, 0);
-    Vec2D pos2(1, 4);
-    Vec2D pos3(2, 2);
-    Vec2D nearest_point1 = findNearestBuildableOffset(player_map, pos1);
-    Vec2D nearest_point2 = findNearestBuildableOffset(player_map, pos2);
-    Vec2D nearest_point3 = findNearestBuildableOffset(player_map, pos3);
-
-    EXPECT_EQ(nearest_point1, Vec2D(0, 0));
-    EXPECT_EQ(nearest_point2, Vec2D(3, 4));
-    EXPECT_EQ(nearest_point3, Vec2D(2, 2));
+    actor_counts = getActorCounts(player_states[0]);
+    EXPECT_EQ(actor_counts[0][0], 18);
+    EXPECT_EQ(actor_counts[3][4], 1);
+    EXPECT_EQ(actor_counts[2][3], 1);
 }
 
 TEST_F(PlayerStateTest, GetBotByIdTest) {
@@ -106,4 +99,38 @@ TEST_F(PlayerStateTest, GetTowerByIdTest) {
     EXPECT_EQ(tower1, getTowerById(player_states[0], 64));
     EXPECT_EQ(tower2, getTowerById(player_states[1], 4040));
     EXPECT_EQ(Tower::null, getTowerById(player_states[0], 95));
+}
+
+TEST_F(PlayerStateTest, FindNearestFlagTest) {
+    // Finding the nearest flags
+    DoubleVec2D pos1(0.5, 0.5);
+    DoubleVec2D pos2(2.5, 2.5);
+    DoubleVec2D pos3(3.5, 4.5);
+    DoubleVec2D nearest_point1 =
+        findNearestFlagPosition(player_states[0], pos1);
+    DoubleVec2D nearest_point2 =
+        findNearestFlagPosition(player_states[0], pos2);
+    DoubleVec2D nearest_point3 =
+        findNearestFlagPosition(player_states[0], pos3);
+
+    EXPECT_EQ(nearest_point1, DoubleVec2D(2.5, 1.5));
+    EXPECT_EQ(nearest_point2, DoubleVec2D(2.5, 2.5));
+    EXPECT_EQ(nearest_point3, DoubleVec2D(2.5, 3.5));
+}
+
+TEST_F(PlayerStateTest, FindNearestFreePositionTest) {
+    // Finding the nearest buildable offsets
+    DoubleVec2D pos1(0.2, 0.8);
+    DoubleVec2D pos2(1.5, 1.5);
+    DoubleVec2D pos3(3.5, 4.5);
+    DoubleVec2D nearest_point1 =
+        findNearestFreePosition(player_states[0], pos1);
+    DoubleVec2D nearest_point2 =
+        findNearestFreePosition(player_states[0], pos2);
+    DoubleVec2D nearest_point3 =
+        findNearestFreePosition(player_states[0], pos3);
+
+    EXPECT_EQ(nearest_point1, DoubleVec2D(1.5, 0.5));
+    EXPECT_EQ(nearest_point2, DoubleVec2D(0.5, 1.5));
+    EXPECT_EQ(nearest_point3, DoubleVec2D(3.5, 4.5));
 }
