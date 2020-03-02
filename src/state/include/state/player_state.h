@@ -201,6 +201,7 @@ struct State {
     array<array<MapElement, Constants::Map::MAP_SIZE>, Constants::Map::MAP_SIZE>
         map;
     vector<DoubleVec2D> flag_offsets;
+    int64_t num_flags;
 
     vector<Bot> bots;
     vector<Bot> enemy_bots;
