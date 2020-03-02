@@ -202,8 +202,9 @@ class CommandGiverTest : public Test {
             player_states[enemy_id].enemy_towers.push_back(player_tower);
         }
 
-        player_states[0].score = 1000;
-        player_states[1].score = 1000;
+        player_states[0].scores = {1000, 1000};
+
+        player_states[1].scores = {1000, 1000};
 
         // Creating state bots and towers
         auto state_bot1 =

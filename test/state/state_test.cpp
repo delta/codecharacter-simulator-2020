@@ -8,7 +8,6 @@ using namespace state;
 const auto L = state::TerrainType::LAND;
 const auto W = state::TerrainType::WATER;
 const auto F = state::TerrainType::FLAG;
-const auto T = state::TerrainType::TOWER;
 
 class StateTest : public Test {
   public:
@@ -224,7 +223,7 @@ TEST_F(StateTest, BlastTowerTest) {
         std::bind(&State::damageEnemyActors, state.get(), placeholders::_1,
                   placeholders::_2, placeholders::_3);
 
-    // Checking if the tower's blasting property is set after calling blastTower
+    // Checking if the tower's blasting property is set after calling blast
     tower->setBlastCallback(blast_tower_callback);
     EXPECT_EQ(tower->isBlasting(), false);
     state->blastTower(tower->getActorId());

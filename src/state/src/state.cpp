@@ -74,9 +74,8 @@ void State::handleTransformRequests() {
     // NOTE : We do not account for towers because bots cannot move to positions
     // with towers anyway
 
-    std::array<std::array<int64_t, Constants::Map::MAP_SIZE>,
-               Constants::Map::MAP_SIZE>
-        position_counts{};
+    using namespace Constants::Map;
+    std::array<std::array<int64_t, MAP_SIZE>, MAP_SIZE> position_counts{};
 
     for (int64_t id = 0; id < static_cast<int64_t>(PlayerId::PLAYER_COUNT);
          ++id) {

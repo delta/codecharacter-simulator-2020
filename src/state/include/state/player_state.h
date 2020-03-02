@@ -10,8 +10,11 @@
 #include "state/utilities.h"
 
 #include <array>
+#include <functional>
+#include <queue>
 
 using namespace std;
+using namespace Constants::Map;
 
 namespace player_state {
 
@@ -30,28 +33,6 @@ enum class BotState : int8_t {
     DEAD
 };
 
-inline ostream &operator<<(ostream &os, const BotState &bot_state) {
-    switch (bot_state) {
-    case BotState::IDLE:
-        os << "IDLE";
-        break;
-    case BotState::MOVE:
-        os << "MOVE";
-        break;
-    case BotState::BLAST:
-        os << "BLAST";
-        break;
-    case BotState::TRANSFORM:
-        os << "TRANSFORM";
-        break;
-    case BotState::DEAD:
-        os << "DEAD";
-        break;
-    }
-
-    return os;
-}
-
 enum class TowerState : int8_t {
     // Tower is doing nothing
     IDLE,
@@ -61,28 +42,13 @@ enum class TowerState : int8_t {
     DEAD
 };
 
-inline ostream &operator<<(ostream &os, const TowerState &tower_state) {
-    switch (tower_state) {
-    case TowerState::IDLE:
-        os << "IDLE";
-        break;
-    case TowerState::BLAST:
-        os << "BLAST";
-        break;
-    case TowerState::DEAD:
-        os << "DEAD";
-        break;
-    }
-
-    return os;
-}
-
 struct _Actor {
     int64_t id;
     int64_t hp;
     DoubleVec2D position;
 
     _Actor() : id(0), hp(100), position(DoubleVec2D{0, 0}){};
+    _Actor(int64_t id) : id(id), hp(100), position(DoubleVec2D{0, 0}){};
 };
 
 struct _Blaster {
@@ -110,9 +76,16 @@ struct _Unit : _Actor {
     _Unit()
         : _Actor(), destination(DoubleVec2D::null),
           speed(Constants::Actor::BOT_SPEED){};
+
+    _Unit(int64_t id)
+        : _Actor(id), destination(DoubleVec2D::null),
+          speed(Constants::Actor::BOT_SPEED) {}
 };
 
 struct Bot : _Unit, _Blaster {
+    // A static member to represent a null bot or an invalid bot
+    static Bot null;
+
     BotState state;
     // move and blast at set destination
     DoubleVec2D final_destination;
@@ -129,13 +102,13 @@ struct Bot : _Unit, _Blaster {
         _Blaster::reset();
     }
 
-    void blast_bot() {
+    void blast() {
         reset();
-        blast();
+        _Blaster::blast();
     }
 
     // move to a target position and blast
-    void blast_bot(DoubleVec2D target_position) {
+    void blast(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
             blast();
@@ -144,12 +117,12 @@ struct Bot : _Unit, _Blaster {
         }
     }
 
-    void transform_bot() {
+    void transform() {
         reset();
         transforming = true;
     }
 
-    void transform_bot(DoubleVec2D target_position) {
+    void transform(DoubleVec2D target_position) {
         reset();
         if (target_position == position) {
             transforming = true;
@@ -171,27 +144,32 @@ struct Bot : _Unit, _Blaster {
         this->state = reference_bot.state;
     }
 
+    bool operator==(const Bot &bot) const {
+        return (bot.id == id && bot.state == state && bot.hp == hp &&
+                bot.final_destination == final_destination &&
+                bot.destination == destination &&
+                bot.transform_destination == transform_destination &&
+                bot.transforming == transforming && bot.blasting == blasting);
+    }
+
     Bot()
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
           transform_destination(DoubleVec2D::null), transforming(false){};
 
+    Bot(int64_t id)
+        : _Unit(id), _Blaster(), final_destination(DoubleVec2D::null),
+          transform_destination(DoubleVec2D::null), transforming(false){};
+
     virtual ~Bot() {}
 };
 
-inline ostream &operator<<(ostream &os, const Bot &bot) {
-    os << "Bot(id: " << bot.id << ") {" << endl;
-    os << "   hp: " << bot.hp << endl;
-    os << "   position: " << bot.position << endl;
-    os << "   state: " << bot.state << endl;
-    os << "}" << endl;
-    return os;
-}
-
 struct Tower : _Actor, _Blaster {
+    static Tower null;
+
     TowerState state;
 
-    void blast_tower() { blast(); }
+    void blast() { _Blaster::blast(); }
 
     Tower(const Tower &reference_tower) {
         this->id = reference_tower.id;
@@ -201,21 +179,19 @@ struct Tower : _Actor, _Blaster {
         this->blasting = reference_tower.blasting;
     }
 
-    Tower() : _Actor::_Actor(), _Blaster(), state(TowerState::IDLE){};
-};
+    bool operator==(const Tower &tower) const {
+        return (tower.id == id && tower.hp == hp && tower.state == state &&
+                tower.position == position && tower.blasting == blasting);
+    }
 
-inline ostream &operator<<(ostream &os, const Tower &tower) {
-    os << "Tower(id: " << tower.id << ") {" << endl;
-    os << "   hp: " << tower.hp << endl;
-    os << "   state: " << tower.state << endl;
-    os << "}" << endl;
-    return os;
-}
+    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
+    Tower(int64_t id) : _Actor(id), _Blaster(), state(TowerState::IDLE){};
+};
 
 struct MapElement {
     TerrainType type;
     void setTerrain(TerrainType p_type) { type = p_type; }
-    TerrainType getTerrain() { return type; }
+    TerrainType getTerrain() const { return type; }
 };
 
 /**
@@ -224,6 +200,7 @@ struct MapElement {
 struct State {
     array<array<MapElement, Constants::Map::MAP_SIZE>, Constants::Map::MAP_SIZE>
         map;
+    vector<DoubleVec2D> flag_offsets;
 
     vector<Bot> bots;
     vector<Bot> enemy_bots;
@@ -237,7 +214,7 @@ struct State {
     int64_t num_towers;
     int64_t num_enemy_towers;
 
-    int64_t score;
+    array<int64_t, 2> scores;
 
     State()
         : map(), bots(Constants::Actor::MAX_NUM_BOTS),
@@ -247,55 +224,76 @@ struct State {
           towers(Constants::Actor::MAX_NUM_TOWERS),
           enemy_towers(Constants::Actor::MAX_NUM_TOWERS),
           num_towers(Constants::Actor::MAX_NUM_TOWERS),
-          num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), score(0) {}
+          num_enemy_towers(Constants::Actor::MAX_NUM_TOWERS), scores({0, 0}) {}
 };
 
-inline ostream &operator<<(ostream &os, const State &state) {
-    os << "Map:" << endl;
-    for (auto const &row : state.map) {
-        for (auto const &elem : row) {
-            switch (elem.type) {
-            case TerrainType::LAND:
-                os << "L ";
-                break;
-            case TerrainType::WATER:
-                os << "W ";
-                break;
-            case TerrainType::FLAG:
-                os << "F ";
-                break;
-            case TerrainType::TOWER:
-                os << "T ";
-                break;
-            }
-        }
-        os << endl;
-    }
+/**
+ * Returns the actor counts in each offset
+ *
+ * @param state Reference to the player state
+ * @return array<array<uint64_t, MAP_SIZE>, MAP_SIZE>
+ */
+array<array<uint64_t, MAP_SIZE>, MAP_SIZE> getActorCounts(const State &state);
 
-    os << "-- Bots --" << endl;
-    for (auto const &bot : state.bots) {
-        os << bot << endl;
-    }
+/**
+ * Finds the nearest flag offset from a given position
+ *
+ * @param state Reference to the player state
+ * @param position Position from which nearest flag position is calculated
+ * @return DoubleVec2D The center of the nearest flag offset
+ */
+DoubleVec2D findNearestFlagPosition(const State &state, DoubleVec2D position);
 
-    os << "-- Enemy Bots --" << endl;
-    for (auto const &enemy_bot : state.enemy_bots) {
-        os << enemy_bot << endl;
-    }
+/**
+ * Finds the nearest free position where a tower can be built
+ *
+ * @param state Reference to the player state
+ * @param position Position from which nearest free position is calculated
+ * @return DoubleVec2D The center of the nearest free offset
+ */
+DoubleVec2D findNearestFreePosition(const State &state, DoubleVec2D position);
 
-    os << "-- Towers --" << endl;
-    for (auto const &tower : state.towers) {
-        os << tower << endl;
-    }
+/**
+ * Helper function to find nearest offset given condition
+ *
+ * @param map Reference to player state map
+ * @param position Position from which nearest offset is calculated
+ * @return Vec2D Nearest offset satisfying condition
+ */
+Vec2D findNearestOffset(
+    const State &state, Vec2D position,
+    std::function<bool(TerrainType type, uint64_t position_count)>);
 
-    os << "-- Enemy Towers --" << endl;
-    for (auto const &enemy_tower : state.enemy_towers) {
-        os << enemy_tower << endl;
-    }
+/**
+ * Returns a bot reference given the bot id
+ *
+ * @param state Reference to player state
+ * @param bot_id Id of bot to be found
+ * @return Bot& Reference to bot with given bot id if it exists, else Bot::null
+ */
+Bot &getBotById(State &state, int64_t bot_id);
 
-    os << "-- Score --" << endl;
-    os << state.score << endl;
+/**
+ * Returns a tower reference given the tower id
+ *
+ * @param state Reference to player state
+ * @param tower_id Id of tower to be found
+ * @return Tower& Reference to tower with given tower id if it exists, else
+ * Tower::null
+ */
+Tower &getTowerById(State &state, int64_t tower_id);
 
-    return os;
-}
+ostream &operator<<(ostream &os,
+                    const array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map);
+
+ostream &operator<<(ostream &os, const TowerState &tower_state);
+
+ostream &operator<<(ostream &os, const Tower &tower);
+
+ostream &operator<<(ostream &os, const Bot &bot);
+
+ostream &operator<<(ostream &os, const BotState &bot_state);
+
+ostream &operator<<(ostream &os, const State &state);
 
 } // namespace player_state
