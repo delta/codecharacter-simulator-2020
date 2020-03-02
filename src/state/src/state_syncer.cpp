@@ -134,7 +134,7 @@ void StateSyncer::updatePlayerStates(
 
         if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
             std::copy(flag_offsets.begin(), flag_offsets.end(),
-                      player_states[player_id].flag_offsets.begin());
+                      player_states[player_id].flag_offsets.begin());             
         } else {
             // Flipping all the map positions and moving it into PLAYER2's
             // flag_offset positions as they won't be asked for again

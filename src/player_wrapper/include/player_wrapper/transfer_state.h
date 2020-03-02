@@ -102,8 +102,7 @@ ConvertToTransferState(const player_state::State &ps) {
     ts.enemy_towers = vectorToArray<Actor::MAX_NUM_TOWERS>(ps.enemy_towers);
 
     // Copy flag offsets
-    ts.flag_offsets =
-        vectorToArray<Map::MAP_SIZE * Map::MAP_SIZE>(ps.flag_offsets);
+    ts.flag_offsets = vectorToArray<Map::MAP_SIZE * Map::MAP_SIZE>(ps.flag_offsets);
 
     // Copy score
     std::copy(ps.scores.begin(), ps.scores.end(), ts.scores.begin());
