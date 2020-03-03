@@ -12,6 +12,8 @@
 #include "state/actor/bot_states/bot_state.h"
 #include "state/actor/bot_states/bot_transform_state.h"
 #include "state/path_planner/path_planner.h"
+#include <chrono>
+#include <unistd.h>
 
 namespace state {
 
@@ -54,8 +56,19 @@ std::unique_ptr<IActorState> BotMoveState::update() const {
     auto speed = bot->getSpeed();
     auto destination = bot->getDestination();
 
+    using namespace std;
+
+    //    auto start = std::chrono::steady_clock::now();
+
     auto next_position =
         path_planner->getNextPosition(current_position, destination, speed);
+
+    //    auto end = std::chrono::steady_clock::now();
+
+    //    cout << "Elapsed time in nanoseconds : "
+    //         << chrono::duration_cast<chrono::microseconds>(end -
+    //         start).count()
+    //         << " ns" << endl;
 
     if (next_position) {
         bot->setNewPosition(next_position);

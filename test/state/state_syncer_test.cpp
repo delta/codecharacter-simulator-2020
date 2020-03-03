@@ -218,7 +218,7 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     EXPECT_EQ(player_states[0].flag_offsets[0], DoubleVec2D(2.5, 2.5));
     EXPECT_EQ(player_states[1].flag_offsets[0], DoubleVec2D(2.5, 2.5));
     EXPECT_EQ(player_states[0].flag_offsets[1], DoubleVec2D(3.5, 3.5));
-    EXPECT_EQ(player_states[1].flag_offsets[1], DoubleVec2D(1.5, 1.5));
+    EXPECT_EQ(player_states[1].flag_offsets[1], DoubleVec2D(3.5, 3.5));
 
     // Checking bots and towers
     EXPECT_EQ(player_states[0].bots[0].id, 0);
