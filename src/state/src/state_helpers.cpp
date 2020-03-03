@@ -73,7 +73,7 @@ std::vector<Vec2D> State::getNeighbouringPoints(DoubleVec2D position) {
     std::vector<Vec2D> neighbouring_points;
     for (auto x = pos_x; x < std::floor(position.x); ++x) {
         for (auto y = pos_y; y < std::floor(position.y); ++y) {
-            neighbouring_points.push_back({pos_x, pos_y});
+            neighbouring_points.push_back(Vec2D(pos_x, pos_y));
         }
     }
 

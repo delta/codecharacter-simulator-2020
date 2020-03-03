@@ -81,26 +81,16 @@ void State::handleTransformRequests() {
          ++id) {
         for (const auto &bot : bots[id]) {
             DoubleVec2D bot_position = bot->getPosition();
-<<<<<<< 10668f15601833fd0d80edaacd2be6c1fb1c8c83
-            Vec2D offset = getOffsetFromPosition(bot_position, (PlayerId) id);
-            position_counts[offset.x][offset.y]++;
-        }
-
-        for (const auto &tower : towers[id]) {
-            DoubleVec2D tower_position = tower->getPosition();
-            Vec2D offset = getOffsetFromPosition(tower_position, (PlayerId) id);
-            position_counts[offset.x][offset.y]++;
-=======
 
             // Get neighbouring points
-            std::vector<Vec2D> neighboring_offsets =
-                getNeighbouringPoints(position);
+            std::vector<Vec2D> neighbouring_offsets =
+                getNeighbouringPoints(bot_position);
 
             // If the bot belongs strictly to only one offset
-            if (neighboring_offsets.size() == 1) {
-                Vec2D offset = neighboring_offsets[0];
+            if (neighbouring_offsets.size() == 1) {
+                Vec2D offset = neighbouring_offsets[0];
                 position_counts[offset.x][offset.y]++;
-            } else if (neighboring_offsets.size() ==
+            } else if (neighbouring_offsets.size() ==
                        2) { // If the bot is on an edge
                 Vec2D offset1 = neighbouring_offsets[0];
                 Vec2D offset2 = neighbouring_offsets[1];
@@ -114,11 +104,11 @@ void State::handleTransformRequests() {
                            !path_planner->isOffsetBlocked(offset1)) {
                     position_counts[offset1.x][offset1.y]++;
                 }
-            } else if (neighboring_offsets.size() ==
+            } else if (neighbouring_offsets.size() ==
                        4) { // If the bot is on a vertex on the grid
                 uint64_t total_blocked_count = 0;
                 Vec2D unblocked_offset = Vec2D::null;
-                for (const auto &offset : neighboring_offsets) {
+                for (const auto &offset : neighbouring_offsets) {
                     if (path_planner->isOffsetBlocked(offset)) {
                         ++total_blocked_count;
                     } else {
@@ -135,7 +125,6 @@ void State::handleTransformRequests() {
                 // If less than three are blocked, then not assigning the bot to
                 // any offset
             }
->>>>>>> Add check to properly assign bot offset
         }
     }
 
