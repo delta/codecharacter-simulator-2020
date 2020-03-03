@@ -246,7 +246,8 @@ DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
     }
 
     result = current_position;
-    cache[{source, destination}] = result;
+
+    cache.insert({{source, destination}, result});
 
     return result;
 }

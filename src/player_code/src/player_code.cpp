@@ -37,9 +37,9 @@ State PlayerCode::update(State state) {
     // Range based loops are convenient to use. We use a reference to
     // ensure that our changes are reflected and not made on a copy!
     for (auto &bot : state.bots) {
-        // Let's not use up all our bots just for these. So, we will only use a
-        // maximum of 15 bots here.
-        if (used_bots >= state.flag_offsets.size() || used_bots >= 15)
+        // Let's not use up all our bots just for this operation. So, we will
+        // only use a maximum of 18 bots here.
+        if (used_bots >= state.flag_offsets.size() || used_bots >= 18)
             break;
 
         // State has a vector that has the locations of flag locations on the
@@ -60,21 +60,13 @@ State PlayerCode::update(State state) {
     }
 
     // Other than blasting and moving, bots can also transform into towers
-    // Let's try to transform all of the remaining bots near the other end of
-    // the map i.e., (MAP_SIZE - 1, MAP_SIZE - 1) Note that you cannot construct
-    // / move to coordinates where either x = MAP_SIZE or y = MAP_SIZE
-    int x = MAP_SIZE - 1, y = MAP_SIZE - 5;
+    // Let's try to transform one of the bots near the other end of
+    // the map i.e., (MAP_SIZE - 2, MAP_SIZE - 2) Note that you cannot construct
+    // or move to coordinates where either x = MAP_SIZE or y = MAP_SIZE
 
     // The bots can also be traversed like a usual array using an index
-    for (size_t i = used_bots; i < state.bots.size(); i++) {
-        if (y != (MAP_SIZE - 1)) {
-
-            // You can use the DoubleVec2D class to define positions and
-            // distances
-            state.bots[i].transform(DoubleVec2D(x, y));
-            x--;
-            y++;
-        }
+    for (size_t i = used_bots; i < used_bots + 1; i++) {
+        state.bots[i].transform(DoubleVec2D(MAP_SIZE - 2, MAP_SIZE - 2));
     }
 
     // State also has the vector of player towers
@@ -94,6 +86,10 @@ State PlayerCode::update(State state) {
     // reading the docs provided. It should get you up to date with
     // all there is to State and we have some helper snippets and methods
     // so you start competing right away!
+
+    for (auto &bot : state.bots) {
+        logr << bot.position << endl;
+    }
 
     return state;
 }
