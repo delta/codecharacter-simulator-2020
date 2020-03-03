@@ -72,23 +72,23 @@ class BotTest : public Test {
 
 TEST_F(BotTest, InitialValuesTest) {
     // check all member values for new bot instance
-    ASSERT_EQ(bot->getState(), BotStateName::IDLE);
-    ASSERT_EQ(bot->getHp(), BOT_HP);
-    ASSERT_EQ(bot->getMaxHp(), BOT_HP);
-    ASSERT_EQ(bot->getBlastRange(), BOT_BLAST_RANGE);
-    ASSERT_EQ(bot->getBlastDamage(), 0);
-    ASSERT_EQ(bot->getSpeed(), BOT_SPEED);
-    ASSERT_EQ(bot->getPosition(), START_POS);
-    ASSERT_EQ(bot->getDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isDestinationSet(), false);
-    ASSERT_EQ(bot->getNewPosition(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isNewPostitionSet(), false);
-    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isFinalDestinationSet(), false);
-    ASSERT_EQ(bot->isTransformDestinationSet(), false);
-    ASSERT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
-    ASSERT_EQ(bot->isBlasting(), false);
-    ASSERT_EQ(bot->isTransforming(), false);
+    EXPECT_EQ(bot->getState(), BotStateName::IDLE);
+    EXPECT_EQ(bot->getHp(), BOT_HP);
+    EXPECT_EQ(bot->getMaxHp(), BOT_HP);
+    EXPECT_EQ(bot->getBlastRange(), BOT_BLAST_RANGE);
+    EXPECT_EQ(bot->getBlastDamage(), 0);
+    EXPECT_EQ(bot->getSpeed(), BOT_SPEED);
+    EXPECT_EQ(bot->getPosition(), START_POS);
+    EXPECT_EQ(bot->getDestination(), DoubleVec2D::null);
+    EXPECT_EQ(bot->isDestinationSet(), false);
+    EXPECT_EQ(bot->getNewPosition(), DoubleVec2D::null);
+    EXPECT_EQ(bot->isNewPostitionSet(), false);
+    EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    EXPECT_EQ(bot->isFinalDestinationSet(), false);
+    EXPECT_EQ(bot->isTransformDestinationSet(), false);
+    EXPECT_EQ(bot->getFinalDestination(), DoubleVec2D::null);
+    EXPECT_EQ(bot->isBlasting(), false);
+    EXPECT_EQ(bot->isTransforming(), false);
 }
 
 TEST_F(BotTest, MoveTest) {

@@ -39,7 +39,9 @@ proto::BotState GetProtoBotState(BotStateName bot_state) {
         curr_bot_state = proto::BOT_MOVE_TO_TRANSFORM;
         break;
     case BotStateName::TRANSFORM:
-        curr_bot_state = proto::BOT_TRANSFORM;
+        // This happens when the bot is waiting to transform, can be rendered
+        // as an idle bot
+        curr_bot_state = proto::BOT_IDLE;
         break;
     case BotStateName::BLAST:
         curr_bot_state = proto::BOT_BLAST;

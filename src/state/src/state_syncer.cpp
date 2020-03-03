@@ -138,10 +138,6 @@ void StateSyncer::updatePlayerStates(
         } else {
             // Flipping all the map positions and moving it into PLAYER2's
             // flag_offset positions as they won't be asked for again
-            for_each(flag_offsets.begin(), flag_offsets.end(),
-                     [map](auto &flag_offset) {
-                         flag_offset = flipPosition(*map, flag_offset);
-                     });
             player_states[player_id].flag_offsets = std::move(flag_offsets);
         }
     }

@@ -68,6 +68,12 @@ class PathPlanner : public IPathPlanner {
      */
     std::vector<Vec2D> getAdjoiningOffsets(DoubleVec2D position);
 
+    /**
+     * Path cache for given any source and destination, cache the next position
+     * to move to. This cache is invalidated at the start of every turn
+     */
+    std::map<std::pair<DoubleVec2D, DoubleVec2D>, DoubleVec2D> cache;
+
   public:
     PathPlanner(Map *p_map);
 

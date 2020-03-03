@@ -18,7 +18,7 @@ namespace Constants::Actor {
 const uint64_t MAX_BOT_HP = 200;
 
 // Maximum number of bots per player
-const size_t MAX_NUM_BOTS = 250;
+const size_t MAX_NUM_BOTS = 100;
 
 // Number of bots that each player starts with
 const size_t NUM_BOTS_START = 20;
@@ -30,7 +30,7 @@ const uint64_t BOT_BLAST_IMPACT_RADIUS = 2;
 const size_t BOT_BLAST_DAMAGE_POINTS = 50;
 
 // Speed of a bot in manhattan distance per turn
-const uint64_t BOT_SPEED = 6;
+const uint64_t BOT_SPEED = 1;
 
 // Number of bots spawning at home base per turn
 const uint64_t BOT_SPAWN_FREQUENCY = 1;
