@@ -139,7 +139,7 @@ void State::handleTransformRequests() {
             Vec2D offset = getOffsetFromPosition(bot_position, (PlayerId) id);
             // Checking if only one actor is in the offset position where
             // transforming is requested
-            if (position_counts[offset.x][offset.y] == 1) {
+            if (position_counts[offset.x][offset.y] <= 1) {
                 produceTower(bot);
             }
         }

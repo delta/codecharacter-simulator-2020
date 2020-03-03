@@ -405,7 +405,7 @@ TEST_F(StateTest, AcknowledgeTransformRequest) {
         std::bind(&State::constructTowerCallback, state.get(), _1);
     bot->setConstructTowerCallback(construct_tower_callback);
 
-    state->transformBot(bot->getActorId(), bot->getPosition());
+    bot->setTransforming(true);
     bot->update();
     bot->lateUpdate();
 
