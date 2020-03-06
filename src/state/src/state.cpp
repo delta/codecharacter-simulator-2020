@@ -321,11 +321,16 @@ void State::produceTower(Bot *bot) {
     DoubleVec2D tower_position = bot_offset;
 
     // Add the tower obstacle in map
-    path_planner->buildTower(bot_position, player_id);
+    auto tower_offset = path_planner->buildTower(bot_position, player_id);
+
+    // Check if the tower is actually built
+    if (tower_offset == DoubleVec2D::null) {
+        return;
+    }
 
     // Making the tower position as the center of the offset
-    tower_position.x += 0.5;
-    tower_position.y += 0.5;
+    tower_position.x = tower_offset.x + 0.5;
+    tower_position.y = tower_offset.y + 0.5;
 
     // Transitioning the bot into the dead state
     // Move the bot to the new tower's position
