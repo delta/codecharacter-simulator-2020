@@ -21,7 +21,7 @@ const uint64_t MAX_BOT_HP = 200;
 const size_t MAX_NUM_BOTS = 250;
 
 // Number of bots that each player starts with
-const size_t NUM_BOTS_START = 1;
+const size_t NUM_BOTS_START = 20;
 
 // Blast impact radius around the bot
 const uint64_t BOT_BLAST_IMPACT_RADIUS = 2;
