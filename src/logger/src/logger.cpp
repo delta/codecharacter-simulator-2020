@@ -168,6 +168,7 @@ void Logger::logState() {
             t_tower->set_id(tower->getActorId());
             t_tower->set_player_id((int) (tower->getPlayerId()));
             t_tower->set_hp(tower->getHp());
+            t_tower->set_blast_tower(tower->isBlasting());
 
             auto tower_position = tower->getPosition();
             t_tower->set_x(tower_position.x);
