@@ -245,4 +245,5 @@ TEST_F(LoggerTest, WriteReadTest) {
 
     // Check if tower blasts
     ASSERT_EQ(game->states(1).towers(0).state(), proto::TOWER_DEAD);
+    ASSERT_EQ(game->states(1).towers(0).blast_tower(), true);
 }
