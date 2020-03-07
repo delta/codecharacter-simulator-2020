@@ -306,11 +306,6 @@ void State::produceTower(Bot *bot) {
     DoubleVec2D bot_offset =
         getOffsetFromPosition(bot->getPosition(), player_id);
 
-    if (path_planner->getTerrainType(bot_position, player_id) ==
-        TerrainType::FLAG) {
-        score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
-    }
-
     // Finding ratio of hps of tower and bot to scale
     double hp_ratio = (double) (Constants::Actor::MAX_TOWER_HP) /
                       (double) (Constants::Actor::MAX_BOT_HP);
@@ -326,6 +321,12 @@ void State::produceTower(Bot *bot) {
     // Check if the tower is actually built
     if (tower_offset == DoubleVec2D::null) {
         return;
+    }
+
+    if (path_planner->getTerrainType(tower_offset, player_id) ==
+        TerrainType::FLAG) {
+        score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
+        score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
     }
 
     // Making the tower position as the center of the offset
@@ -346,11 +347,6 @@ void State::produceTower(Bot *bot) {
         tower_position, Constants::Actor::TOWER_BLAST_DAMAGE_POINTS,
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
-
-    if (path_planner->getTerrainType(tower_position, player_id) ==
-        TerrainType::FLAG) {
-        score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
-    }
 }
 
 void State::produceTower(PlayerId player_id) {
@@ -392,6 +388,13 @@ void State::removeDeadActors() {
             if (tower->getState() == TowerStateName::DEAD) {
                 auto tower_position = tower->getPosition();
                 path_planner->destroyTower(tower_position);
+            }
+
+            if (path_planner->getTerrainType(tower->getPosition(),
+                                             tower->getPlayerId()) ==
+                TerrainType::FLAG) {
+                score_manager->actorExitedFlagArea(ActorType::TOWER,
+                                                   tower->getPlayerId());
             }
         }
     }
