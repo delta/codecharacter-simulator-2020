@@ -134,6 +134,13 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
     static bool isSpawnOffset(const Map &map, DoubleVec2D position,
                               PlayerId player_id);
 
+    /**
+     * Given a double value, make it not dangerous
+     * @param value
+     * @return sanitized double
+     */
+    static double_t sanitize(double_t value);
+
   public:
     CommandGiver();
 

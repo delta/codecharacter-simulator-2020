@@ -15,13 +15,13 @@ const uint64_t PLAYER_INSTRUCTION_LIMIT_TURN = 10000000;
 
 // Number of instructions exceeding which the entire game is cancelled
 const uint64_t PLAYER_INSTRUCTION_LIMIT_GAME =
-    10 * PLAYER_INSTRUCTION_LIMIT_TURN;
+    100 * PLAYER_INSTRUCTION_LIMIT_TURN;
 
 // Number of turns in the game
 const int64_t NUM_TURNS = 1000;
 
 // Duration of the game in milliseconds
-const int64_t GAME_DURATION_MS = 5 * 1000;
+const int64_t GAME_DURATION_MS = 20 * 1000;
 
 // File names for passing SHM names to player processes
 const auto SHM_FILE_NAMES = std::array<std::string, 2>{"shm1.txt", "shm2.txt"};
