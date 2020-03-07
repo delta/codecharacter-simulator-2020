@@ -181,7 +181,10 @@ bool PathPlanner::destroyTower(Vec2D tower_offset) {
     return true;
 }
 
-void PathPlanner::recomputePathGraph() { path_graph.recomputeWaypointGraph(); }
+void PathPlanner::recomputePathGraph() {
+    cache.clear();
+    path_graph.recomputeWaypointGraph();
+}
 
 DoubleVec2D PathPlanner::getPointAlongLine(const DoubleVec2D &point_a,
                                            const DoubleVec2D &point_b,
@@ -214,10 +217,16 @@ TerrainType PathPlanner::getTerrainType(DoubleVec2D position,
 DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
                                          DoubleVec2D destination,
                                          size_t speed) {
+    if (cache.find({source, destination}) != cache.end()) {
+        return cache[{source, destination}];
+    }
+
+    auto result = DoubleVec2D::null;
+
     std::vector<DoubleVec2D> path = path_graph.getPath(source, destination);
 
     if (path.empty()) {
-        return DoubleVec2D::null;
+        result = DoubleVec2D::null;
     }
 
     double distance_left = speed;
@@ -236,7 +245,10 @@ DoubleVec2D PathPlanner::getNextPosition(DoubleVec2D source,
         distance_left -= travel_distance;
     }
 
-    return current_position;
+    result = current_position;
+    cache[{source, destination}] = result;
+
+    return result;
 }
 
 } // namespace state
