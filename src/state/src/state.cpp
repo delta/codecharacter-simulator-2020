@@ -306,11 +306,6 @@ void State::produceTower(Bot *bot) {
     DoubleVec2D bot_offset =
         getOffsetFromPosition(bot->getPosition(), player_id);
 
-    if (path_planner->getTerrainType(bot_position, player_id) ==
-        TerrainType::FLAG) {
-        score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
-    }
-
     // Finding ratio of hps of tower and bot to scale
     double hp_ratio = (double) (Constants::Actor::MAX_TOWER_HP) /
                       (double) (Constants::Actor::MAX_BOT_HP);
@@ -332,6 +327,12 @@ void State::produceTower(Bot *bot) {
     tower_position.x = tower_offset.x + 0.5;
     tower_position.y = tower_offset.y + 0.5;
 
+    if (path_planner->getTerrainType(tower_position, player_id) ==
+        TerrainType::FLAG) {
+        score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
+        score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
+    }
+
     // Transitioning the bot into the dead state
     // Move the bot to the new tower's position
     bot->setState(BotStateName::DEAD);
@@ -341,16 +342,12 @@ void State::produceTower(Bot *bot) {
 
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
+
     towers[id].push_back(make_unique<Tower>(
         bot_id, player_id, tower_hp, Constants::Actor::MAX_TOWER_HP,
         tower_position, Constants::Actor::TOWER_BLAST_DAMAGE_POINTS,
         Constants::Actor::TOWER_BLAST_IMPACT_RADIUS, score_manager.get(),
         damage_enemy_actors));
-
-    if (path_planner->getTerrainType(tower_position, player_id) ==
-        TerrainType::FLAG) {
-        score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
-    }
 }
 
 void State::produceTower(PlayerId player_id) {
@@ -392,6 +389,13 @@ void State::removeDeadActors() {
             if (tower->getState() == TowerStateName::DEAD) {
                 auto tower_position = tower->getPosition();
                 path_planner->destroyTower(tower_position);
+
+                if (path_planner->getTerrainType(tower->getPosition(),
+                                                 tower->getPlayerId()) ==
+                    TerrainType::FLAG) {
+                    score_manager->actorExitedFlagArea(ActorType::TOWER,
+                                                       tower->getPlayerId());
+                }
             }
         }
     }
