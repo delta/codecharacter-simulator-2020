@@ -323,15 +323,15 @@ void State::produceTower(Bot *bot) {
         return;
     }
 
-    if (path_planner->getTerrainType(tower_offset, player_id) ==
+    // Making the tower position as the center of the offset
+    tower_position.x = tower_offset.x + 0.5;
+    tower_position.y = tower_offset.y + 0.5;
+
+    if (path_planner->getTerrainType(tower_position, player_id) ==
         TerrainType::FLAG) {
         score_manager->actorExitedFlagArea(ActorType::BOT, player_id);
         score_manager->actorEnteredFlagArea(ActorType::TOWER, player_id);
     }
-
-    // Making the tower position as the center of the offset
-    tower_position.x = tower_offset.x + 0.5;
-    tower_position.y = tower_offset.y + 0.5;
 
     // Transitioning the bot into the dead state
     // Move the bot to the new tower's position
@@ -342,6 +342,7 @@ void State::produceTower(Bot *bot) {
 
     auto damage_enemy_actors =
         std::bind(&State::damageEnemyActors, this, _1, _2, _3);
+
     towers[id].push_back(make_unique<Tower>(
         bot_id, player_id, tower_hp, Constants::Actor::MAX_TOWER_HP,
         tower_position, Constants::Actor::TOWER_BLAST_DAMAGE_POINTS,
@@ -388,13 +389,13 @@ void State::removeDeadActors() {
             if (tower->getState() == TowerStateName::DEAD) {
                 auto tower_position = tower->getPosition();
                 path_planner->destroyTower(tower_position);
-            }
 
-            if (path_planner->getTerrainType(tower->getPosition(),
-                                             tower->getPlayerId()) ==
-                TerrainType::FLAG) {
-                score_manager->actorExitedFlagArea(ActorType::TOWER,
-                                                   tower->getPlayerId());
+                if (path_planner->getTerrainType(tower->getPosition(),
+                                                 tower->getPlayerId()) ==
+                    TerrainType::FLAG) {
+                    score_manager->actorExitedFlagArea(ActorType::TOWER,
+                                                       tower->getPlayerId());
+                }
             }
         }
     }
