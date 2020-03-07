@@ -135,11 +135,12 @@ class STATE_EXPORT CommandGiver : public ICommandGiver {
                               PlayerId player_id);
 
     /**
-     * Given a double value, make it not dangerous
+     * Given a double position, make it not dangerous i.e., round it to 6
+     * decimals
      * @param value
      * @return sanitized double
      */
-    static double_t sanitize(double_t value);
+    static DoubleVec2D sanitize(DoubleVec2D position);
 
   public:
     CommandGiver();

@@ -127,10 +127,10 @@ Vec2D CommandGiver::getOffset(const Map &map, DoubleVec2D position,
     }
 }
 
-double_t CommandGiver::sanitize(double_t value) {
-    std::cout << value << std::endl;
-    value = ceil(value * 1000000) / 1000000.0;
-    return value;
+DoubleVec2D CommandGiver::sanitize(DoubleVec2D position) {
+    position.x = ceil(position.x * 1000000) / 1000000.0;
+    position.y = ceil(position.y * 1000000) / 1000000.0;
+    return position;
 }
 
 void CommandGiver::runCommands(
@@ -174,8 +174,8 @@ void CommandGiver::runCommands(
             auto player_bot = player_states[id].bots[bot_index];
             auto state_bot = state_bots[id][bot_index];
             DoubleVec2D player_bot_position = player_bot.position;
-            player_bot_position = {sanitize(player_bot_position.x),
-                                   sanitize(player_bot_position.y)};
+            sanitize(player_bot_position);
+
             if (player_id == PlayerId::PLAYER2) {
                 player_bot_position =
                     flipBotPosition(*map, player_bot_position);
@@ -248,8 +248,7 @@ void CommandGiver::runCommands(
             } else if (is_moving_to_blast) {
                 // Validate the position where the player wants the bot to blast
                 DoubleVec2D final_destination = player_bot.final_destination;
-                final_destination = {sanitize(final_destination.x),
-                                     sanitize(final_destination.y)};
+                sanitize(final_destination);
                 if (player_id == PlayerId::PLAYER2) {
                     final_destination =
                         flipBotPosition(*map, final_destination);
@@ -266,8 +265,7 @@ void CommandGiver::runCommands(
                 // the bot
                 DoubleVec2D transform_destination =
                     player_bot.transform_destination;
-                transform_destination = {sanitize(transform_destination.x),
-                                         sanitize(transform_destination.y)};
+                sanitize(transform_destination);
                 if (player_id == PlayerId::PLAYER2) {
                     transform_destination =
                         flipBotPosition(*map, transform_destination);
@@ -300,8 +298,7 @@ void CommandGiver::runCommands(
                 // Validates the position that the player has requested to
                 // move onto
                 DoubleVec2D destination = player_bot.destination;
-                destination = {sanitize(destination.x),
-                               sanitize(destination.y)};
+                sanitize(destination);
                 if (player_id == PlayerId::PLAYER2) {
                     destination = flipBotPosition(*map, destination);
                 }
@@ -333,8 +330,7 @@ void CommandGiver::runCommands(
             auto player_tower = player_states[id].towers[tower_index];
             auto state_tower = state_towers[id][tower_index];
             DoubleVec2D player_tower_position = player_tower.position;
-            player_tower_position = {sanitize(player_tower_position.x),
-                                     sanitize(player_tower_position.y)};
+            sanitize(player_tower_position);
             if (player_id == PlayerId::PLAYER2) {
                 player_tower_position =
                     flipTowerPosition(*map, player_tower_position);
