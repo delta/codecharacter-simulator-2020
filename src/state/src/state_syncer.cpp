@@ -132,18 +132,8 @@ void StateSyncer::updatePlayerStates(
         player_states[player_id].flag_offsets.resize(total_flag_offsets);
         player_states[player_id].num_flags = total_flag_offsets;
 
-        if (static_cast<PlayerId>(player_id) == PlayerId::PLAYER1) {
-            std::copy(flag_offsets.begin(), flag_offsets.end(),
-                      player_states[player_id].flag_offsets.begin());
-        } else {
-            // Flipping all the map positions and moving it into PLAYER2's
-            // flag_offset positions as they won't be asked for again
-            for_each(flag_offsets.begin(), flag_offsets.end(),
-                     [map](auto &flag_offset) {
-                         flag_offset = flipPosition(*map, flag_offset);
-                     });
-            player_states[player_id].flag_offsets = std::move(flag_offsets);
-        }
+        std::copy(flag_offsets.begin(), flag_offsets.end(),
+                  player_states[player_id].flag_offsets.begin());
     }
 
     // Updating the player's scores

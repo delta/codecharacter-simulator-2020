@@ -30,7 +30,7 @@ const uint64_t BOT_BLAST_IMPACT_RADIUS = 2;
 const size_t BOT_BLAST_DAMAGE_POINTS = 50;
 
 // Speed of a bot in manhattan distance per turn
-const uint64_t BOT_SPEED = 6;
+const uint64_t BOT_SPEED = 1;
 
 // Number of bots spawning at home base per turn
 const uint64_t BOT_SPAWN_FREQUENCY = 1;
