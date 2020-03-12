@@ -196,6 +196,10 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     EXPECT_EQ(player_states[1].towers[1].position, DoubleVec2D(1, 2));
     EXPECT_EQ(player_states[0].enemy_towers[1].position, DoubleVec2D(4, 3));
 
+    // Incrementing the age of state towers
+    state_towers[0][0]->incrementAge();
+    state_towers[1][0]->incrementAge();
+
     // Checking for bots and tower's new states
     manageStateExpectations(state_bots, state_towers);
     this->state_syncer->updatePlayerStates(player_states);
@@ -237,9 +241,11 @@ TEST_F(StateSyncerTest, updatePlayerStates) {
     EXPECT_EQ(player_states[0].towers[0].hp, 100);
     EXPECT_EQ(player_states[0].towers[0].position, DoubleVec2D(0, 0));
     EXPECT_EQ(player_states[0].towers[0].state, player_state::TowerState::IDLE);
+    EXPECT_EQ(player_states[0].towers[0].age, 1);
 
     EXPECT_EQ(player_states[1].towers[0].id, 3);
     EXPECT_EQ(player_states[1].towers[0].hp, 100);
     EXPECT_EQ(player_states[1].towers[0].position, DoubleVec2D(1, 1));
     EXPECT_EQ(player_states[1].towers[0].state, player_state::TowerState::IDLE);
+    EXPECT_EQ(player_states[1].towers[0].age, 1);
 }
