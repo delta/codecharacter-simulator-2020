@@ -284,6 +284,15 @@ Bot &getBotById(State &state, int64_t bot_id);
  */
 Tower &getTowerById(State &state, int64_t tower_id);
 
+/**
+ * Returns a Tower By Position
+ *
+ * @param state Refernce to state
+ * @param position Position against which a tower is checked
+ * @return Tower& Refernce to tower at position
+ */
+Tower &getTowerByPosition(State &state, DoubleVec2D position);
+
 ostream &operator<<(ostream &os,
                     const array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map);
 

@@ -182,6 +182,27 @@ Tower &getTowerById(State &state, int64_t tower_id) {
     return Tower::null;
 }
 
+Tower &getTowerByPosition(State &state, DoubleVec2D position) {
+    // Changing the position to the center of the offset
+    int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    DoubleVec2D center_position = DoubleVec2D(pos_x + 0.5, pos_y + 0.5);
+
+    // Iterating through all towers
+    for (auto &tower : state.towers) {
+        if (tower.position == center_position) {
+            return tower;
+        }
+    }
+
+    for (auto &enemy_tower : state.enemy_towers) {
+        if (enemy_tower.position == center_position) {
+            return enemy_tower;
+        }
+    }
+
+    return Tower::null;
+}
+
 DoubleVec2D findNearestFlagPosition(const State &state, DoubleVec2D position) {
     // The nearest flag location only depends upon the terrain type being flag
     // and not the position count
