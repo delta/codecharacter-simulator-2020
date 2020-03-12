@@ -134,3 +134,30 @@ TEST_F(PlayerStateTest, FindNearestFreePositionTest) {
     EXPECT_EQ(nearest_point2, DoubleVec2D(0.5, 1.5));
     EXPECT_EQ(nearest_point3, DoubleVec2D(3.5, 4.5));
 }
+
+TEST_F(PlayerStateTest, FindTowerByPosition) {
+    // Adding towers to the player state
+    auto tower1 = Tower(6);
+    tower1.position = DoubleVec2D(2.5, 2.5);
+    auto tower2 = Tower(7);
+    tower2.position = DoubleVec2D(3.5, 3.5);
+
+    player_states[0].towers.push_back(tower1);
+    player_states[0].enemy_towers.push_back(tower2);
+
+    auto tower = getTowerByPosition(player_states[0], DoubleVec2D(2.1, 2.2));
+    EXPECT_EQ(tower, tower1);
+
+    tower = getTowerByPosition(player_states[0], DoubleVec2D(3.5, 3.5));
+    EXPECT_EQ(tower, tower2);
+
+    tower = getTowerByPosition(player_states[0], DoubleVec2D(4.1, 4.2));
+    EXPECT_EQ(tower, Tower::null);
+}
+
+TEST_F(PlayerStateTest, GetOffsetFromPosition) {
+    auto offset1 = getOffsetFromPosition(DoubleVec2D(2.5, 2.9));
+    auto offset2 = getOffsetFromPosition(DoubleVec2D(2, 2));
+    EXPECT_EQ(offset1, Vec2D(2, 2));
+    EXPECT_EQ(offset2, Vec2D(2, 2));
+}
