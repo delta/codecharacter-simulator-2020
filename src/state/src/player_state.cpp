@@ -182,6 +182,11 @@ Tower &getTowerById(State &state, int64_t tower_id) {
     return Tower::null;
 }
 
+Vec2D getOffsetFromPosition(DoubleVec2D position) {
+    uint64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);
+    return Vec2D(pos_x, pos_y);
+}
+
 Tower &getTowerByPosition(State &state, DoubleVec2D position) {
     // Changing the position to the center of the offset
     int64_t pos_x = std::floor(position.x), pos_y = std::floor(position.y);

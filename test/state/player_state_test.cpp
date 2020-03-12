@@ -154,3 +154,10 @@ TEST_F(PlayerStateTest, FindTowerByPosition) {
     tower = getTowerByPosition(player_states[0], DoubleVec2D(4.1, 4.2));
     EXPECT_EQ(tower, Tower::null);
 }
+
+TEST_F(PlayerStateTest, GetOffsetFromPosition) {
+    auto offset1 = getOffsetFromPosition(DoubleVec2D(2.5, 2.9));
+    auto offset2 = getOffsetFromPosition(DoubleVec2D(2, 2));
+    EXPECT_EQ(offset1, Vec2D(2, 2));
+    EXPECT_EQ(offset2, Vec2D(2, 2));
+}

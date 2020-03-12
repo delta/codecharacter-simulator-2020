@@ -293,6 +293,14 @@ Tower &getTowerById(State &state, int64_t tower_id);
  */
 Tower &getTowerByPosition(State &state, DoubleVec2D position);
 
+/**
+ * Returns the Offset given a position
+ *
+ * @param position Position for which offset is derived from
+ * @return Vec2D Offset
+ */
+Vec2D getOffsetFromPosition(DoubleVec2D position);
+
 ostream &operator<<(ostream &os,
                     const array<array<MapElement, MAP_SIZE>, MAP_SIZE> &map);
 
