@@ -286,6 +286,9 @@ void StateSyncer::assignTowers(int64_t id,
             new_tower.position = flipped_tower_position;
         }
 
+        // Assigning the tower's age
+        new_tower.age = state_tower->getAge();
+
         new_towers.push_back(new_tower);
     }
 

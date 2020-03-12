@@ -166,7 +166,7 @@ struct Bot : _Unit, _Blaster {
 
 struct Tower : _Actor, _Blaster {
     static Tower null;
-
+    uint64_t age;
     TowerState state;
 
     void blast() { _Blaster::blast(); }
@@ -177,6 +177,7 @@ struct Tower : _Actor, _Blaster {
         this->position = reference_tower.position;
         this->state = reference_tower.state;
         this->blasting = reference_tower.blasting;
+        this->age = reference_tower.age;
     }
 
     bool operator==(const Tower &tower) const {
@@ -184,8 +185,9 @@ struct Tower : _Actor, _Blaster {
                 tower.position == position && tower.blasting == blasting);
     }
 
-    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE){};
-    Tower(int64_t id) : _Actor(id), _Blaster(), state(TowerState::IDLE){};
+    Tower() : _Actor(), _Blaster(), state(TowerState::IDLE), age(0){};
+    Tower(int64_t id)
+        : _Actor(id), _Blaster(), state(TowerState::IDLE), age(0){};
 };
 
 struct MapElement {
