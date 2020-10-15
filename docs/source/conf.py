@@ -59,3 +59,5 @@ breathe_projects = { "codecharacterdocs": "../xml" }
 
 #Specify a default project:
 breathe_default_project = "codecharacterdocs"
+
+breathe_domain_by_extension = {"h" : "cpp" }
