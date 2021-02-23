@@ -22,17 +22,17 @@ class STATE_EXPORT ScoreManager {
     /**
      * Current game scores
      */
-    std::array<size_t, 2> scores;
+    std::array<std::size_t, 2> scores;
 
     /**
      * Number of bots of player in flag area
      */
-    std::array<size_t, 2> num_bots;
+    std::array<std::size_t, 2> num_bots;
 
     /**
      * Number of towers of players in flag area
      */
-    std::array<size_t, 2> num_towers;
+    std::array<std::size_t, 2> num_towers;
 
     /**
      * Get points based on number of bots and towers owned by the player
@@ -54,7 +54,7 @@ class STATE_EXPORT ScoreManager {
      *
      * @param scores
      */
-    ScoreManager(std::array<size_t, 2> scores);
+    ScoreManager(std::array<std::size_t, 2> scores);
 
     /**
      * Record actor entering flag
@@ -79,22 +79,22 @@ class STATE_EXPORT ScoreManager {
     /**
      * Returns the scores
      *
-     * @return std::array<size_t, 2> scores
+     * @return std::array<std::size_t, 2> scores
      */
-    std::array<size_t, 2> getScores() const;
+    std::array<std::size_t, 2> getScores() const;
 
     /**
      * Get the Tower Counts at the end of the turn
      *
-     * @return std::array<size_t, 2>
+     * @return std::array<std::size_t, 2>
      */
-    std::array<size_t, 2> getTowerCounts() const;
+    std::array<std::size_t, 2> getTowerCounts() const;
 
     /**
      * Gets the Bot Counts at the end of the turn of both players
      *
-     * @return std::array<size_t, 2>
+     * @return std::array<std::size_t, 2>
      */
-    std::array<size_t, 2> getBotCounts() const;
+    std::array<std::size_t, 2> getBotCounts() const;
 };
 } // namespace state
