@@ -152,6 +152,8 @@ struct Bot : _Unit, _Blaster {
                 bot.transforming == transforming && bot.blasting == blasting);
     }
 
+    bool operator!=(const Bot &bot) const { return !((*this) == bot); }
+
     Bot()
         : _Unit(), _Blaster(), state(BotState::IDLE),
           final_destination(DoubleVec2D::null),
@@ -184,6 +186,8 @@ struct Tower : _Actor, _Blaster {
         return (tower.id == id && tower.hp == hp && tower.state == state &&
                 tower.position == position && tower.blasting == blasting);
     }
+
+    bool operator!=(const Tower &tower) const { return !((*this) == tower); }
 
     Tower() : _Actor(), _Blaster(), state(TowerState::IDLE), age(0){};
     Tower(int64_t id)

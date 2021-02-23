@@ -84,6 +84,8 @@ TEST_F(PlayerStateTest, GetBotByIdTest) {
     EXPECT_EQ(bot1, getBotById(player_states[0], 2000));
     EXPECT_EQ(bot2, getBotById(player_states[1], 65));
     EXPECT_EQ(Bot::null, getBotById(player_states[0], -50));
+    EXPECT_NE(Bot::null, getBotById(player_states[0], 2000));
+    EXPECT_NE(Bot::null, getBotById(player_states[1], 65));
 }
 
 TEST_F(PlayerStateTest, GetTowerByIdTest) {
@@ -99,6 +101,8 @@ TEST_F(PlayerStateTest, GetTowerByIdTest) {
     EXPECT_EQ(tower1, getTowerById(player_states[0], 64));
     EXPECT_EQ(tower2, getTowerById(player_states[1], 4040));
     EXPECT_EQ(Tower::null, getTowerById(player_states[0], 95));
+    EXPECT_NE(Tower::null, getTowerById(player_states[0], 64));
+    EXPECT_NE(Tower::null, getTowerById(player_states[1], 4040));
 }
 
 TEST_F(PlayerStateTest, FindNearestFlagTest) {
