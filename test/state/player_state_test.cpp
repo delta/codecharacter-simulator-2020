@@ -165,3 +165,121 @@ TEST_F(PlayerStateTest, GetOffsetFromPosition) {
     EXPECT_EQ(offset1, Vec2D(2, 2));
     EXPECT_EQ(offset2, Vec2D(2, 2));
 }
+
+TEST_F(PlayerStateTest, TowerStructTest) {
+    Tower tower1(10);
+    Tower tower2(19);
+    Tower tower3(tower1);
+    Tower tower4;
+    tower4.id = 19;
+
+    EXPECT_EQ(tower1.id, 10);
+    EXPECT_EQ(tower2.id, 19);
+    EXPECT_EQ(tower3.id, 10);
+    EXPECT_EQ(tower4.id, 19);
+
+    EXPECT_NE(tower1, tower2);
+    EXPECT_EQ(tower1, tower3);
+    EXPECT_EQ(tower2, tower4);
+
+    EXPECT_EQ(tower1.blasting, false);
+    EXPECT_EQ(tower2.blasting, false);
+    EXPECT_EQ(tower3.blasting, false);
+    EXPECT_EQ(tower4.blasting, false);
+
+    tower1.blast();
+    tower2.blast();
+    tower3.blast();
+    tower4.blast();
+
+    EXPECT_EQ(tower1.blasting, true);
+    EXPECT_EQ(tower2.blasting, true);
+    EXPECT_EQ(tower3.blasting, true);
+    EXPECT_EQ(tower4.blasting, true);
+}
+
+TEST_F(PlayerStateTest, BotStructTest) {
+    // different methods of construction
+    Bot bot1(11);
+    Bot bot2(29);
+    bot2.position = {2, 2};
+    Bot bot3;
+    bot3.id = 35;
+    Bot bot4(bot2);
+    Bot bot5(1);
+    bot5.position = {20, 20};
+
+    EXPECT_EQ(bot1.id, 11);
+    EXPECT_EQ(bot1.final_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.transforming, false);
+    EXPECT_EQ(bot1.blasting, false);
+    EXPECT_EQ(bot1.destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.position, DoubleVec2D(0, 0));
+
+    // equality operator checks
+    EXPECT_EQ(bot2, bot4);
+    EXPECT_NE(bot1, bot3);
+    EXPECT_NE(bot1, bot2);
+
+    // target_position!=position case
+    bot1.blast({10, 10});
+    EXPECT_EQ(bot1.final_destination, DoubleVec2D(10, 10));
+    EXPECT_EQ(bot1.blasting, false);
+
+    // target_position==postion case
+    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
+    bot2.blast({2, 2});
+    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
+    EXPECT_EQ(bot2.blasting, true);
+
+    bot5.blast();
+    EXPECT_EQ(bot5.position, DoubleVec2D(20, 20));
+    EXPECT_EQ(bot5.blasting, true);
+
+    bot1.reset();
+    EXPECT_EQ(bot1.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.final_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.transforming, false);
+    EXPECT_EQ(bot1.destination, DoubleVec2D::null);
+    EXPECT_EQ(bot1.blasting, false);
+
+    bot2.reset();
+    EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.transforming, false);
+    EXPECT_EQ(bot2.destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.blasting, false);
+
+    bot5.reset();
+    EXPECT_EQ(bot5.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot5.final_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot5.transforming, false);
+    EXPECT_EQ(bot5.destination, DoubleVec2D::null);
+    EXPECT_EQ(bot5.blasting, false);
+
+    // transforms test
+
+    bot1.position = {9, 9};
+    bot1.transform({9, 9});
+    EXPECT_EQ(bot1.transforming, true);
+
+    bot2.transform({10, 10});
+    EXPECT_EQ(bot2.transform_destination, DoubleVec2D(10, 10));
+    EXPECT_EQ(bot2.transforming, false);
+
+    bot2.transform();
+    EXPECT_EQ(bot2.transforming, true);
+}
+
+TEST_F(PlayerStateTest, MapElementStructTest) {
+    MapElement elem1;
+    elem1.setTerrain(player_state::TerrainType::LAND);
+    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::LAND);
+    elem1.setTerrain(player_state::TerrainType::FLAG);
+    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::FLAG);
+    elem1.setTerrain(player_state::TerrainType::WATER);
+    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::WATER);
+    elem1.setTerrain(player_state::TerrainType::TOWER);
+    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::TOWER);
+}
