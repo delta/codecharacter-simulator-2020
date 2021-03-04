@@ -1,5 +1,6 @@
 #include "state/player_state.h"
 #include "gtest/gtest.h"
+#include <sstream>
 
 using namespace std;
 using namespace state;
@@ -163,20 +164,21 @@ TEST_F(PlayerStateTest, GetOffsetFromPosition) {
 }
 
 TEST_F(PlayerStateTest, TowerTest) {
-    player_state::Tower tower1(10);
-    player_state::Tower tower2(19);
-    player_state::Tower tower3(tower1);
-    player_state::Tower tower4;
-    tower4.id = 19;
+    Tower &tower1 = player_states[0].towers[2];
+    tower1.id = 10;
+    Tower &tower2 = player_states[1].towers[3];
+    tower2.id = 19;
+    Tower tower3(tower1);
+    Tower &tower4 = player_states[0].towers[5];
+    tower4.id = 29;
 
     EXPECT_EQ(tower1.id, 10);
     EXPECT_EQ(tower2.id, 19);
     EXPECT_EQ(tower3.id, 10);
-    EXPECT_EQ(tower4.id, 19);
+    EXPECT_EQ(tower4.id, 29);
 
     EXPECT_NE(tower1, tower2);
     EXPECT_EQ(tower1, tower3);
-    EXPECT_EQ(tower2, tower4);
 
     // Initial values
     EXPECT_EQ(tower4.position, DoubleVec2D(0, 0));
@@ -192,14 +194,12 @@ TEST_F(PlayerStateTest, TowerTest) {
 
 TEST_F(PlayerStateTest, BotTest) {
     // different methods of construction
-    player_state::Bot bot1(11);
-    player_state::Bot bot2(29);
+    Bot &bot1 = player_states[0].bots[2];
+    bot1.id = 11;
+    Bot &bot2 = player_states[1].bots[2];
+    bot2.id = 29;
     bot2.position = {2, 2};
-    player_state::Bot bot3;
-    bot3.id = 35;
-    player_state::Bot bot4(bot2);
-    player_state::Bot bot5(1);
-    bot5.position = {20, 20};
+    player_state::Bot bot3(bot2);
 
     EXPECT_EQ(bot1.id, 11);
     EXPECT_EQ(bot1.final_destination, DoubleVec2D::null);
@@ -210,23 +210,13 @@ TEST_F(PlayerStateTest, BotTest) {
     EXPECT_EQ(bot1.position, DoubleVec2D(0, 0));
 
     // == & != operator checks
-    EXPECT_EQ(bot2, bot4);
-    EXPECT_NE(bot1, bot3);
+    EXPECT_EQ(bot2, bot3);
     EXPECT_NE(bot1, bot2);
 
     // target_position!=position case
     bot1.blast({10, 10});
     EXPECT_EQ(bot1.final_destination, DoubleVec2D(10, 10));
     EXPECT_EQ(bot1.blasting, false);
-
-    // target_position==postion case
-    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
-    bot2.blast({2, 2});
-    EXPECT_EQ(bot2.transforming, false);
-    EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
-    EXPECT_EQ(bot2.blasting, true);
 
     bot1.reset();
     EXPECT_EQ(bot1.transform_destination, DoubleVec2D::null);
@@ -235,17 +225,26 @@ TEST_F(PlayerStateTest, BotTest) {
     EXPECT_EQ(bot1.destination, DoubleVec2D::null);
     EXPECT_EQ(bot1.blasting, false);
 
+    // transforms test on bot1
+    bot1.position = {9, 9};
+    bot1.transform({9, 9});
+    EXPECT_EQ(bot1.transforming, true);
+
+    // target_position==postion case on bot2
+    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
+    bot2.blast({2, 2});
+    EXPECT_EQ(bot2.transforming, false);
+    EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
+    EXPECT_EQ(bot2.blasting, true);
+
     bot2.reset();
     EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
     EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
     EXPECT_EQ(bot2.transforming, false);
     EXPECT_EQ(bot2.destination, DoubleVec2D::null);
     EXPECT_EQ(bot2.blasting, false);
-
-    // transforms test
-    bot1.position = {9, 9};
-    bot1.transform({9, 9});
-    EXPECT_EQ(bot1.transforming, true);
 
     bot2.transform({10, 10});
     EXPECT_EQ(bot2.transform_destination, DoubleVec2D(10, 10));
@@ -256,7 +255,51 @@ TEST_F(PlayerStateTest, BotTest) {
 }
 
 TEST_F(PlayerStateTest, MapElementTest) {
-    player_state::MapElement elem1;
+    auto &elem1 = player_map[1][2];
     elem1.setTerrain(player_state::TerrainType::LAND);
     EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::LAND);
+}
+
+TEST_F(PlayerStateTest, OverloadOperatorsTest) {
+    std::ostringstream result;
+    std::ostringstream expected;
+
+    // Tower and TowerState ostream overloads test
+    auto &tower = player_states[0].towers[1];
+    tower.id = 10;
+    tower.state = TowerState::DEAD;
+    // towerstate ostream << test
+    result << tower.state;
+    EXPECT_EQ(result.str(), string("DEAD"));
+    result.str(""); // clears the stream
+    result.clear();
+    // << for Tower class
+    expected << "Tower(id: " << tower.id << ") {" << endl;
+    expected << "   hp: " << tower.hp << endl;
+    expected << "   state: " << tower.state << endl;
+    expected << "}" << endl;
+    result << tower;
+    EXPECT_EQ(result.str(), expected.str());
+    result.str("");
+    result.clear();
+    expected.str("");
+    expected.clear();
+
+    // Bot and BotState ostream overload tests
+    auto &bot = player_states[1].bots[2];
+    bot.id = 29;
+    bot.state = BotState::BLAST;
+    // BotState <<
+    result << bot.state;
+    EXPECT_EQ(result.str(), string("BLAST"));
+    result.str(""); // clears the stream
+    result.clear();
+    // << for Bot
+    expected << "Bot(id: " << bot.id << ") {" << endl;
+    expected << "   hp: " << bot.hp << endl;
+    expected << "   position: " << bot.position << endl;
+    expected << "   state: " << bot.state << endl;
+    expected << "}" << endl;
+    result << bot;
+    EXPECT_EQ(expected.str(), result.str());
 }
