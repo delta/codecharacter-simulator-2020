@@ -84,8 +84,6 @@ TEST_F(PlayerStateTest, GetBotByIdTest) {
     EXPECT_EQ(bot1, getBotById(player_states[0], 2000));
     EXPECT_EQ(bot2, getBotById(player_states[1], 65));
     EXPECT_EQ(Bot::null, getBotById(player_states[0], -50));
-    EXPECT_NE(Bot::null, getBotById(player_states[0], 2000));
-    EXPECT_NE(Bot::null, getBotById(player_states[1], 65));
 }
 
 TEST_F(PlayerStateTest, GetTowerByIdTest) {
@@ -101,8 +99,6 @@ TEST_F(PlayerStateTest, GetTowerByIdTest) {
     EXPECT_EQ(tower1, getTowerById(player_states[0], 64));
     EXPECT_EQ(tower2, getTowerById(player_states[1], 4040));
     EXPECT_EQ(Tower::null, getTowerById(player_states[0], 95));
-    EXPECT_NE(Tower::null, getTowerById(player_states[0], 64));
-    EXPECT_NE(Tower::null, getTowerById(player_states[1], 4040));
 }
 
 TEST_F(PlayerStateTest, FindNearestFlagTest) {
@@ -166,11 +162,11 @@ TEST_F(PlayerStateTest, GetOffsetFromPosition) {
     EXPECT_EQ(offset2, Vec2D(2, 2));
 }
 
-TEST_F(PlayerStateTest, TowerStructTest) {
-    Tower tower1(10);
-    Tower tower2(19);
-    Tower tower3(tower1);
-    Tower tower4;
+TEST_F(PlayerStateTest, TowerTest) {
+    player_state::Tower tower1(10);
+    player_state::Tower tower2(19);
+    player_state::Tower tower3(tower1);
+    player_state::Tower tower4;
     tower4.id = 19;
 
     EXPECT_EQ(tower1.id, 10);
@@ -182,31 +178,27 @@ TEST_F(PlayerStateTest, TowerStructTest) {
     EXPECT_EQ(tower1, tower3);
     EXPECT_EQ(tower2, tower4);
 
-    EXPECT_EQ(tower1.blasting, false);
-    EXPECT_EQ(tower2.blasting, false);
-    EXPECT_EQ(tower3.blasting, false);
+    // Initial values
+    EXPECT_EQ(tower4.position, DoubleVec2D(0, 0));
+    EXPECT_EQ(tower4.state, player_state::TowerState::IDLE);
+    EXPECT_EQ(tower4.age, 0);
+    EXPECT_EQ(tower4.hp, 100);
+    EXPECT_EQ(tower4.impact_radius, 0);
     EXPECT_EQ(tower4.blasting, false);
 
     tower1.blast();
-    tower2.blast();
-    tower3.blast();
-    tower4.blast();
-
     EXPECT_EQ(tower1.blasting, true);
-    EXPECT_EQ(tower2.blasting, true);
-    EXPECT_EQ(tower3.blasting, true);
-    EXPECT_EQ(tower4.blasting, true);
 }
 
-TEST_F(PlayerStateTest, BotStructTest) {
+TEST_F(PlayerStateTest, BotTest) {
     // different methods of construction
-    Bot bot1(11);
-    Bot bot2(29);
+    player_state::Bot bot1(11);
+    player_state::Bot bot2(29);
     bot2.position = {2, 2};
-    Bot bot3;
+    player_state::Bot bot3;
     bot3.id = 35;
-    Bot bot4(bot2);
-    Bot bot5(1);
+    player_state::Bot bot4(bot2);
+    player_state::Bot bot5(1);
     bot5.position = {20, 20};
 
     EXPECT_EQ(bot1.id, 11);
@@ -217,7 +209,7 @@ TEST_F(PlayerStateTest, BotStructTest) {
     EXPECT_EQ(bot1.destination, DoubleVec2D::null);
     EXPECT_EQ(bot1.position, DoubleVec2D(0, 0));
 
-    // equality operator checks
+    // == & != operator checks
     EXPECT_EQ(bot2, bot4);
     EXPECT_NE(bot1, bot3);
     EXPECT_NE(bot1, bot2);
@@ -230,12 +222,11 @@ TEST_F(PlayerStateTest, BotStructTest) {
     // target_position==postion case
     EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
     bot2.blast({2, 2});
+    EXPECT_EQ(bot2.transforming, false);
+    EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
+    EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
     EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
     EXPECT_EQ(bot2.blasting, true);
-
-    bot5.blast();
-    EXPECT_EQ(bot5.position, DoubleVec2D(20, 20));
-    EXPECT_EQ(bot5.blasting, true);
 
     bot1.reset();
     EXPECT_EQ(bot1.transform_destination, DoubleVec2D::null);
@@ -251,15 +242,7 @@ TEST_F(PlayerStateTest, BotStructTest) {
     EXPECT_EQ(bot2.destination, DoubleVec2D::null);
     EXPECT_EQ(bot2.blasting, false);
 
-    bot5.reset();
-    EXPECT_EQ(bot5.transform_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot5.final_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot5.transforming, false);
-    EXPECT_EQ(bot5.destination, DoubleVec2D::null);
-    EXPECT_EQ(bot5.blasting, false);
-
     // transforms test
-
     bot1.position = {9, 9};
     bot1.transform({9, 9});
     EXPECT_EQ(bot1.transforming, true);
@@ -272,14 +255,8 @@ TEST_F(PlayerStateTest, BotStructTest) {
     EXPECT_EQ(bot2.transforming, true);
 }
 
-TEST_F(PlayerStateTest, MapElementStructTest) {
-    MapElement elem1;
+TEST_F(PlayerStateTest, MapElementTest) {
+    player_state::MapElement elem1;
     elem1.setTerrain(player_state::TerrainType::LAND);
     EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::LAND);
-    elem1.setTerrain(player_state::TerrainType::FLAG);
-    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::FLAG);
-    elem1.setTerrain(player_state::TerrainType::WATER);
-    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::WATER);
-    elem1.setTerrain(player_state::TerrainType::TOWER);
-    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::TOWER);
 }
