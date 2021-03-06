@@ -172,11 +172,6 @@ TEST_F(PlayerStateTest, TowerTest) {
     Tower &tower4 = player_states[0].towers[5];
     tower4.id = 29;
 
-    EXPECT_EQ(tower1.id, 10);
-    EXPECT_EQ(tower2.id, 19);
-    EXPECT_EQ(tower3.id, 10);
-    EXPECT_EQ(tower4.id, 29);
-
     EXPECT_NE(tower1, tower2);
     EXPECT_EQ(tower1, tower3);
 
@@ -199,9 +194,8 @@ TEST_F(PlayerStateTest, BotTest) {
     Bot &bot2 = player_states[1].bots[2];
     bot2.id = 29;
     bot2.position = {2, 2};
-    player_state::Bot bot3(bot2);
+    Bot bot3(bot2);
 
-    EXPECT_EQ(bot1.id, 11);
     EXPECT_EQ(bot1.final_destination, DoubleVec2D::null);
     EXPECT_EQ(bot1.transform_destination, DoubleVec2D::null);
     EXPECT_EQ(bot1.transforming, false);
@@ -239,13 +233,6 @@ TEST_F(PlayerStateTest, BotTest) {
     EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
     EXPECT_EQ(bot2.blasting, true);
 
-    bot2.reset();
-    EXPECT_EQ(bot2.transform_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot2.final_destination, DoubleVec2D::null);
-    EXPECT_EQ(bot2.transforming, false);
-    EXPECT_EQ(bot2.destination, DoubleVec2D::null);
-    EXPECT_EQ(bot2.blasting, false);
-
     bot2.transform({10, 10});
     EXPECT_EQ(bot2.transform_destination, DoubleVec2D(10, 10));
     EXPECT_EQ(bot2.transforming, false);
@@ -255,9 +242,9 @@ TEST_F(PlayerStateTest, BotTest) {
 }
 
 TEST_F(PlayerStateTest, MapElementTest) {
-    auto &elem1 = player_map[1][2];
-    elem1.setTerrain(player_state::TerrainType::LAND);
-    EXPECT_EQ(elem1.getTerrain(), player_state::TerrainType::LAND);
+    auto &offset = player_map[1][2];
+    offset.setTerrain(player_state::TerrainType::LAND);
+    EXPECT_EQ(offset.getTerrain(), player_state::TerrainType::LAND);
 }
 
 TEST_F(PlayerStateTest, OverloadOperatorsTest) {
@@ -280,7 +267,9 @@ TEST_F(PlayerStateTest, OverloadOperatorsTest) {
     expected << "}" << endl;
     result << tower;
     EXPECT_EQ(result.str(), expected.str());
+    // .str("") will set the buffer to "" overwriting whatever was there before
     result.str("");
+    // .clear() clears the error flags had they been set
     result.clear();
     expected.str("");
     expected.clear();
