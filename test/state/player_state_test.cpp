@@ -169,19 +169,17 @@ TEST_F(PlayerStateTest, TowerTest) {
     Tower &tower2 = player_states[1].towers[3];
     tower2.id = 19;
     Tower tower3(tower1);
-    Tower &tower4 = player_states[0].towers[5];
-    tower4.id = 29;
 
     EXPECT_NE(tower1, tower2);
     EXPECT_EQ(tower1, tower3);
 
     // Initial values
-    EXPECT_EQ(tower4.position, DoubleVec2D(0, 0));
-    EXPECT_EQ(tower4.state, player_state::TowerState::IDLE);
-    EXPECT_EQ(tower4.age, 0);
-    EXPECT_EQ(tower4.hp, 100);
-    EXPECT_EQ(tower4.impact_radius, 0);
-    EXPECT_EQ(tower4.blasting, false);
+    EXPECT_EQ(tower1.position, DoubleVec2D(0, 0));
+    EXPECT_EQ(tower1.state, player_state::TowerState::IDLE);
+    EXPECT_EQ(tower1.age, 0);
+    EXPECT_EQ(tower1.hp, 100);
+    EXPECT_EQ(tower1.impact_radius, 0);
+    EXPECT_EQ(tower1.blasting, false);
 
     tower1.blast();
     EXPECT_EQ(tower1.blasting, true);
@@ -219,7 +217,11 @@ TEST_F(PlayerStateTest, BotTest) {
     EXPECT_EQ(bot1.destination, DoubleVec2D::null);
     EXPECT_EQ(bot1.blasting, false);
 
-    // transforms test on bot1
+    // move test on bot1, checks to see if destination was set
+    bot1.move(DoubleVec2D(9, 9));
+    EXPECT_EQ(bot1.destination, DoubleVec2D(9, 9));
+
+    // transform test on bot1, target_position==position case
     bot1.position = {9, 9};
     bot1.transform({9, 9});
     EXPECT_EQ(bot1.transforming, true);
@@ -233,10 +235,12 @@ TEST_F(PlayerStateTest, BotTest) {
     EXPECT_EQ(bot2.position, DoubleVec2D(2, 2));
     EXPECT_EQ(bot2.blasting, true);
 
+    // transform test on bot2, target_position!= position case
     bot2.transform({10, 10});
     EXPECT_EQ(bot2.transform_destination, DoubleVec2D(10, 10));
     EXPECT_EQ(bot2.transforming, false);
 
+    // transforms at whatever the current position is
     bot2.transform();
     EXPECT_EQ(bot2.transforming, true);
 }
