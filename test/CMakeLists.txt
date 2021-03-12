@@ -18,8 +18,7 @@ set(SOURCE_FILES
     state/state_test.cpp
     llvm_pass/llvm_pass_test.cpp
     drivers/timer_test.cpp
-    drivers/main_driver_test.cpp
-  )
+    drivers/main_driver_test.cpp)
 
 if(NOT BUILD_PROJECT STREQUAL "all")
   include(${CMAKE_INSTALL_PREFIX}/lib/physics_config.cmake)

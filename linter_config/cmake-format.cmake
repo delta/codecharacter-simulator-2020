@@ -17,5 +17,5 @@ list(FILTER ALL_CMAKE_FILES EXCLUDE REGEX ${CMAKE_SOURCE_DIR}/build*)
 list(FILTER ALL_CMAKE_FILES EXCLUDE REGEX ${CMAKE_SOURCE_DIR}/ext*)
 list(FILTER ALL_CMAKE_FILES EXCLUDE REGEX ${CMAKE_INSTALL_PREFIX}/*)
 
-add_custom_target(cmakeformat COMMAND ${CMAKE_FORMAT_EXECUTABLE} -i
-                                      ${ALL_CMAKE_FILES})
+add_custom_target(cmakeformat ALL COMMAND ${CMAKE_FORMAT_EXECUTABLE} -i
+                                          ${ALL_CMAKE_FILES})

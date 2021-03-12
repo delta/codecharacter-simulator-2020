@@ -22,5 +22,5 @@ file(
   test/*.h)
 
 # Add target to build
-add_custom_target(clangformat COMMAND ${CLANG_FORMAT_EXECUTABLE} -style=file -i
-                                      ${ALL_SOURCE_FILES})
+add_custom_target(clangformat ALL COMMAND ${CLANG_FORMAT_EXECUTABLE}
+                                          -style=file -i ${ALL_SOURCE_FILES})
