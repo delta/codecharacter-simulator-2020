@@ -9,6 +9,7 @@
 #include "state/utilities.h"
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 
 namespace state {
