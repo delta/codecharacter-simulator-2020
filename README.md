@@ -10,15 +10,15 @@ Simulator for Pragyan CodeCharacter 2020
 
 3. Install Clang++ (>=9.0.1) (Can install using `sudo apt-get install clang`)
 
-4. Install Clang-format using `sudo apt-get install clang-format`
+4. Download [Boost 1.71](https://www.boost.org/users/history/version_1_71_0.html) (preferably in `/usr/local/lib/`)
 
-5. Download [Boost 1.71](https://www.boost.org/users/history/version_1_71_0.html) (preferably in `/usr/local/lib/`)
+5. `cd` to the Boost directory and build the system library by running `./bootstrap.sh --prefix=. --with-libraries=system && ./b2 cxxflags=-std=c++14 install`
 
-6. `cd` to the Boost directory and build the system library by running `./bootstrap.sh --prefix=. --with-libraries=system && ./b2 cxxflags=-std=c++14 install`
+6. `cd` to your projects directory and run `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git` && `git config core.hooksPath .githooks/`
 
-7. `cd` to your projects directory and run `git clone --recursive https://github.com/delta/codecharacter-simulator-2020.git` && `git config core.hooksPath .githooks/`
+7. run `pip install cmake-format`
 
-8. run `pip install cmake-format`
+8. Install Clang-format using `sudo apt-get install clang-format`
 
 9. `mkdir build && cd build`
 
