@@ -4,20 +4,23 @@ set -o pipefail
 
 # Run Clangformat
 cd /root/project/build
-make clangformat || { echo "Make Clangformat failed!"; exit 1; }
+make clangformat || {
+    echo "Make Clangformat failed!"
+    exit 1
+}
 
 # Check git for changes
 cd /root/project
-linterchecklist=`git status | grep "modified"`
+linterchecklist=$(git status | grep "modified")
 if [[ -z $linterchecklist ]]; then
     echo "ClangFormat test passed!"
-    exit 0;
+    exit 0
 else
     echo "You have clang-format problems :"
     echo "$linterchecklist"
     for f in $linterchecklist; do
-        filename=`echo $f | awk '{print $2}'`
+        filename=$(echo $f | awk '{print $2}')
         echo "$(git diff $filename)"
     done
-    exit 1;
+    exit 1
 fi
