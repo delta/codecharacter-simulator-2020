@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: "c7:38:93:8b:cd:b5:9b:4f:e6:8f:a3:bb:8b:b8:e8:f4"
+          fingerprints: "5a:4f:14:e4:3a:85:10:19:35:ea:a2:3d:5d:61:00:6a"
       - run:
           name: Setup Environment
           command: |
@@ -30,7 +30,7 @@ jobs:
             cd ..
             mkdir /usr/local/share/boost
             cp -r boost_1_68_0/* /usr/local/share/boost
-            curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &&  python get-pip.py && pip install cmake-format
+            curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && python get-pip.py && pip install wheel setuptools cmake-format==0.6.9
             apt-get install -y libprotobuf-dev protobuf-compiler
             mkdir simulator build
       - run:
@@ -64,3 +64,10 @@ jobs:
           working_directory: /root/project
           command: |
             doxygen && cd docs/ && make html && cd ../
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
