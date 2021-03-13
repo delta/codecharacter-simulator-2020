@@ -64,3 +64,10 @@ jobs:
           working_directory: /root/project
           command: |
             doxygen && cd docs/ && make html && cd ../
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
