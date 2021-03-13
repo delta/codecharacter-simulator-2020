@@ -30,7 +30,7 @@ jobs:
             cd ..
             mkdir /usr/local/share/boost
             cp -r boost_1_68_0/* /usr/local/share/boost
-            curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && python get-pip.py && pip install cmake-format
+            curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && python get-pip.py && pip install cmakelang
             apt-get install -y libprotobuf-dev protobuf-compiler
             mkdir simulator build
       - run:
