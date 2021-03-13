@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Needed by circleci local build tool
-exec < /dev/tty
-
 echo "##### Running pre-commit hook #####"
 root="$(pwd)"
 
@@ -12,11 +9,5 @@ bash "${root}/.githooks/clangformat.sh"
 # Run cmake-format on cmake lists files
 bash "${root}/.githooks/cmakeformat.sh"
 
-# Referred:  https://circleci.com/blog/circleci-hacks-validate-circleci-config-on-every-commit-with-a-git-hook/
-# Validates circleci config file
-if ! msg=$(circleci config validate -c .circleci/config.yml); then
-	echo "Failed circleci validation"
-	exit 1
-else
-	echo $msg
-fi
+# Run circleci config validation
+bash "${root}/.githooks/circleci_validate.sh"
