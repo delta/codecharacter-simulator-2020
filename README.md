@@ -8,7 +8,7 @@ Simulator for Pragyan CodeCharacter 2020
 
 2. Download & Install [Protobuf](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
 
-3. Install Clang++ (>=9.0.1)
+3. Install Clang++ (>=9.0.1) (Can install using `sudo apt-get install clang`)
 
 4. Download [Boost 1.71](https://www.boost.org/users/history/version_1_71_0.html) (preferably in `/usr/local/lib/`)
 
@@ -18,13 +18,15 @@ Simulator for Pragyan CodeCharacter 2020
 
 7. run `pip install cmake-format`
 
-8. `mkdir build && cd build`
+8. Install Clang-format using `sudo apt-get install clang-format`
 
-9. `export LD_LIBRARY_PATH=<repo_install_location>/lib`
+9. `mkdir build && cd build`
 
-10. `cmake .. -DCMAKE_INSTALL_PREFIX=<repo_install_location> -DBOOST_ROOT=<boost_download_location> -DCMAKE_CXX_COMPILER=clang++`
+10. `export LD_LIBRARY_PATH=<repo_install_location>/lib`
 
-11. `make install`
+11. `cmake .. -DCMAKE_INSTALL_PREFIX=<repo_install_location> -DBOOST_ROOT=<boost_download_location> -DCMAKE_CXX_COMPILER=clang++`
+
+12. `make install`
 
 To run the simulator, `<your_install_location>/bin/simulator`
 
