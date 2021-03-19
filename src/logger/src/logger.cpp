@@ -39,10 +39,10 @@ proto::BotState GetProtoBotState(BotStateName bot_state) {
         curr_bot_state = proto::BOT_MOVE_TO_TRANSFORM;
         break;
     case BotStateName::TRANSFORM:
-        curr_bot_state = proto::BOT_TRANSFORM;
+        curr_bot_state = proto::BOT_IDLE;
         break;
     case BotStateName::BLAST:
-        curr_bot_state = proto::BOT_BLAST;
+        curr_bot_state = proto::BOT_IDLE;
         break;
     case BotStateName::MOVE_TO_BLAST:
         curr_bot_state = proto::BOT_MOVE_TO_BLAST;
@@ -174,6 +174,7 @@ void Logger::logState() {
             t_tower->set_y(tower_position.y);
 
             t_tower->set_state(GetProtoTowerState(tower->getState()));
+            t_tower->set_blast_tower(tower->isBlasting());
         }
     }
 
