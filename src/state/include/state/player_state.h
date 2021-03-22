@@ -224,7 +224,7 @@ struct State {
     array<int64_t, 2> scores;
 
     State()
-        : map(), bots(Constants::Actor::MAX_NUM_BOTS),
+        : map(), num_flags(0), bots(Constants::Actor::MAX_NUM_BOTS),
           enemy_bots(Constants::Actor::MAX_NUM_BOTS),
           num_bots(Constants::Actor::MAX_NUM_BOTS),
           num_enemy_bots(Constants::Actor::MAX_NUM_BOTS),
