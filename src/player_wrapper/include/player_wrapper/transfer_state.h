@@ -76,6 +76,13 @@ ConvertToPlayerState(const transfer_state::State &ts) {
     // Copy score
     std::copy(ts.scores.begin(), ts.scores.end(), ps.scores.begin());
 
+    // Copy Sizes
+    ps.num_bots = ps.bots.size();
+    ps.num_enemy_bots = ps.enemy_bots.size();
+    ps.num_towers = ps.towers.size();
+    ps.num_enemy_towers = ps.enemy_towers.size();
+    ps.num_flags = ps.flag_offsets.size();
+
     return ps;
 }
 
