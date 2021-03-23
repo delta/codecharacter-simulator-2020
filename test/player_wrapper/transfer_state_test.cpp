@@ -17,14 +17,23 @@ class TransferStateTest : public Test {
 
     TransferStateTest() : ts(), ps() {
         ts.num_bots = 10;
+        ts.bots[5].blast();
+        ts.bots[6].transform();
         ts.num_enemy_bots = 20;
+        ts.enemy_bots[10].blast();
+        ts.enemy_bots[11].transform();
         ts.num_towers = 30;
+        ts.towers[29].blast();
         ts.scores = {1000, 2000};
 
         ps.num_bots = 50;
         ps.bots.assign(ps.num_bots, player_state::Bot());
+        ps.bots[10].blast();
+        ps.bots[20].transform();
         ps.num_enemy_bots = 30;
         ps.enemy_bots.assign(ps.num_enemy_bots, player_state::Bot());
+        ps.enemy_bots[7].blast();
+        ps.enemy_bots[9].transform();
         ps.scores = {100, 200};
 
         // Creating a basic map and player state
@@ -77,14 +86,11 @@ class TransferStateTest : public Test {
         return true;
     }
 
-    bool flagOffsetsEquality(
-        const vector<DoubleVec2D> &ps_flags,
-        const array<DoubleVec2D, Map::MAP_SIZE * Map::MAP_SIZE> &ts_flags) {
-        for (auto i = 0u; i < ps_flags.size(); i++) {
-            if (ps_flags[i] != ts_flags[i])
-                return false;
-        }
-        return true;
+    template <typename T, size_t _>
+    bool compareVectorAndArray(const vector<T> &vec, const array<T, _> &arr) {
+        return all_of(
+            vec.begin(), vec.end(),
+            [&arr, i = 0](const T &val) mutable { return val == arr[i++]; });
     }
 };
 
@@ -92,30 +98,50 @@ TEST_F(TransferStateTest, ConvertToPlayerStateTest) {
     auto new_ps = ConvertToPlayerState(ts);
 
     // non default values, changed in TransferStateTest constructor
-    EXPECT_EQ(new_ps.num_bots, ts.num_bots);             // must equal 10
+    EXPECT_EQ(new_ps.num_bots, ts.num_bots); // must equal 10
+    EXPECT_EQ(compareVectorAndArray(new_ps.bots, ts.bots), true);
+
     EXPECT_EQ(new_ps.num_enemy_bots, ts.num_enemy_bots); // must equal 20
-    EXPECT_EQ(new_ps.num_towers, ts.num_towers);         // must equal 30
+    EXPECT_EQ(compareVectorAndArray(new_ps.enemy_bots, ts.enemy_bots), true);
+
+    EXPECT_EQ(new_ps.num_towers, ts.num_towers); // must equal 30
+    EXPECT_EQ(compareVectorAndArray(new_ps.towers, ts.towers), true);
+
     EXPECT_EQ(pairFromScores(new_ps.scores), pairFromScores(ts.scores));
+
     EXPECT_EQ(mapEquality(new_ps.map, ts.map), true);
+
     EXPECT_EQ(new_ps.num_flags, ts.num_flags);
-    EXPECT_EQ(flagOffsetsEquality(new_ps.flag_offsets, ts.flag_offsets), true);
+    EXPECT_EQ(compareVectorAndArray(new_ps.flag_offsets, ts.flag_offsets),
+              true);
 
     // default values
     EXPECT_EQ(new_ps.num_enemy_towers, ts.num_enemy_towers);
+    EXPECT_EQ(compareVectorAndArray(new_ps.enemy_towers, ts.enemy_towers),
+              true);
 }
 
 TEST_F(TransferStateTest, ConvertToTransferStateTest) {
     auto new_ts = ConvertToTransferState(ps);
 
     // non default values, changed in TransferStateTest constructor
-    EXPECT_EQ(new_ts.num_bots, ps.num_bots);             // equals 50
+    EXPECT_EQ(new_ts.num_bots, ps.num_bots); // equals 50
+    EXPECT_EQ(compareVectorAndArray(ps.bots, new_ts.bots), true);
+
     EXPECT_EQ(new_ts.num_enemy_bots, ps.num_enemy_bots); // equals 30
+    EXPECT_EQ(compareVectorAndArray(ps.enemy_bots, new_ts.enemy_bots), true);
+
     EXPECT_EQ(pairFromScores(new_ts.scores), pairFromScores(ps.scores));
+
     EXPECT_EQ(mapEquality(new_ts.map, ps.map), true);
+
     EXPECT_EQ(new_ts.num_flags, ps.num_flags);
-    EXPECT_EQ(flagOffsetsEquality(ps.flag_offsets, ts.flag_offsets), true);
+    EXPECT_EQ(compareVectorAndArray(ps.flag_offsets, ts.flag_offsets), true);
 
     // default values
     EXPECT_EQ(new_ts.num_towers, ps.num_towers);
+    EXPECT_EQ(compareVectorAndArray(ps.towers, new_ts.towers), true);
     EXPECT_EQ(new_ts.num_enemy_towers, ps.num_enemy_towers);
+    EXPECT_EQ(compareVectorAndArray(ps.enemy_towers, new_ts.enemy_towers),
+              true);
 }
